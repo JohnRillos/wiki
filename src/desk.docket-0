@@ -1,5 +1,5 @@
-:~  title+'Example App'
-    info+'Example description'
+:~  title+'Wiki'
+    info+'Encyclopedia Urbitica'
     color+0xa0.e2a7
     base+'wiki'
     image+'https://example.com/image.svg'
