@@ -1,9 +1,9 @@
 :~  title+'Wiki'
     info+'Encyclopedia Urbitica'
-    color+0xa0.e2a7
+    color+0xff.ffff
     base+'wiki'
-    image+'https://example.com/image.svg'
-    glob-ames+[~sampel 0v0]
+    :: image+'https://example.com/image.svg'
+    site+/wiki
     version+[0 0 1]
     website+'https://example.com'
     license+'MIT'
