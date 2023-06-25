@@ -1,12 +1,4 @@
-<!---
-    Initial Repository Setup:
-    * Replace "template" with the name of your app everywhere in this repo
-    * Add your name to LICENSE
-    * If you want to use a React.JS frontend, clone https://github.com/urbit/create-landscape-app and copy `create-landscape-app/ts/ui/*` into a directory named `ui/`
-      * Otherwise, delete any references to ui/ in _build.sh and README.md
--->
-
-# %template
+# %wiki
 
 An app for [Urbit](https://urbit.org).
 
@@ -44,13 +36,13 @@ Unix:
   * or `npm run dev:env foo` to use `ui/.env.foo.local` as config
 
 Dojo:
-* `|commit %template` to build your desk
-* `|install our %template` to install your desk and start the app for the first time
+* `|commit %wiki` to build your desk
+* `|install our %wiki` to install your desk and start the app for the first time
 
 -----
 ## Distributing the app:
 
 * `./_dist.sh PATH/TO/PIER` to copy `src/` and `deps/` to your distribution ship's pier.
-* Dojo: `|commit %template`
+* Dojo: `|commit %wiki`
 * `./_build.sh` to build the React frontend
 * Upload `ui/dist` to the %docket globulator at `<distro ship hostname>/docket/upload`
