@@ -1,5 +1,6 @@
 /-  *wiki
-/+  dbug, default-agent, verb
+/+  dbug, default-agent, rudder, verb
+/~  web  (page:rudder (map @tas book) action)  /web/wiki
 ::
 ::  types core
 ::
@@ -13,6 +14,7 @@
 ::
 +$  state-0
   $:  %0
+    books=(map @tas book)
   ==
 --
 ::
@@ -36,26 +38,119 @@
     default  ~(. (default-agent this %|) bowl)
     main     ~(. +> bowl)
 ::
-++  on-init   on-init:default
-++  on-save   !>(~)
-++  on-load   on-load:default
+++  on-init
+  ^-  (quip card _this)
+  =^  cards  state
+    =|  state=state-0
+    =.  books.state  ~
+    :_  state
+    [%pass /eyre/connect %arvo %e %connect [~ /[dap.bowl]] dap.bowl]~
+  [cards this]
+::
+++  on-save  !>(state)
+::
+++  on-load
+  |=  old-vase=vase
+  ^-  (quip card _this)
+  |^  =+  !<(old=versioned-state old-vase)
+      =^  cards  state  (build-state old)
+      [cards this]
+  ::
+  ++  build-state
+    |=  old=versioned-state
+    ^-  (quip card state-0)
+    =|  cards=(list card)
+    |-
+    ?-  -.old
+      %0  [cards old]
+    ==
+  --
 ::
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card _this)
-  ?.  =(our.bowl src.bowl)  ~|('Unauthorized!' !!)
-  ?+  mark  (on-poke:default mark vase)
-      %cryo-action
-    =^  cards  state
-      (handle-action:main !<(action vase))
-    [cards this]
+  |^  ?.  =(our.bowl src.bowl)  ~|('Unauthorized! ' !!)
+      ?+  mark  (on-poke:default mark vase)
+      ::
+          %wiki-action
+        =^  cards  state  (handle-action !<(action vase))
+        [cards this]
+      ::
+          %handle-http-request
+        ^-  (quip card _this)
+        =;  out=(quip card _+.state)
+          [-.out this(+.state +.out)]
+        %.  [bowl !<(order:rudder vase) +.state]
+        %-  (steer:rudder _+.state action)
+        :^    web                 :: pages
+            http-route            :: route
+          (fours:rudder +.state)  :: adlib
+        |=  act=action            :: solve
+        ^-  $@(brief:rudder [brief:rudder (list card) _+.state])
+        =^  cards  this
+          (on-poke %wiki-action !>(act))
+        ['Processed succesfully.' cards +.state] :: not sure what this does
+      ::
+      ==
+  ::
+  ++  handle-action
+    |=  act=action
+    ^-  (quip card _state)
+    ~&  >  act
+    ?-  -.act
+      %new-book       (new-book:main act)
+      %mod-book-name  (mod-book-name:main act)
+      %new-page       (new-page:main act)
+      %mod-page       [~ state]
+      %del-page       [~ state]
+    ==
+  ::
+  ++  http-route
+    ^-  route:rudder
+    |=  =trail:rudder
+    ^-  (unit place:rudder)
+    :: todo: 404 on reserved paths /wiki/book and /wiki/page
+    ?~  point=((point:rudder /[dap.bowl] & ~(key by web)) trail)
+      (dynamic-route trail)
+    point
+  ::
+  ++  dynamic-route
+    |=  [ext=(unit @ta) site=(list @t)]
+    ^-  (unit place:rudder)
+    =/  pat=(unit path)  (decap:rudder /wiki site)
+    ?~  pat  ~
+    =/  auth=?  &  :: todo: allow some books to be un-auth'd
+    ?-  u.pat
+      [@ ~]      `[%page auth %book]
+      [@ ~ ~]    `[%away (snip site)]
+      [@ @ ~]    `[%page auth %page]
+      [@ @ ~ ~]  `[%away (snip site)]
+      *          ~
+    ==
+  --
+::
+++  on-watch
+  |=  =path
+  ^-  (quip card _this)
+  ?>  =(our.bowl src.bowl)
+  ?+  path  (on-watch:default path)
+    [%http-response *]  [~ this]
   ==
 ::
-++  on-watch  on-watch:default
 ++  on-leave  on-leave:default
 ++  on-peek   on-peek:default
 ++  on-agent  on-agent:default
-++  on-arvo   on-arvo:default
+::
+++  on-arvo
+  |=  [=wire =sign-arvo]
+  ^-  (quip card _this)
+  ?+  sign-arvo  (on-arvo:default wire sign-arvo)
+      [%eyre %bound *]
+    ~?  !accepted.sign-arvo
+      [dap.bowl 'eyre bind rejected!' binding.sign-arvo]
+    [~ this]
+  ==
+::
 ++  on-fail   on-fail:default
 --
 ::
@@ -63,12 +158,24 @@
 ::
 |_  =bowl:gall
 ::
-++  handle-action
-  |=  act=action
-  ^-  (quip card _state)
-  ?-  -.act
-      %foo
-    ~&  bar.act
-    [~ state]
-  ==
+++  new-book
+  |=  [%new-book id=@tas title=@t]
+  =.  books  (~(put by books) [id [title ~]])
+  [~ state]
+::
+++  mod-book-name
+  |=  [%mod-book-name id=@tas title=@t]
+  =/  =book  (~(got by books) id)
+  =.  title.book  title
+  =.  books  (~(put by books) id book)
+  [~ state]
+::
+++  new-page
+  |=  [%new-page book-id=@tas id=@tas title=@t content=tape]
+  =/  =book  (~(got by books) book-id)
+  ?:  (~(has by pages.book) id)  ~|("Page {<id>} already exists!" !!)
+  =.  pages.book  (~(put by pages.book) id [title content])
+  =.  books  (~(put by books) [book-id book])
+  [~ state]
+::
 --

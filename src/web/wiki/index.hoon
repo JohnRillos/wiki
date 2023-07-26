@@ -1,0 +1,85 @@
+::  app index
+::
+/-  *wiki
+/+  rudder
+::
+^-  (page:rudder (map @tas book) action)
+::
+|_  [=bowl:gall =order:rudder books=(map @tas book)]
+::
+++  argue
+  |=  [headers=header-list:http body=(unit octs)]
+  ^-  $@(brief:rudder action)
+  =/  args=(map @t @t)
+    ?~(body ~ (frisk:rudder q.u.body))
+  ~&  >>  "args: {<args>}"
+  ?~  what=(~(get by args) 'action')  ~
+  ~&  >>  "what: {<what>}"
+  |^  ?+  u.what  'say what now'
+      ::
+          %new-book
+        =/  book-id=@tas  
+          ~|  'Invalid wiki ID'  (slav %tas (~(got by args) 'book-id'))
+        =/  book-title=@t  (~(got by args) 'book-title')
+        [%new-book book-id book-title]
+      ==
+  --
+::
+++  final  (alert:rudder url.request.order build)
+::
+++  build
+  |=  $:  arg=(list [k=@t v=@t])
+          msg=(unit [o=? =@t])
+      ==
+  ^-  reply:rudder
+  ::
+  |^  [%page render]
+  ::
+  ++  style  ""
+  ::
+  ++  render
+    ^-  manx
+    ;html
+      ;head
+        ;title:"%wiki"
+        ;meta(charset "utf-8");
+        ;meta(name "viewport", content "width=device-width, initial-scale=1");
+        ;style:"{style}"
+      ==
+      ;body
+        ;h1: %wiki manager
+        ;h2: Your Wikis
+        ;ul
+          ;*  %+  turn  ~(tap by books)
+              |=  [id=@tas =book]
+              ^-  manx
+              ;li
+                ;a/"/wiki/{(trip id)}": {(trip title.book)}
+              ==
+        ==
+        ;table#add-book :: break this form out into its own page /wiki/new-wiki or /wiki/wikis/new or /wiki/books/new
+          ;form(method "post")
+            ;tr(style "font-weight: bold")
+              ;td:""
+              ;td:""
+              ;td:"Wiki ID"
+              ;td:"Wiki Title"
+            ==
+            ;tr
+              ;td:""
+              ;td
+                ;button(type "submit", name "action", value "new-book"):"Create Wiki"
+              ==
+              ;td
+                ;input(type "text", name "book-id", placeholder "my-wiki");
+              ==
+              ;td.label
+                ;input(type "text", name "book-title", placeholder "My Wiki");
+              ==
+            ==
+          ==
+        ==
+      ==
+    ==
+  --
+--
