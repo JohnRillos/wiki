@@ -17,11 +17,16 @@
       ::
           %new-book
         =/  book-id=@ta
-          ~|  'Invalid wiki ID'  (slav %ta (~(got by args) 'book-id'))
+          ~|  'Invalid wiki ID'  (tie (~(got by args) 'book-id'))
         =/  book-title=@t  (~(got by args) 'book-title')
         =/  pub-read=?  (~(has by args) 'public-read')
         [%new-book book-id book-title pub-read]
       ==
+    ::
+    ++  tie
+      |=  =knot
+      ^-  @ta
+      (slav %ta (cat 3 '~.' knot))
   --
 ::
 ++  final  (alert:rudder url.request.order build)
@@ -35,6 +40,14 @@
   |^  [%page render]
   ::
   ++  style  ""
+  ::
+  ++  knot-regex  "[0-9a-z\\-_~\\.]+"
+  ::
+  ++  knot-explain
+    """
+    Lowercase letters, numbers, period (.), underscore (_), hyphen (-), 
+    and tilde (~)
+    """
   ::
   ++  render
     ^-  manx
@@ -71,7 +84,7 @@
                 ;button(type "submit", name "action", value "new-book"):"Create Wiki"
               ==
               ;td
-                ;input(type "text", name "book-id", placeholder "my-wiki");
+                ;input(type "text", name "book-id", placeholder "my-wiki", pattern knot-regex, title knot-explain);
               ==
               ;td
                 ;input(type "text", name "book-title", placeholder "My Wiki");
