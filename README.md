@@ -25,8 +25,6 @@ Documentation and release notes can also be viewed in the [%docs](https://github
 
 `_dist.sh`: Copies project files into your ship's pier.
 
-`_build.sh`: Builds the React frontend. `ui/dist` can be uploaded as a glob.
-
 -----
 ## Running the app:
 
