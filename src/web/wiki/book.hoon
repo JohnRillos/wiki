@@ -16,6 +16,7 @@
   |^  ?+  u.what  'say what now'
       ::
           %new-page
+        ?.  authenticated.order  'You must be logged in to create an article!'
         =/  page-id=@tas
           ~|  'Invalid page ID'  (slav %tas (~(got by args) 'page-id'))
         =/  page-title=@t  (~(got by args) 'page-title')
@@ -30,10 +31,10 @@
 ::
 ++  final
   |=  [success=? msg=brief:rudder]
-  (build ~ ~)
+  (build ~ ?~(msg ~ `[success `@t`msg]))
 ::
 ++  build
-  |=  [arg=(list [k=@t v=@t]) msg=(unit [? @t])]
+  |=  [arg=(list [k=@t v=@t]) msg=(unit [success=? text=@t])]
   ^-  reply:rudder
   ::
   =/  site=(pole knot)  (stab url.request.order)
@@ -44,7 +45,7 @@
   ::
   |^  [%page render]
   ::
-  ++  style  ''
+  ++  style  ""
   ::
   ++  render
     ^-  manx
@@ -53,6 +54,8 @@
         ;title: {(trip title.book)}
       ==
       ;body
+        ;*  ?~  msg  ~
+            ~[;/((trip text.u.msg))]
         ;h1: {(trip title.book)}
         ;h2: Pages
         ;ul
@@ -80,7 +83,7 @@
               ;td
                 ;input(type "text", name "page-id", placeholder "my-page");
               ==
-              ;td.label
+              ;td
                 ;input(type "text", name "page-title", placeholder "My Page");
               ==
             ==

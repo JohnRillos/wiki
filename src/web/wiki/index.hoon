@@ -12,16 +12,15 @@
   ^-  $@(brief:rudder action)
   =/  args=(map @t @t)
     ?~(body ~ (frisk:rudder q.u.body))
-  ~&  >>  "args: {<args>}"
   ?~  what=(~(get by args) 'action')  ~
-  ~&  >>  "what: {<what>}"
-  |^  ?+  u.what  'say what now'
+  |^  ?+  u.what  'Invalid post body'
       ::
           %new-book
         =/  book-id=@tas  
           ~|  'Invalid wiki ID'  (slav %tas (~(got by args) 'book-id'))
         =/  book-title=@t  (~(got by args) 'book-title')
-        [%new-book book-id book-title]
+        =/  pub-read=?  (~(has by args) 'public-read')
+        [%new-book book-id book-title pub-read]
       ==
   --
 ::
@@ -64,6 +63,7 @@
               ;td:""
               ;td:"Wiki ID"
               ;td:"Wiki Title"
+              ;td:"Public Read Access"
             ==
             ;tr
               ;td:""
@@ -73,8 +73,11 @@
               ;td
                 ;input(type "text", name "book-id", placeholder "my-wiki");
               ==
-              ;td.label
+              ;td
                 ;input(type "text", name "book-title", placeholder "My Wiki");
+              ==
+              ;td
+                ;input(type "checkbox", name "public-read");
               ==
             ==
           ==

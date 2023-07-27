@@ -50,7 +50,7 @@
   ::
   |^  [%page render]
   ::
-  ++  style  ''
+  ++  style  ""
   ::
   ++  render
     ^-  manx

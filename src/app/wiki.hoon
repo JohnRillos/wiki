@@ -87,9 +87,11 @@
           (fours:rudder +.state)  :: adlib
         |=  act=action            :: solve
         ^-  $@(brief:rudder [brief:rudder (list card) _+.state])
+        =/  =order:rudder  !<(order:rudder vase)
+        ?.  authenticated.order  ['Unauthorized!' ~ +.state]
         =^  cards  this
           (on-poke %wiki-action !>(act))
-        ['Processed succesfully.' cards +.state] :: not sure what this does
+        ['Processed successfully.' cards +.state]
       ::
       ==
   ::
@@ -109,24 +111,26 @@
     ^-  route:rudder
     |=  =trail:rudder
     ^-  (unit place:rudder)
-    :: todo: 404 on reserved paths /wiki/book and /wiki/page
-    ?~  point=((point:rudder /[dap.bowl] & ~(key by web)) trail)
-      (dynamic-route trail)
-    point
-  ::
-  ++  dynamic-route
-    |=  [ext=(unit @ta) site=(list @t)]
-    ^-  (unit place:rudder)
-    =/  pat=(unit path)  (decap:rudder /wiki site)
+    ?^  point=((point:rudder /[dap.bowl] & ~(key by web)) trail)
+      point
+    =/  site=(list @t)  site.trail
+    =/  pat=(unit (pole term))  (decap:rudder /wiki site)
     ?~  pat  ~
-    =/  auth=?  &  :: todo: allow some books to be un-auth'd
+    =/  auth=?  (chekov u.pat)
     ?-  u.pat
-      [@ ~]      `[%page auth %book]
-      [@ ~ ~]    `[%away (snip site)]
-      [@ @ ~]    `[%page auth %page]
-      [@ @ ~ ~]  `[%away (snip site)]
-      *          ~
+      [bid=@tas ~]             `[%page auth %book]
+      [bid=@tas ~ ~]           `[%away (snip site)]
+      [bid=@tas pid=@tas ~]    `[%page auth %page]
+      [bid=@tas pid=@tas ~ ~]  `[%away (snip site)]
+      *                        ~
     ==
+  ::
+  ++  chekov
+    |=  pat=(pole term)
+    ^-  ?
+    ?.  ?=([book-id=@tas *] pat)  &
+    ?~  book=(~(get by books) book-id.pat)  &
+    !public-read.rules.u.book
   --
 ::
 ++  on-watch
@@ -159,8 +163,8 @@
 |_  =bowl:gall
 ::
 ++  new-book
-  |=  [%new-book id=@tas title=@t]
-  =.  books  (~(put by books) [id [title ~]])
+  |=  [%new-book id=@tas title=@t rules=access]
+  =.  books  (~(put by books) [id [title ~ rules]])
   [~ state]
 ::
 ++  mod-book-name

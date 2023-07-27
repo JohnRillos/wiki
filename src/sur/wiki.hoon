@@ -3,7 +3,7 @@
 +$  book
   $:  title=@t
       pages=(map @tas page)
-      :: rules=access
+      rules=access
   ==
 ::
 +$  page
@@ -11,16 +11,15 @@
       content=tape
   ==
 ::
-:: +$  access
-::   $:  public-read=_&
-::       public-edit=_|
-::       mods=(set @p)
-::       bans=(set @p)
-::   ==
++$  access
+  $:  public-read=?
+      :: public-edit=?
+      :: mods=(set @p)
+      :: bans=(set @p)
+  ==
 ::
 +$  action
-  $%  [%new-book id=@tas title=@t]
-      :: [%new-book id=@tas title=@t rules=access]
+  $%  [%new-book id=@tas title=@t rules=access]
       [%mod-book-name id=@tas title=@t]
       :: [%mod-rule-read id=@tas public-read=?]
       :: [%mod-rule-edit id=@tas public-edit=?]
