@@ -1,6 +1,6 @@
 /-  *wiki
 /+  dbug, default-agent, rudder, verb
-/~  web  (page:rudder (map @tas book) action)  /web/wiki
+/~  web  (page:rudder (map @ta book) action)  /web/wiki
 ::
 ::  types core
 ::
@@ -14,7 +14,7 @@
 ::
 +$  state-0
   $:  %0
-    books=(map @tas book)
+    books=(map @ta book)
   ==
 --
 ::
@@ -114,21 +114,21 @@
     ?^  point=((point:rudder /[dap.bowl] & ~(key by web)) trail)
       point
     =/  site=(list @t)  site.trail
-    =/  pat=(unit (pole term))  (decap:rudder /wiki site)
+    =/  pat=(unit (pole knot))  (decap:rudder /wiki site)
     ?~  pat  ~
     =/  auth=?  (chekov u.pat)
     ?-  u.pat
-      [bid=@tas ~]             `[%page auth %book]
-      [bid=@tas ~ ~]           `[%away (snip site)]
-      [bid=@tas pid=@tas ~]    `[%page auth %page]
-      [bid=@tas pid=@tas ~ ~]  `[%away (snip site)]
+      [bid=@ta ~]            `[%page auth %book]
+      [bid=@ta ~ ~]          `[%away (snip site)]
+      [bid=@ta pid=@ta ~]    `[%page auth %page]
+      [bid=@ta pid=@ta ~ ~]  `[%away (snip site)]
       *                        ~
     ==
   ::
   ++  chekov
     |=  pat=(pole term)
     ^-  ?
-    ?.  ?=([book-id=@tas *] pat)  &
+    ?.  ?=([book-id=@ta *] pat)  &
     ?~  book=(~(get by books) book-id.pat)  &
     !public-read.rules.u.book
   --
@@ -163,19 +163,19 @@
 |_  =bowl:gall
 ::
 ++  new-book
-  |=  [%new-book id=@tas title=@t rules=access]
+  |=  [%new-book id=@ta title=@t rules=access]
   =.  books  (~(put by books) [id [title ~ rules]])
   [~ state]
 ::
 ++  mod-book-name
-  |=  [%mod-book-name id=@tas title=@t]
+  |=  [%mod-book-name id=@ta title=@t]
   =/  =book  (~(got by books) id)
   =.  title.book  title
   =.  books  (~(put by books) id book)
   [~ state]
 ::
 ++  new-page
-  |=  [%new-page book-id=@tas id=@tas title=@t content=tape]
+  |=  [%new-page book-id=@ta id=@ta title=@t content=tape]
   =/  =book  (~(got by books) book-id)
   ?:  (~(has by pages.book) id)  ~|("Page {<id>} already exists!" !!)
   =.  pages.book  (~(put by pages.book) id [title content])

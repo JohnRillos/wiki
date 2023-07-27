@@ -3,9 +3,9 @@
 /-  *wiki
 /+  rudder
 ::
-^-  (page:rudder (map @tas book) action)
+^-  (page:rudder (map @ta book) action)
 ::
-|_  [=bowl:gall =order:rudder books=(map @tas book)]
+|_  [=bowl:gall =order:rudder books=(map @ta book)]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -16,8 +16,8 @@
   |^  ?+  u.what  'Invalid post body'
       ::
           %new-book
-        =/  book-id=@tas  
-          ~|  'Invalid wiki ID'  (slav %tas (~(got by args) 'book-id'))
+        =/  book-id=@ta
+          ~|  'Invalid wiki ID'  (slav %ta (~(got by args) 'book-id'))
         =/  book-title=@t  (~(got by args) 'book-title')
         =/  pub-read=?  (~(has by args) 'public-read')
         [%new-book book-id book-title pub-read]
@@ -50,7 +50,7 @@
         ;h2: Your Wikis
         ;ul
           ;*  %+  turn  ~(tap by books)
-              |=  [id=@tas =book]
+              |=  [id=@ta =book]
               ^-  manx
               ;li
                 ;a/"/wiki/{(trip id)}": {(trip title.book)}

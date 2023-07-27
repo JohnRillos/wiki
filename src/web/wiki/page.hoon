@@ -3,30 +3,28 @@
 /-  *wiki
 /+  rudder
 ::
-^-  (page:rudder (map @tas book) action)
+^-  (page:rudder (map @ta book) action)
 ::
-|_  [=bowl:gall =order:rudder books=(map @tas book)]
+|_  [=bowl:gall =order:rudder books=(map @ta book)]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
   ^-  $@(brief:rudder action)
   =/  args=(map @t @t)
     ?~(body ~ (frisk:rudder q.u.body))
-  ~&  >>  "args: {<args>}"
   ?~  what=(~(get by args) 'action')  ~
-  ~&  >>  "what: {<what>}"
   |^  ?+  u.what  'say what now'
       ::
           %new-page
-        =/  page-id=@tas
-          ~|  'Invalid page ID'  (slav %tas (~(got by args) 'page-id'))
+        =/  page-id=@ta
+          ~|  'Invalid page ID'  (slav %ta (~(got by args) 'page-id'))
         =/  page-title=@t  (~(got by args) 'page-title')
         [%new-page book-id page-id page-title "hello world"]
       ==
   ::
   ++  book-id
     =/  site=(pole knot)  (stab url.request.order)
-    ?>  ?=([%wiki book-id=@tas ~] site)
+    ?>  ?=([%wiki book-id=@ta ~] site)
     book-id.site
   --
 ::
@@ -39,7 +37,7 @@
   ^-  reply:rudder
   ::
   =/  site=(pole knot)  (stab url.request.order)
-  ?.  ?=([%wiki book-id=@tas page-id=@tas ~] site)
+  ?.  ?=([%wiki book-id=@ta page-id=@ta ~] site)
     [%code 404 'Invalid path']
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
