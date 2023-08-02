@@ -45,7 +45,7 @@
   ::
   ++  knot-explain
     """
-    Lowercase letters, numbers, period (.), underscore (_), hyphen (-), 
+    Lowercase letters, numbers, hyphen (-), underscore (_), period (.),
     and tilde (~)
     """
   ::
