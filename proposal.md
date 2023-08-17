@@ -9,11 +9,6 @@ Wikis should fit multiple typical use cases:
 * Personal knowledge management, akin to Obsidian
 * Public-facing documentation, such as the urbit.org developer guide
 
-Future work (descoped from this proposal):
-* Encyclopedia collaboratively maintained by many users, such as Wikipedia
-* Private documentation within an organization, akin to Confluence
-
-
 ## Milestones
 
 ### Milestone 1 - Local wikis + Frontend
@@ -44,6 +39,15 @@ Future work (descoped from this proposal):
 * Deliverables:
   * Folders of `.md` files can be imported as wikis.
   * Wikis can be exported as folders of `.md` files.
+
+
+## Future work
+
+Some milestones have been descoped from this proposal, but I'd like to continue them in a future proposal:
+
+* Remote users (including guests on clearweb) can edit wikis
+* Wikis can be shared but restricted to whitelisted members
+* Remote wiki content can be discovered via search
 
 
 ## My Background
