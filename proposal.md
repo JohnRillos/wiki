@@ -1,5 +1,5 @@
 ## Overview
-`%wiki` will be an app for creating, reading, and collaborating on wikis. 
+`%wiki` will be an app for creating, reading, and (ultimately) collaborating on wikis. 
 
 Any user should be able to create their own wiki, share it on the network, 
 and make it available on the public internet ("clearweb") to be accessed like 
@@ -8,6 +8,8 @@ any site in the vein of Wikipedia.
 Wikis should fit multiple typical use cases:
 * Personal knowledge management, akin to Obsidian
 * Public-facing documentation, such as the urbit.org developer guide
+
+Future work (descoped from this proposal):
 * Encyclopedia collaboratively maintained by many users, such as Wikipedia
 * Private documentation within an organization, akin to Confluence
 
@@ -15,8 +17,8 @@ Wikis should fit multiple typical use cases:
 ## Milestones
 
 ### Milestone 1 - Local wikis + Frontend
-* Estimated completion: early September
-* Compensation: 1 star
+* Estimated completion: late September
+* Compensation: 2 stars
 * Deliverables:
   * User can create/edit/delete local wikis
     * Only host can view or edit
@@ -29,38 +31,19 @@ Wikis should fit multiple typical use cases:
 
 ### Milestone 2 - Publicly readable wikis
 * Estimated completion: late October (Assembly '23)
-* Compensation: 1 star
+* Compensation: 2 stars
 * Deliverables:
   * Wikis can be kept private or made public
   * Public wikis can be read on the clearweb
     * Each page has its own URL, including old versions
   * Public wiki pages can be accessed via remote scry
 
-### Milestone 3 - Publicly writeable wikis
-* Estimated completion: December
+### Milestone 3 - Obsidian file import/export
+* Estimated completion: November
 * Compensation: 1 star
 * Deliverables:
-  * Wikis can be edited by remote users
-  * Write access can be:
-    * global (any user can edit unless banned)
-    * restricted (only mods can edit)
-  * Host can give mod powers to remote users
-  * Host/mod can ban users from editing
-
-### Milestone 4 - Discoverability
-* Estimated completion: January 2024
-* Compensation: 1 star
-* Deliverables:
-  * Public wikis will appear in search results
-  * Searching for a page in the frontend will return relevant results in other 
-  public wikis
-  * Pages can have links to pages in remote public wikis
-
-### Milestone 5 - Shared private wikis
-* Estimated completion: March 2024
-* Compensation: 1 star
-* Deliverables:
-  * User can grant access so only certain users can read
+  * Folders of `.md` files can be imported as wikis.
+  * Wikis can be exported as folders of `.md` files.
 
 
 ## My Background
