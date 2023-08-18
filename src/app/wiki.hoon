@@ -77,21 +77,7 @@
         [cards this]
       ::
           %handle-http-request
-        ^-  (quip card _this)
-        =;  out=(quip card _+.state)
-          [-.out this(+.state +.out)]
-        %.  [bowl !<(order:rudder vase) +.state]
-        %-  (steer:rudder _+.state action)
-        :^    web                 :: pages
-            http-route            :: route
-          (fours:rudder +.state)  :: adlib
-        |=  act=action            :: solve
-        ^-  $@(brief:rudder [brief:rudder (list card) _+.state])
-        =/  =order:rudder  !<(order:rudder vase)
-        ?.  authenticated.order  ['Unauthorized!' ~ +.state]
-        =^  cards  this
-          (on-poke %wiki-action !>(act))
-        ['Processed successfully.' cards +.state]
+        (handle-http !<(order:rudder vase))
       ::
       ==
   ::
@@ -107,6 +93,23 @@
       %del-page       [~ state]
     ==
   ::
+  ++  handle-http
+    |=  =order:rudder
+    ^-  (quip card _this)
+    =;  out=(quip card _+.state)
+      [-.out this(+.state +.out)]
+    %.  [bowl order +.state]
+    %-  (steer:rudder _+.state action)
+    :^    web                 :: pages
+        http-route            :: route
+      (fours:rudder +.state)  :: adlib
+    |=  act=action            :: solve
+    ^-  $@(brief:rudder [brief:rudder (list card) _+.state])
+    ?.  authenticated.order  ['Unauthorized!' ~ +.state]
+    =^  cards  this
+      (on-poke %wiki-action !>(act))
+    ['Successfully processed' cards +.state]
+  ::
   ++  http-route
     ^-  route:rudder
     |=  =trail:rudder
@@ -116,21 +119,26 @@
     =/  site=(list @t)  site.trail
     =/  pat=(unit (pole knot))  (decap:rudder /wiki site)
     ?~  pat  ~
-    =/  auth=?  (chekov u.pat)
-    ?-  u.pat
-      [bid=@ta ~]            `[%page auth %book]
-      [bid=@ta ~ ~]          `[%away (snip site)]
-      [bid=@ta pid=@ta ~]    `[%page auth %page]
-      [bid=@ta pid=@ta ~ ~]  `[%away (snip site)]
-      *                        ~
-    ==
-  ::
-  ++  chekov
-    |=  pat=(pole term)
-    ^-  ?
-    ?.  ?=([book-id=@ta *] pat)  &
-    ?~  book=(~(get by books) book-id.pat)  &
-    !public-read.rules.u.book
+    |^  ?+  u.pat               sans-fas
+          [sig %new ~]          `[%page auth %new-book]
+          [bid=@ta ~]           `[%page auth %book]
+          [bid=@ta sig %new ~]  `[%page auth %new-page]
+          [bid=@ta pid=@ta ~]   `[%page auth %page]
+        ==
+    ::
+    +$  sig  %~.~
+    ::
+    ++  auth
+      ^-  ?
+      =/  book-id=@ta  -.u.pat
+      ?~  book=(~(get by books) book-id)  &
+      !public-read.rules.u.book
+    ::
+    ++  sans-fas :: trim leading / or 404
+      ^-  (unit place:rudder)
+      ?.  ?=([%$ *] (flop u.pat))  ~
+      `[%away (snip site)]
+    --
   --
 ::
 ++  on-watch
@@ -164,6 +172,7 @@
 ::
 ++  new-book
   |=  [%new-book id=@ta title=@t rules=access]
+  ?:  =(~.~ id)  ~|("Invalid wiki ID" !!)
   =.  books  (~(put by books) [id [title ~ rules]])
   [~ state]
 ::

@@ -9,28 +9,9 @@
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  ^-  $@(brief:rudder action)
-  =/  args=(map @t @t)
-    ?~(body ~ (frisk:rudder q.u.body))
-  ?~  what=(~(get by args) 'action')  ~
-  |^  ?+  u.what  'say what now'
-      ::
-          %new-page
-        =/  page-id=@ta
-          ~|  'Invalid page ID'  (slav %ta (~(got by args) 'page-id'))
-        =/  page-title=@t  (~(got by args) 'page-title')
-        [%new-page book-id page-id page-title "hello world"]
-      ==
-  ::
-  ++  book-id
-    =/  site=(pole knot)  (stab url.request.order)
-    ?>  ?=([%wiki book-id=@ta ~] site)
-    book-id.site
-  --
+  !!
 ::
-++  final
-  |=  [success=? msg=brief:rudder]
-  (build ~ ~)
+++  final  (alert:rudder url.request.order build)
 ::
 ++  build
   |=  [arg=(list [k=@t v=@t]) msg=(unit [? @t])]

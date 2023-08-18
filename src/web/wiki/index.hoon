@@ -9,25 +9,7 @@
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  ^-  $@(brief:rudder action)
-  =/  args=(map @t @t)
-    ?~(body ~ (frisk:rudder q.u.body))
-  ?~  what=(~(get by args) 'action')  ~
-  |^  ?+  u.what  'Invalid post body'
-      ::
-          %new-book
-        =/  book-id=@ta
-          ~|  'Invalid wiki ID'  (tie (~(got by args) 'book-id'))
-        =/  book-title=@t  (~(got by args) 'book-title')
-        =/  pub-read=?  (~(has by args) 'public-read')
-        [%new-book book-id book-title pub-read]
-      ==
-    ::
-    ++  tie
-      |=  =knot
-      ^-  @ta
-      (slav %ta (cat 3 '~.' knot))
-  --
+  !!
 ::
 ++  final  (alert:rudder url.request.order build)
 ::
@@ -41,14 +23,6 @@
   ::
   ++  style  ""
   ::
-  ++  knot-regex  "[0-9a-z\\-_~\\.]+"
-  ::
-  ++  knot-explain
-    """
-    Lowercase letters, numbers, hyphen (-), underscore (_), period (.),
-    and tilde (~)
-    """
-  ::
   ++  render
     ^-  manx
     ;html
@@ -60,6 +34,9 @@
       ==
       ;body
         ;h1: %wiki manager
+        ;a/"/wiki/~/new"
+          ;button(type "button"): New Wiki
+        ==
         ;h2: Your Wikis
         ;ul
           ;*  %+  turn  ~(tap by books)
@@ -68,32 +45,6 @@
               ;li
                 ;a/"/wiki/{(trip id)}": {(trip title.book)}
               ==
-        ==
-        ;table#add-book :: break this form out into its own page /wiki/new-wiki or /wiki/wikis/new or /wiki/books/new
-          ;form(method "post")
-            ;tr(style "font-weight: bold")
-              ;td:""
-              ;td:""
-              ;td:"Wiki ID"
-              ;td:"Wiki Title"
-              ;td:"Public Read Access"
-            ==
-            ;tr
-              ;td:""
-              ;td
-                ;button(type "submit", name "action", value "new-book"):"Create Wiki"
-              ==
-              ;td
-                ;input(type "text", name "book-id", placeholder "my-wiki", pattern knot-regex, title knot-explain);
-              ==
-              ;td
-                ;input(type "text", name "book-title", placeholder "My Wiki");
-              ==
-              ;td
-                ;input(type "checkbox", name "public-read");
-              ==
-            ==
-          ==
         ==
       ==
     ==
