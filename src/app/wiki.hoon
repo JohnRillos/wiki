@@ -1,6 +1,5 @@
 /-  *wiki
-/+  dbug, default-agent, rudder, verb
-/~  web  (page:rudder (map @ta book) action)  /web/wiki
+/+  dbug, default-agent, rudder, verb, wiki-http
 ::
 ::  types core
 ::
@@ -36,6 +35,7 @@
 |_  =bowl:gall
 +*  this       .
     default  ~(. (default-agent this %|) bowl)
+    http     ~(. wiki-http books)
     main     ~(. +> bowl)
 ::
 ++  on-init
@@ -96,48 +96,21 @@
   ++  handle-http
     |=  =order:rudder
     ^-  (quip card _this)
-    =;  out=(quip card _+.state)
-      [-.out this(+.state +.out)]
-    %.  [bowl order +.state]
-    %-  (steer:rudder _+.state action)
-    :^    web                 :: pages
-        http-route            :: route
-      (fours:rudder +.state)  :: adlib
-    |=  act=action            :: solve
-    ^-  $@(brief:rudder [brief:rudder (list card) _+.state])
-    ?.  authenticated.order  ['Unauthorized!' ~ +.state]
-    =^  cards  this
-      (on-poke %wiki-action !>(act))
-    ['Successfully processed' cards +.state]
-  ::
-  ++  http-route
-    ^-  route:rudder
-    |=  =trail:rudder
-    ^-  (unit place:rudder)
-    ?^  point=((point:rudder /[dap.bowl] & ~(key by web)) trail)
-      point
-    =/  site=(list @t)  site.trail
-    =/  pat=(unit (pole knot))  (decap:rudder /wiki site)
-    ?~  pat  ~
-    |^  ?+  u.pat               sans-fas
-          [sig %new ~]          `[%page auth %new-book]
-          [bid=@ta ~]           `[%page auth %book]
-          [bid=@ta sig %new ~]  `[%page auth %new-page]
-          [bid=@ta pid=@ta ~]   `[%page auth %page]
-        ==
+    |^  =/  out=(quip card _+.state)
+          (serve [bowl order +.state])
+        [-.out this(+.state +.out)]
     ::
-    +$  sig  %~.~
-    ::
-    ++  auth
-      ^-  ?
-      =/  book-id=@ta  -.u.pat
-      ?~  book=(~(get by books) book-id)  &
-      !public-read.rules.u.book
-    ::
-    ++  sans-fas :: trim leading / or 404
-      ^-  (unit place:rudder)
-      ?.  ?=([%$ *] (flop u.pat))  ~
-      `[%away (snip site)]
+    ++  serve
+      %-  (steer:rudder _+.state action)
+      :^    web:http            :: pages
+          http-route:http       :: route
+        (fours:rudder +.state)  :: adlib
+      |=  act=action            :: solve
+      ^-  $@(brief:rudder [brief:rudder (list card) _+.state])
+      ?.  authenticated.order  ['Unauthorized!' ~ +.state]
+      =^  cards  this
+        (on-poke %wiki-action !>(act))
+      ['Successfully processed' cards +.state]
     --
   --
 ::
