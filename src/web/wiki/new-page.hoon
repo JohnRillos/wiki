@@ -2,6 +2,9 @@
 ::
 /-  *wiki
 /+  rudder
+/*  codemirror-js   %js   /lib/codemirror/lib/codemirror/js
+/*  codemirror-css  %css  /lib/codemirror/lib/codemirror/css
+/*  markdown-js     %js   /lib/codemirror/mode/markdown/markdown/js
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -23,7 +26,8 @@
         =/  page-id=@ta
           ~|  'Invalid page ID'  (tie (~(got by args) 'page-id'))
         =/  page-title=@t  (~(got by args) 'page-title')
-        [%new-page book-id:help page-id page-title "hello world"]
+        =/  content=tape  (trip (~(got by args) 'content'))
+        [%new-page book-id:help page-id page-title content]
       ==
   ::
   ++  tie
@@ -56,31 +60,46 @@
   ::
   ++  style  ""
   ::
+  ++  textarea-script
+    """
+    var editor = CodeMirror.fromTextArea(document.getElementById('content'), \{
+      mode: 'markdown',
+      highlightFormatting: true,
+      lineNumbers: true,
+      lineWrapping: true,
+      theme: 'default',
+      extraKeys: \{'Enter': 'newlineAndIndentContinueMarkdownList' }
+    });
+    """
+  ::
   ++  render
     ^-  manx
     ;html
       ;head
         ;title: New Page - {(trip title.book)}
       ==
+      ;script: {(trip codemirror-js)}
+      ;style: {(trip codemirror-css)}
+      ;script: {(trip markdown-js)}
       ;body
         ;*  ?~  msg  ~
             ~[;/((trip text.u.msg))]
         ;h1: {(trip title.book)}
         ;h2: New Page
         ::
-        ;table#add-page
-          ;form(method "post")
+        ;form(method "post")
+          ;table#add-page
+            ;tr
+              ;td
+                ;button(type "submit", name "action", value "new-page"):"Create Page"
+              ==
+              ;td:""
+            ==
             ;tr(style "font-weight: bold")
-              ;td:""
-              ;td:""
               ;td:"Page ID"
               ;td:"Page Title"
             ==
             ;tr
-              ;td:""
-              ;td
-                ;button(type "submit", name "action", value "new-page"):"Create Page"
-              ==
               ;td
                 ;input(type "text", name "page-id", placeholder "my-page");
               ==
@@ -89,7 +108,10 @@
               ==
             ==
           ==
+          ;h3: Content
+          ;textarea(id "content", name "content", placeholder "Lorem ipsum");
         ==
+        ;script: {textarea-script}
       ==
     ==
   --

@@ -31,6 +31,9 @@
   ::
   ++  style  ""
   ::
+  ++  zero-md-src
+    "https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"
+  ::
   ++  render
     ^-  manx
     ;html
@@ -39,7 +42,10 @@
       ==
       ;body
         ;h1: {(trip title.page)}
-        ;p: {content.page}
+        ;script(type "module", src zero-md-src);
+        ;zero-md
+          ;script(type "text/markdown"): {content.page}
+        ==
       ==
     ==
   --
