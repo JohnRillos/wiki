@@ -36,15 +36,29 @@
   ::
   ++  render
     ^-  manx
+    =/  dir=tape  (trip page-id.site)
     ;html
       ;head
         ;title: {(trip title.page)}
       ==
       ;body
-        ;h1: {(trip title.page)}
-        ;script(type "module", src zero-md-src);
-        ;zero-md
-          ;script(type "text/markdown"): {content.page}
+        ;nav
+          ;a(href "."): {(trip title.book)}
+        ==
+        ;main
+          ;nav
+            ;a(href "{dir}/~/edit"): Edit         :: to-do
+            ;a(href "{dir}/~/history"): Revisions :: to-do
+          ==
+          ;article
+            ;header
+              ;h1: {(trip title.page)}
+            ==
+            ;script(type "module", src zero-md-src);
+            ;zero-md
+              ;script(type "text/markdown"): {content.page}
+            ==
+          ==
         ==
       ==
     ==

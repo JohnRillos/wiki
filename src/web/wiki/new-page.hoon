@@ -95,9 +95,9 @@
               ==
               ;td:""
             ==
-            ;tr(style "font-weight: bold")
-              ;td:"Page ID"
-              ;td:"Page Title"
+            ;tr
+              ;th:"Page ID"
+              ;th:"Page Title"
             ==
             ;tr
               ;td

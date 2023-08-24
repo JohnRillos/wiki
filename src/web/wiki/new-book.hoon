@@ -73,10 +73,10 @@
         ;h2: New Wiki
         ;table#add-book
           ;form(method "post")
-            ;tr(style "font-weight: bold")
-              ;td:"Wiki ID"
-              ;td:"Wiki Title"
-              ;td:"Public Read Access"
+            ;tr
+              ;th:"Wiki ID"
+              ;th:"Wiki Title"
+              ;th:"Public Read Access"
             ==
             ;tr
               ;td
