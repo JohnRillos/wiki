@@ -89,7 +89,7 @@
       %new-book       (new-book:main act)
       %mod-book-name  (mod-book-name:main act)
       %new-page       (new-page:main act)
-      %mod-page       [~ state]
+      %mod-page       (mod-page:main act)
       %del-page       [~ state]
     ==
   ::
@@ -161,7 +161,17 @@
   =/  =book  (~(got by books) book-id)
   ?:  (~(has by pages.book) id)  ~|("Page {<id>} already exists!" !!)
   =.  pages.book  (~(put by pages.book) id [title content])
-  =.  books  (~(put by books) [book-id book])
+  =.  books  (~(put by books) book-id book)
+  [~ state]
+::
+++  mod-page
+  |=  [%mod-page book-id=@ta id=@ta title=(unit @t) content=(unit tape)]
+  =/  =book  (~(got by books) book-id)
+  =/  =page  (~(got by pages.book) id)
+  =.  title.page    (fall title title.page)
+  =.  content.page  (fall content content.page)
+  =.  pages.book  (~(put by pages.book) id page)
+  =.  books       (~(put by books) book-id book)
   [~ state]
 ::
 --

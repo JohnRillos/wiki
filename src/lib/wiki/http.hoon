@@ -15,11 +15,12 @@
   =/  site=(list @t)  site.trail
   =/  pat=(unit (pole knot))  (decap:rudder /wiki site)
   ?~  pat  ~
-  |^  ?+  u.pat               sans-fas
-        [sig %new ~]          `[%page auth %new-book]
-        [bid=@ta ~]           `[%page auth %book]
-        [bid=@ta sig %new ~]  `[%page auth %new-page]
-        [bid=@ta pid=@ta ~]   `[%page auth %page]
+  |^  ?+  u.pat                sans-fas
+        [sig %new ~]           `[%page & %new-book]
+        [@ta ~]                `[%page auth %book]
+        [@ta sig %new ~]       `[%page & %new-page]
+        [@ta @ta ~]            `[%page auth %page]
+        [@ta @ta sig %edit ~]  `[%page & %edit-page]
       ==
   ::
   ++  auth

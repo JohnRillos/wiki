@@ -2,7 +2,7 @@
 ::
 +$  book
   $:  title=@t
-      pages=(map @ta page)
+      pages=(map @ta page) :: todo: (map path page) or similar
       rules=access
   ==
 ::

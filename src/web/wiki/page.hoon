@@ -2,6 +2,7 @@
 ::
 /-  *wiki
 /+  rudder
+/$  udon-to-elem  %udon  %elem
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -31,8 +32,20 @@
   ::
   ++  style  ""
   ::
+  ++  md-style  ""
+  ::
+  ++  prism-style-override
+    """
+    code[class*=language-] \{
+      font-family: monospace;
+    }
+    """
+  ::
   ++  zero-md-src
     "https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"
+  ::
+  ++  prism-css-src
+    "https://cdn.jsdelivr.net/gh/PrismJS/prism@1/themes/prism.min.css"
   ::
   ++  render
     ^-  manx
@@ -47,8 +60,8 @@
         ==
         ;main
           ;nav
-            ;a(href "{dir}/~/edit"): Edit         :: to-do
-            ;a(href "{dir}/~/history"): Revisions :: to-do
+            ;a(href "{dir}/~/edit"): Edit
+            ;a(href "{dir}/~/history"): Revisions
           ==
           ;article
             ;header
@@ -56,6 +69,11 @@
             ==
             ;script(type "module", src zero-md-src);
             ;zero-md
+              ;template
+                ;style: {md-style}
+                ;link(rel "stylesheet", href prism-css-src);
+                ;style: {prism-style-override};
+              ==
               ;script(type "text/markdown"): {content.page}
             ==
           ==
