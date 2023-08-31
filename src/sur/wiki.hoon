@@ -2,7 +2,7 @@
 ::
 +$  book
   $:  title=@t
-      pages=(map @ta page) :: todo: (map path page) or similar
+      pages=(map path page)
       rules=access
   ==
 ::
@@ -23,9 +23,9 @@
       [%mod-book-name id=@ta title=@t]
       :: [%mod-rule-read id=@ta public-read=?]
       :: [%mod-rule-edit id=@ta public-edit=?]
-      [%new-page book-id=@ta id=@ta title=@t content=tape]
-      [%mod-page book-id=@ta id=@ta title=(unit @t) content=(unit tape)]
-      [%del-page book-id=@ta id=@ta]
+      [%new-page book-id=@ta =path title=@t content=tape]
+      [%mod-page book-id=@ta =path title=(unit @t) content=(unit tape)]
+      [%del-page book-id=@ta =path]
       :: [%knight book-id=@ta =ship]
       :: [%demote book-id=@ta =ship]
       :: [%banish book-id=@ta =ship]

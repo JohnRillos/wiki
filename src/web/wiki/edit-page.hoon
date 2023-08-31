@@ -25,7 +25,7 @@
         ?.  authenticated.order  'You must be logged in to edit an article!'
         =/  page-title=@t  (~(got by args) 'page-title')
         =/  content=tape  (trip (~(got by args) 'content'))
-        [%mod-page book-id:help page-id:help `page-title `content]
+        [%mod-page book-id:help page-path:help `page-title `content]
       ==
   ::
   ++  tie
@@ -40,8 +40,8 @@
   =/  next=@t
     ?.  success  url.request.order
     =/  bid=@t  book-id:help
-    =/  pid=@t  page-id:help
-    (crip "/wiki/{(trip bid)}/{(trip pid)}")
+    =/  =path  page-path:help
+    (crip "/wiki/{(trip bid)}{(spud path)}")
   ((alert:rudder next build))
 ::
 ++  build
@@ -49,13 +49,13 @@
   ^-  reply:rudder
   ::
   =/  site=(pole knot)  (stab url.request.order)
-  ?.  ?=([%wiki book-id=@ta page-id=@ta %~.~ %edit ~] site)
+  ?.  ?=([%wiki book-id=@ta %~.~ %edit *] site)
     [%code 404 'Invalid path']
-  ?~  buuk=(~(get by books) book-id.site)
-    [%code 404 (crip "Wiki {<book-id.site>} not found")]
+  ?~  buuk=(~(get by books) book-id:help)
+    [%code 404 (crip "Wiki {<book-id:help>} not found")]
   =/  =book  u.buuk
-  ?~  puge=(~(get by pages.book) page-id.site)
-    [%code 404 (crip "Article {<page-id.site>} not found in {<title.book>}")]
+  ?~  puge=(~(get by pages.book) page-path:help)
+    [%code 404 (crip "Article {<page-path:help>} not found in {<title.book>}")]
   =/  =page  u.puge
   ::
   |^  [%page render]
@@ -76,6 +76,8 @@
   ::
   ++  render
     ^-  manx
+    =/  wik-dir=tape  (spud /wiki/[book-id:help])
+    =/  pag-dir=tape  (spud page-path:help)
     ;html
       ;head
         ;title: Edit Page - {(trip title.page)}
@@ -87,11 +89,11 @@
         ;*  ?~  msg  ~
             ~[;/((trip text.u.msg))]
         ;nav
-          ;a(href "../.."): {(trip title.book)}
+          ;a(href wik-dir): {(trip title.book)}
         ==
         ;h1: Edit Page - {(trip title.page)}
         ::
-        ;a(href ".."): Cancel
+        ;a(href "{wik-dir}{pag-dir}"): Cancel
         ::
         ;form(method "post")
           ;table#add-page
@@ -102,12 +104,12 @@
               ;td:""
             ==
             ;tr
-              ;th: Page ID
+              ;th: Page Path
               ;th: Page Title
             ==
             ;tr
               ;td
-                ;input(type "text", name "page-id", value (trip page-id.site), disabled "true");
+                ;input(type "text", name "page-path", value (spud page-path:help), disabled "true");
               ==
               ;td
                 ;input(type "text", name "page-title", value (trip title.page));
@@ -132,15 +134,16 @@
   ?~  body.request.order  ~
   (frisk:rudder q.u.body.request.order)
 ::
-++  book-id
+++  book-id  ~+
   ^-  @ta
   =/  site=(pole knot)  (stab url.request.order)
   ?>  ?=([%wiki book-id=@ta *] site)
   book-id.site
 ::
-++  page-id
-  ^-  @ta
+++  page-path  ~+
+  ^-  path
   =/  site=(pole knot)  (stab url.request.order)
-  ?>  ?=([%wiki book-id=@ta page-id=@ta *] site)
-  page-id.site
+  ?>  ?=([%wiki book-id=@ta %~.~ %edit pat=*] site)
+  pat.site
+::
 --

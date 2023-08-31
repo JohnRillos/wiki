@@ -6,7 +6,11 @@
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
+=<
+::
 |_  [=bowl:gall =order:rudder books=(map @ta book)]
+::
++*  help  ~(. +> [bowl order books])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -19,13 +23,13 @@
   ^-  reply:rudder
   ::
   =/  site=(pole knot)  (stab url.request.order)
-  ?.  ?=([%wiki book-id=@ta page-id=@ta ~] site)
+  ?.  ?=([%wiki book-id=@ta *] site)
     [%code 404 'Invalid path']
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk
-  ?~  puge=(~(get by pages.book) page-id.site)
-    [%code 404 (crip "Article {<page-id.site>} not found in {<title.book>}")]
+  ?~  puge=(~(get by pages.book) page-path:help)
+    [%code 404 (crip "Article {<page-path:help>} not found in {<title.book>}")]
   =/  =page  u.puge
   ::
   |^  [%page render]
@@ -49,19 +53,20 @@
   ::
   ++  render
     ^-  manx
-    =/  dir=tape  (trip page-id.site)
+    =/  wik-dir=tape  (spud /wiki/[book-id:help])
+    =/  pag-dir=tape  (spud page-path:help)
     ;html
       ;head
         ;title: {(trip title.page)}
       ==
       ;body
         ;nav
-          ;a(href "."): {(trip title.book)}
+          ;a(href wik-dir): {(trip title.book)}
         ==
         ;main
           ;nav
-            ;a(href "{dir}/~/edit"): Edit
-            ;a(href "{dir}/~/history"): Revisions
+            ;a(href "{wik-dir}/~/edit{pag-dir}"): Edit
+            ;a(href "{wik-dir}/~/history{pag-dir}"): Revisions
           ==
           ;article
             ;header
@@ -81,4 +86,22 @@
       ==
     ==
   --
+--
+::
+::  helper core (help)
+::
+|_  [=bowl:gall =order:rudder books=(map @ta book)]
+::
+++  book-id  ~+
+  ^-  @ta
+  =/  site=(pole knot)  (stab url.request.order)
+  ?>  ?=([%wiki book-id=@ta *] site)
+  book-id.site
+::
+++  page-path  ~+
+  ^-  path
+  =/  site=(pole knot)  (stab url.request.order)
+  ?>  ?=([%wiki book-id=@ta pat=*] site)
+  pat.site
+::
 --

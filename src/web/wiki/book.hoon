@@ -43,10 +43,10 @@
         ;h2: Articles
         ;ul
           ;*  %+  turn  ~(tap by pages.book)
-              |=  [page-id=@ta =page]
+              |=  [=path =page]
               ^-  manx
               ;li
-                ;a/"/wiki/{(trip book-id.site)}/{(trip page-id)}": {(trip title.page)}
+                ;a/"/wiki/{(trip book-id.site)}{(spud path)}": {(trip title.page)}
               ==
         ==
       ==

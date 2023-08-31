@@ -1,7 +1,7 @@
 ::  Article creation page
 ::
 /-  *wiki
-/+  rudder
+/+  rudder, *wiki
 /*  codemirror-js   %js   /lib/codemirror/lib/codemirror/js
 /*  codemirror-css  %css  /lib/codemirror/lib/codemirror/css
 /*  markdown-js     %js   /lib/codemirror/mode/markdown/markdown/js
@@ -23,11 +23,11 @@
       ::
           %new-page
         ?.  authenticated.order  'You must be logged in to create an article!'
-        =/  page-id=@ta
-          ~|  'Invalid page ID'  (tie (~(got by args) 'page-id'))
+        =/  =path
+          ~|  'Invalid page path'  (part (~(got by args) 'page-path'))
         =/  page-title=@t  (~(got by args) 'page-title')
         =/  content=tape  (trip (~(got by args) 'content'))
-        [%new-page book-id:help page-id page-title content]
+        [%new-page book-id:help path page-title content]
       ==
   ::
   ++  tie
@@ -42,8 +42,8 @@
   =/  next=@t
     ?.  success  url.request.order
     =/  bid=@t  book-id:help
-    =/  pid=@t  (~(got by args:help) 'page-id')
-    (crip "/wiki/{(trip bid)}/{(trip pid)}")
+    =/  =path  (part (~(got by args:help) 'page-path'))
+    (crip "/wiki/{(trip bid)}{(spud path)}")
   ((alert:rudder next build))
 ::
 ++  build
@@ -74,6 +74,7 @@
   ::
   ++  render
     ^-  manx
+    =/  wik-dir=tape  (spud /wiki/[book-id:help])
     ;html
       ;head
         ;title: New Page - {(trip title.book)}
@@ -84,30 +85,23 @@
       ;body
         ;*  ?~  msg  ~
             ~[;/((trip text.u.msg))]
-        ;h1: {(trip title.book)}
+        ;nav
+          ;a(href wik-dir): {(trip title.book)}
+        ==
         ;h2: New Page
         ::
+        ;a(href wik-dir): Cancel
+        ::
         ;form(method "post")
-          ;table#add-page
-            ;tr
-              ;td
-                ;button(type "submit", name "action", value "new-page"):"Create Page"
-              ==
-              ;td:""
-            ==
-            ;tr
-              ;th:"Page ID"
-              ;th:"Page Title"
-            ==
-            ;tr
-              ;td
-                ;input(type "text", name "page-id", placeholder "my-page");
-              ==
-              ;td
-                ;input(type "text", name "page-title", placeholder "My Page");
-              ==
-            ==
-          ==
+          ;button(type "submit", name "action", value "new-page"):"Create Page"
+          
+          ;h3: Page Path
+          ;span: /wiki/{(trip book-id:help)}/
+          ;input(type "text", name "page-path", placeholder "my/page");
+
+          ;h3: Page Title
+          ;input(type "text", name "page-title", placeholder "My Page");
+
           ;h3: Content
           ;textarea(id "content", name "content", placeholder "Lorem ipsum");
         ==

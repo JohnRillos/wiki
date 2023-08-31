@@ -157,20 +157,20 @@
   [~ state]
 ::
 ++  new-page
-  |=  [%new-page book-id=@ta id=@ta title=@t content=tape]
+  |=  [%new-page book-id=@ta =path title=@t content=tape]
   =/  =book  (~(got by books) book-id)
-  ?:  (~(has by pages.book) id)  ~|("Page {<id>} already exists!" !!)
-  =.  pages.book  (~(put by pages.book) id [title content])
+  ?:  (~(has by pages.book) path)  ~|("Page {<path>} already exists!" !!)
+  =.  pages.book  (~(put by pages.book) path [title content])
   =.  books  (~(put by books) book-id book)
   [~ state]
 ::
 ++  mod-page
-  |=  [%mod-page book-id=@ta id=@ta title=(unit @t) content=(unit tape)]
+  |=  [%mod-page book-id=@ta =path title=(unit @t) content=(unit tape)]
   =/  =book  (~(got by books) book-id)
-  =/  =page  (~(got by pages.book) id)
+  =/  =page  (~(got by pages.book) path)
   =.  title.page    (fall title title.page)
   =.  content.page  (fall content content.page)
-  =.  pages.book  (~(put by pages.book) id page)
+  =.  pages.book  (~(put by pages.book) path page)
   =.  books       (~(put by books) book-id book)
   [~ state]
 ::
