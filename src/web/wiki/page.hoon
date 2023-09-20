@@ -28,9 +28,12 @@
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk
-  ?~  puge=(~(get by pages.book) page-path:help)
-    [%code 404 (crip "Article {<page-path:help>} not found in {<title.book>}")]
-  =/  =page  u.puge
+  =/  page-path=path  where:space-time:help
+  ?~  tale=(~(get by tales.book) page-path)
+    [%code 404 (crip "Article {<page-path>} not found in {<title.book>}")]
+  =/  peach=(each page @t)  (get-page:help u.tale)
+  ?:  ?=(%| -.peach)  [%code 404 p.peach]
+  =/  =page  p.peach
   ::
   |^  [%page render]
   ::
@@ -54,7 +57,7 @@
   ++  render
     ^-  manx
     =/  wik-dir=tape  (spud /wiki/[book-id:help])
-    =/  pag-dir=tape  (spud page-path:help)
+    =/  pag-dir=tape  (spud page-path)
     ;html
       ;head
         ;title: {(trip title.page)}
@@ -66,7 +69,7 @@
         ;main
           ;nav
             ;a(href "{wik-dir}/~/edit{pag-dir}"): Edit
-            ;a(href "{wik-dir}/~/history{pag-dir}"): Revisions
+            ;a(href "{wik-dir}/~/history{pag-dir}"): History
           ==
           ;article
             ;header
@@ -98,10 +101,43 @@
   ?>  ?=([%wiki book-id=@ta *] site)
   book-id.site
 ::
-++  page-path  ~+
-  ^-  path
+:: ++  page-path  where:space-time
+::
+++  space-time  ~+
+  ^-  [where=path when=(unit (each @da @ud))]
   =/  site=(pole knot)  (stab url.request.order)
   ?>  ?=([%wiki book-id=@ta pat=*] site)
-  pat.site
+  =/  pat=(pole knot)  pat.site
+  ~&  "pat: {<`path`pat>}"
+  :: to-do: see if /~/at/{at} and /~/ed/{ed} can be moved to end of path
+  ?+  pat  [pat ~]
+    [%~.~ %at day=@ta loc=*]  [loc.pat `[%& (slav %da day.pat)]]
+    [%~.~ %ed ver=@ta loc=*]  [loc.pat `[%| (slav %ud ver.pat)]]
+  ==
+::
+++  get-page
+  |=  =tale
+  ^-  (each page @t)
+  =/  when=(unit (each @da @ud))  when:space-time
+  ?~  when  [%& (latest tale)]
+  ?-  -.u.when
+    %&  (page-at tale p.u.when)
+    %|  (page-ed tale p.u.when)
+  ==
+::
+++  page-at
+  |=  [=tale at=@da]
+  ^-  (each page @t)
+  =/  before=^tale  (lot:ton tale `(add at 1) ~)
+  =/  puge=(unit page)  (bind (pry:ton before) tail)
+  ?~  puge  [%| (crip "Page did not exist at {<at>}")]
+  [%& u.puge]
+::
+++  page-ed
+  |=  [=tale version=@ud]
+  ^-  (each page @t)
+  ?:  (gte version (wyt:ton tale))
+    [%| (crip "Page has no version {<version>}")]
+  [%& (tail (snag version (bap:ton tale)))]
 ::
 --

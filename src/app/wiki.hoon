@@ -158,19 +158,27 @@
 ::
 ++  new-page
   |=  [%new-page book-id=@ta =path title=@t content=tape]
+  ?:  =(~ path)  ~|('Path cannot be blank!' !!)
+  ?^  (find "~" path)  ~|('Path cannot contain "/~/"' !!)
   =/  =book  (~(got by books) book-id)
-  ?:  (~(has by pages.book) path)  ~|("Page {<path>} already exists!" !!)
-  =.  pages.book  (~(put by pages.book) path [title content])
+  ?:  (~(has by tales.book) path)  ~|("Page {<path>} already exists!" !!)
+  ?:  =('' title)  ~|("Title cannot be blank!" !!)
+  =/  =page  [title content]
+  =/  =tale  (gas:ton *tale [now.bowl page]~)
+  =.  tales.book  (~(put by tales.book) path tale)
   =.  books  (~(put by books) book-id book)
   [~ state]
 ::
 ++  mod-page
   |=  [%mod-page book-id=@ta =path title=(unit @t) content=(unit tape)]
   =/  =book  (~(got by books) book-id)
-  =/  =page  (~(got by pages.book) path)
+  =/  =tale  (~(got by tales.book) path)
+  =/  =page  (latest tale)
+  ?:  ?~(title | =('' u.title))  ~|("Title cannot be blank!" !!)
   =.  title.page    (fall title title.page)
   =.  content.page  (fall content content.page)
-  =.  pages.book  (~(put by pages.book) path page)
+  =.  tale        (put:ton tale now.bowl page)
+  =.  tales.book  (~(put by tales.book) path tale)
   =.  books       (~(put by books) book-id book)
   [~ state]
 ::

@@ -15,12 +15,14 @@
   =/  site=(list @t)  site.trail
   =/  pat=(unit (pole knot))  (decap:rudder /wiki site)
   ?~  pat  ~
-  |^  ?+  u.pat            sans-fas
-        [sig %new ~]       `[%page & %new-book]
-        [@ta ~]            `[%page auth %book]
-        [@ta sig %new ~]   `[%page & %new-page]
-        [@ta sig %edit *]  `[%page & %edit-page]
-        [@ta *]            `[%page auth %page]
+  |^  ?+  u.pat               sans-fas
+        [sig %new ~]          `[%page & %new-book]
+        [@ta ~]               `[%page auth %book]
+        [@ta sig %new ~]      `[%page & %new-page]
+        [@ta sig %edit *]     `[%page & %edit-page]
+        [@ta sig %history *]  `[%page auth %history]
+        [@ta *]               `[%page auth %page]
+        :: to-do: see if /~/edit and /~/history can be moved to end of path
       ==
   ::
   ++  auth

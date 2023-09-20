@@ -2,9 +2,18 @@
 ::
 +$  book
   $:  title=@t
-      pages=(map path page)
+      tales=(map path tale)
       rules=access
   ==
+::
++$  tale  ((mop @da page) gth)
+::
+++  ton   ((on @da page) gth)
+::
+++  latest
+  |=  =tale
+  ^-  page
+  (tail (need (pry:ton tale)))
 ::
 +$  page
   $:  title=@t

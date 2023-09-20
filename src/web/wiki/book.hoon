@@ -46,9 +46,10 @@
         ==
         ;h2: Articles
         ;ul
-          ;*  %+  turn  ~(tap by pages.book)
-              |=  [=path =page]
+          ;*  %+  turn  ~(tap by tales.book)
+              |=  [=path =tale]
               ^-  manx
+              =/  =page  (latest tale)
               ;li
                 ;a/"/wiki/{(trip book-id.site)}{(spud path)}": {(trip title.page)}
               ==

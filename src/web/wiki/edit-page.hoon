@@ -54,9 +54,9 @@
   ?~  buuk=(~(get by books) book-id:help)
     [%code 404 (crip "Wiki {<book-id:help>} not found")]
   =/  =book  u.buuk
-  ?~  puge=(~(get by pages.book) page-path:help)
+  ?~  tale=(~(get by tales.book) page-path:help)
     [%code 404 (crip "Article {<page-path:help>} not found in {<title.book>}")]
-  =/  =page  u.puge
+  =/  =page  (latest u.tale)
   ::
   |^  [%page render]
   ::
