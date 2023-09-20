@@ -2,7 +2,7 @@
 ::
 /-  *wiki
 /+  rudder
-/+  wik=wiki
+:: /+  wik=wiki
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -30,8 +30,9 @@
   ::
   ++  render
     ^-  manx
-    =/  foo=(bush:wik knot page)  (path-bush:wik pages.book)
-    ~&  >>  "bush: {<foo>}"
+    :: to-do
+    :: =/  foo=(bush:wik knot page)  (path-bush:wik pages.book)
+    :: ~&  >>  "bush: {<foo>}"
     ;html
       ;head
         ;title: {(trip title.book)}
