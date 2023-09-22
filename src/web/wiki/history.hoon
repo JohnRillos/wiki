@@ -76,7 +76,7 @@
                   |=  [date=@da =page]
                   ^-  manx
                   ;li
-                    {<date>}
+                    ;a/"../~/t/{<date>}": {<date>}
                   ==
             ==
           ==
