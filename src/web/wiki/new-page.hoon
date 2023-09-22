@@ -72,6 +72,10 @@
     });
     """
   ::
+  ++  path-regex  "[0-9a-z\\-_~\\.\\/]+"
+  ::
+  ++  path-explain  "Lowercase letters, numbers, period (.), underscore (_), hyphen (-), tilde (~), and slash (/)"
+  ::
   ++  render
     ^-  manx
     =/  wik-dir=tape  (spud /wiki/[book-id:help])
@@ -97,10 +101,10 @@
           
           ;h3: Page Path
           ;span: /wiki/{(trip book-id:help)}/
-          ;input(type "text", name "page-path", placeholder "my/page");
+          ;input(type "text", name "page-path", placeholder "my/page", required "true", pattern path-regex, title path-explain);
 
           ;h3: Page Title
-          ;input(type "text", name "page-title", placeholder "My Page");
+          ;input(type "text", name "page-title", placeholder "My Page", required "true");
 
           ;h3: Content
           ;textarea(id "content", name "content", placeholder "Lorem ipsum");

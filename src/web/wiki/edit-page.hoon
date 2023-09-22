@@ -112,7 +112,7 @@
                 ;input(type "text", name "page-path", value (spud page-path:help), disabled "true");
               ==
               ;td
-                ;input(type "text", name "page-title", value (trip title.page));
+                ;input(type "text", name "page-title", value (trip title.page), required "true");
               ==
             ==
           ==

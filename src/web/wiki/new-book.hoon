@@ -80,10 +80,10 @@
             ==
             ;tr
               ;td
-                ;input(type "text", name "book-id", placeholder "my-wiki", pattern knot-regex, title knot-explain);
+                ;input(type "text", name "book-id", placeholder "my-wiki", required "true", pattern knot-regex, title knot-explain);
               ==
               ;td
-                ;input(type "text", name "book-title", placeholder "My Wiki");
+                ;input(type "text", name "book-title", placeholder "My Wiki", required "true");
               ==
               ;td
                 ;input(type "checkbox", name "public-read");
