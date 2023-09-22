@@ -99,7 +99,12 @@
           ;table#add-page
             ;tr
               ;td
-                ;button(type "submit", name "action", value "mod-page"): Submit Edit
+                ;button
+                  =type   "submit"
+                  =name   "action"
+                  =value  "mod-page"
+                  ; Submit Edit
+                ==
               ==
               ;td:""
             ==
@@ -109,10 +114,22 @@
             ==
             ;tr
               ;td
-                ;input(type "text", name "page-path", value (spud page-path:help), disabled "true");
+                ;input
+                  =type      "text"
+                  =name      "page-path"
+                  =value     (spud page-path:help)
+                  =disabled  "true"
+                  ;
+                ==
               ==
               ;td
-                ;input(type "text", name "page-title", value (trip title.page), required "true");
+                ;input
+                  =type      "text"
+                  =name      "page-title"
+                  =value     (trip title.page)
+                  =required  "true"
+                  ;
+                ==
               ==
             ==
           ==

@@ -63,10 +63,10 @@
     ^-  manx
     ;html
       ;head
-        ;title:"%wiki"
+        ;title: %wiki
         ;meta(charset "utf-8");
         ;meta(name "viewport", content "width=device-width, initial-scale=1");
-        ;style:"{style}"
+        ;style: {style}
       ==
       ;body
         ;h1: %wiki
@@ -80,10 +80,24 @@
             ==
             ;tr
               ;td
-                ;input(type "text", name "book-id", placeholder "my-wiki", required "true", pattern knot-regex, title knot-explain);
+                ;input
+                  =type         "text"
+                  =name         "book-id"
+                  =placeholder  "my-wiki"
+                  =required     "true"
+                  =pattern      knot-regex
+                  =title        knot-explain
+                  ;
+                ==
               ==
               ;td
-                ;input(type "text", name "book-title", placeholder "My Wiki", required "true");
+                ;input
+                  =type         "text"
+                  =name         "book-title"
+                  =placeholder  "My Wiki"
+                  =required     "true"
+                  ;
+                ==
               ==
               ;td
                 ;input(type "checkbox", name "public-read");
@@ -91,7 +105,12 @@
             ==
             ;tr
               ;td
-                ;button(type "submit", name "action", value "new-book"):"Create Wiki"
+                ;button
+                  =type   "submit"
+                  =name   "action"
+                  =value  "new-book"
+                  ; Create Wiki
+                ==
               ==
             ==
           ==

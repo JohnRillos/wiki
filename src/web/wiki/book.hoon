@@ -51,7 +51,9 @@
               ^-  manx
               =/  =page  (latest tale)
               ;li
-                ;a/"/wiki/{(trip book-id.site)}{(spud path)}": {(trip title.page)}
+                ;a/"/wiki/{(trip book-id.site)}{(spud path)}"
+                  ; {(trip title.page)}
+                ==
               ==
         ==
       ==
