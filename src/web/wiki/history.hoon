@@ -23,14 +23,13 @@
   ^-  reply:rudder
   ::
   =/  site=(pole knot)  (stab url.request.order)
-  ?.  ?=([%wiki book-id=@ta %~.~ %history *] site)
+  ?.  ?=([%wiki book-id=@ta *] site)
     [%code 404 'Invalid path']
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk
   ?~  tale=(~(get by tales.book) page-path:help)
     [%code 404 (crip "Article {<page-path:help>} not found in {<title.book>}")]
-  :: =/  =page  (latest u.tale)
   ::
   |^  [%page render]
   ::
@@ -100,7 +99,7 @@
 ++  page-path  ~+
   ^-  path
   =/  site=(pole knot)  (stab url.request.order)
-  ?>  ?=([%wiki book-id=@ta %~.~ %history pat=*] site)
-  pat.site
+  ?>  ?=([%wiki book-id=@ta pat=*] site)
+  (snip (snip `path`pat.site))
 ::
 --

@@ -9,6 +9,14 @@
   ?:  =('/' -.tape)  (stab cord)
   (stab (crip ['/' tape]))
 ::
+++  split
+  |*  [log=(list *) i=@]
+  ^-  [pre=_log suf=_log]
+  =/  pre=_log  ~
+  |-
+  ?:  =(0 i)  [pre log]
+  $(i (dec i), pre (snoc pre -.log), log +.log)
+::
 ++  bush
   |$  [node leaf]
   $@(~ (map node (pair (bush node leaf) (unit leaf))))

@@ -19,10 +19,7 @@
         [sig %new ~]          `[%page & %new-book]
         [@ta ~]               `[%page auth %book]
         [@ta sig %new ~]      `[%page & %new-page]
-        [@ta sig %edit *]     `[%page & %edit-page]
-        [@ta sig %history *]  `[%page auth %history]
-        [@ta *]               `[%page auth %page]
-        :: to-do: see if /~/edit and /~/history can be moved to end of path
+        [@ta *]               page-resource
       ==
   ::
   ++  auth
@@ -35,6 +32,18 @@
     ^-  (unit place:rudder)
     ?.  ?=([%$ *] (flop u.pat))  ~
     `[%away (snip site)]
+  ::
+  ++  page-resource
+    ^-  (unit place:rudder)
+    :-  ~
+    :-  %page
+    =/  n=@  (lent u.pat)
+    ?:  (lth n 3)        [auth %page]
+    =/  suf=path  (slag (sub n 2) u.pat)
+    ?+  suf              [auth %page]
+      [sig %edit ~]     [& %edit-page]
+      [sig %history ~]  [auth %history]
+    ==
   --
 ::
 --

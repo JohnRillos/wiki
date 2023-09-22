@@ -1,7 +1,7 @@
 ::  article
 ::
 /-  *wiki
-/+  rudder
+/+  rudder, *wiki
 /$  udon-to-elem  %udon  %elem
 ::
 ^-  (page:rudder (map @ta book) action)
@@ -68,8 +68,8 @@
         ==
         ;main
           ;nav
-            ;a(href "{wik-dir}/~/edit{pag-dir}"): Edit
-            ;a(href "{wik-dir}/~/history{pag-dir}"): History
+            ;a(href "{wik-dir}{pag-dir}/~/edit"): Edit
+            ;a(href "{wik-dir}{pag-dir}/~/history"): History
           ==
           ;article
             ;header
@@ -101,18 +101,17 @@
   ?>  ?=([%wiki book-id=@ta *] site)
   book-id.site
 ::
-:: ++  page-path  where:space-time
-::
 ++  space-time  ~+
   ^-  [where=path when=(unit (each @da @ud))]
   =/  site=(pole knot)  (stab url.request.order)
   ?>  ?=([%wiki book-id=@ta pat=*] site)
   =/  pat=(pole knot)  pat.site
-  ~&  "pat: {<`path`pat>}"
-  :: to-do: see if /~/at/{at} and /~/ed/{ed} can be moved to end of path
-  ?+  pat  [pat ~]
-    [%~.~ %at day=@ta loc=*]  [loc.pat `[%& (slav %da day.pat)]]
-    [%~.~ %ed ver=@ta loc=*]  [loc.pat `[%| (slav %ud ver.pat)]]
+  =/  n=@  (lent pat)
+  ?:  (lth n 4)  [pat ~]
+  =/  [pre=path suf=(pole knot)]  (split pat (sub n 3))
+  ?+  suf  [pat ~]
+    [%~.~ %t day=@ta ~]  [pre `[%& (slav %da day.suf)]]
+    [%~.~ %v ver=@ta ~]  [pre `[%| (slav %ud ver.suf)]]
   ==
 ::
 ++  get-page
@@ -121,11 +120,11 @@
   =/  when=(unit (each @da @ud))  when:space-time
   ?~  when  [%& (latest tale)]
   ?-  -.u.when
-    %&  (page-at tale p.u.when)
-    %|  (page-ed tale p.u.when)
+    %&  (page-tim tale p.u.when)
+    %|  (page-ver tale p.u.when)
   ==
 ::
-++  page-at
+++  page-tim
   |=  [=tale at=@da]
   ^-  (each page @t)
   =/  before=^tale  (lot:ton tale `(add at 1) ~)
@@ -133,7 +132,7 @@
   ?~  puge  [%| (crip "Page did not exist at {<at>}")]
   [%& u.puge]
 ::
-++  page-ed
+++  page-ver
   |=  [=tale version=@ud]
   ^-  (each page @t)
   ?:  (gte version (wyt:ton tale))
