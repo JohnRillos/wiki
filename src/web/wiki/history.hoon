@@ -1,8 +1,7 @@
 ::  article revision history
 ::
 /-  *wiki
-/+  rudder
-/$  udon-to-elem  %udon  %elem
+/+  rudder, web=wiki-web
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -80,6 +79,7 @@
                   ==
             ==
           ==
+          ;+  (footer:web bowl url.request.order)
         ==
       ==
     ==

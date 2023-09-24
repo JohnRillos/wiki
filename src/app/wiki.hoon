@@ -1,5 +1,6 @@
 /-  *wiki
 /+  dbug, default-agent, rudder, verb, wiki-http
+/~  libs  *  /lib/wiki  :: force-build all wiki libs
 ::
 ::  types core
 ::

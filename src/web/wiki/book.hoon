@@ -1,8 +1,7 @@
 ::  wiki overview
 ::
 /-  *wiki
-/+  rudder
-:: /+  wik=wiki
+/+  rudder, web=wiki-web
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -56,6 +55,7 @@
                 ==
               ==
         ==
+        ;+  (footer:web bowl url.request.order)
       ==
     ==
   --

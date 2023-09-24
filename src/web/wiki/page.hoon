@@ -1,8 +1,7 @@
 ::  article
 ::
 /-  *wiki
-/+  rudder, *wiki
-/$  udon-to-elem  %udon  %elem
+/+  rudder, web=wiki-web, *wiki
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -85,6 +84,7 @@
               ;script(type "text/markdown"): {content.page}
             ==
           ==
+          ;+  (footer:web bowl url.request.order)
         ==
       ==
     ==
