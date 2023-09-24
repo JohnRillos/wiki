@@ -69,8 +69,7 @@
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card _this)
-  |^  ?.  =(our.bowl src.bowl)  ~|('Unauthorized! ' !!)
-      ?+  mark  (on-poke:default mark vase)
+  |^  ?+  mark  (on-poke:default mark vase)
       ::
           %wiki-action
         =^  cards  state  (handle-action !<(action vase))
@@ -84,6 +83,7 @@
   ++  handle-action
     |=  act=action
     ^-  (quip card _state)
+    ?.  =(our.bowl src.bowl)  ~|('Unauthorized! ' !!)
     ~&  >  act
     ?-  -.act
       %new-book       (new-book:main act)
@@ -117,7 +117,6 @@
 ++  on-watch
   |=  =path
   ^-  (quip card _this)
-  ?>  =(our.bowl src.bowl)
   ?+  path  (on-watch:default path)
     [%http-response *]  [~ this]
   ==
