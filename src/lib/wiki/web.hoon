@@ -15,7 +15,7 @@
   ~+
   ^-  tape
   %-  trip
-  .^(@t %cx (weld /[(crip <src.bowl>)]/wiki/[(crip <now.bowl>)] path))
+  .^(@t %cx (weld /[(crip <our.bowl>)]/wiki/[(crip <now.bowl>)] path))
 ::
 ++  footer
   |=  [=bowl:gall site=cord]
