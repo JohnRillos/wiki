@@ -36,16 +36,15 @@
   ::
   |^  [%page render]
   ::
-  ++  style  ""
-  ::
   ++  md-style  ""
   ::
   ++  prism-style-override
-    """
-    code[class*=language-] \{
+    %-  trip
+    '''
+    code[class*=language-] {
       font-family: monospace;
     }
-    """
+    '''
   ::
   ++  zero-md-src
     "https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"
@@ -60,15 +59,16 @@
     ;html
       ;head
         ;title: {(trip title.page)}
+        ;style: {(style:web bowl)}
       ==
       ;body
-        ;nav
-          ;a(href wik-dir): {(trip title.book)}
+        ;nav.global
+          ;a/"{wik-dir}": {(trip title.book)}
         ==
         ;main
           ;nav
-            ;a(href "{wik-dir}{pag-dir}/~/edit"): Edit
-            ;a(href "{wik-dir}{pag-dir}/~/history"): History
+            ;a/"{wik-dir}{pag-dir}/~/edit": Edit
+            ;a/"{wik-dir}{pag-dir}/~/history": History
           ==
           ;article
             ;header

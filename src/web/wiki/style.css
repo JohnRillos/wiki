@@ -1,0 +1,39 @@
+* {
+  font-family: sans-serif;
+  color: black;
+}
+
+/* nav.global {
+  color: inherit;
+} */
+
+main {
+  max-width: 50em;
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+a {
+  color: #3366cc;
+  text-decoration: inherit;
+}
+
+article {
+  line-height: 1.6;
+}
+
+nav.page {
+  display: block
+}
+
+footer {
+  border-top: 2px solid;
+  padding: 1em 0;
+  & a {
+    margin: 0 1em;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+}

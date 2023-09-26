@@ -1,7 +1,7 @@
 ::  Wiki creation page
 ::
 /-  *wiki
-/+  rudder
+/+  rudder, web=wiki-web
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -49,8 +49,6 @@
   ::
   |^  [%page render]
   ::
-  ++  style  ""
-  ::
   ++  knot-regex  "[0-9a-z\\-_~\\.]+"
   ::
   ++  knot-explain
@@ -66,7 +64,7 @@
         ;title: %wiki
         ;meta(charset "utf-8");
         ;meta(name "viewport", content "width=device-width, initial-scale=1");
-        ;style: {style}
+        ;style: {(style:web bowl)}
       ==
       ;body
         ;h1: %wiki

@@ -1,7 +1,7 @@
 ::  app index
 ::
 /-  *wiki
-/+  rudder
+/+  rudder, web=wiki-web
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -21,8 +21,6 @@
   ::
   |^  [%page render]
   ::
-  ++  style  ""
-  ::
   ++  render
     ^-  manx
     ;html
@@ -30,7 +28,7 @@
         ;title:"%wiki"
         ;meta(charset "utf-8");
         ;meta(name "viewport", content "width=device-width, initial-scale=1");
-        ;style:"{style}"
+        ;style: {(style:web bowl)}
       ==
       ;body
         ;h1: %wiki manager

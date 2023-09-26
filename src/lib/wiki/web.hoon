@@ -1,4 +1,10 @@
 |%
+++  style
+  |=  =bowl:gall
+  ^-  tape
+  %-  trip
+  .^(@t %cx /[(crip <src.bowl>)]/wiki/[(crip <now.bowl>)]/web/wiki/style/css)
+::
 ++  footer
   |=  [=bowl:gall site=cord]
   ^-  manx

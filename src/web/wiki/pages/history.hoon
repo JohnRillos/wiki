@@ -32,8 +32,6 @@
   ::
   |^  [%page render]
   ::
-  ++  style  ""
-  ::
   ++  md-style  ""
   ::
   ++  prism-style-override
@@ -57,6 +55,7 @@
     ;html
       ;head
         ;title: {(trip title.last)}
+        ;style: {(style:web bowl)}
       ==
       ;body
         ;nav

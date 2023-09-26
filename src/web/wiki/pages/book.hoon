@@ -25,8 +25,6 @@
   ::
   |^  [%page render]
   ::
-  ++  style  ""
-  ::
   ++  render
     ^-  manx
     :: to-do
@@ -35,6 +33,7 @@
     ;html
       ;head
         ;title: {(trip title.book)}
+        ;style: {(style:web bowl)}
       ==
       ;body
         ;*  ?~  msg  ~

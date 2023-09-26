@@ -1,6 +1,6 @@
 /-  *wiki
 /+  rudder
-/~  web  (page:rudder (map @ta book) action)  /web/wiki
+/~  web  (page:rudder (map @ta book) action)  /web/wiki/pages
 ::
 |_  books=(map @ta book)
 ::
