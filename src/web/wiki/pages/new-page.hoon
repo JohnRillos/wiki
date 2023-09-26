@@ -5,6 +5,7 @@
 /*  codemirror-js   %js   /lib/codemirror/lib/codemirror/js
 /*  codemirror-css  %css  /lib/codemirror/lib/codemirror/css
 /*  markdown-js     %js   /lib/codemirror/mode/markdown/markdown/js
+/*  editor-js       %js   /web/wiki/editor/js
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -58,20 +59,6 @@
   ::
   |^  [%page render]
   ::
-  ++  style  ""
-  ::
-  ++  textarea-script
-    """
-    var editor = CodeMirror.fromTextArea(document.getElementById('content'), \{
-      mode: 'markdown',
-      highlightFormatting: true,
-      lineNumbers: true,
-      lineWrapping: true,
-      theme: 'default',
-      extraKeys: \{'Enter': 'newlineAndIndentContinueMarkdownList' }
-    });
-    """
-  ::
   ++  path-regex  "[0-9a-z\\-_~\\.\\/]+"
   ::
   ++  path-explain  "Lowercase letters, numbers, period (.), underscore (_), hyphen (-), tilde (~), and slash (/)"
@@ -124,7 +111,7 @@
           ;h3: Content
           ;textarea(id "content", name "content", placeholder "Lorem ipsum");
         ==
-        ;script: {textarea-script}
+        ;script: {(trip editor-js)}
       ==
     ==
   --

@@ -36,16 +36,6 @@
   ::
   |^  [%page render]
   ::
-  ++  md-style  ""
-  ::
-  ++  prism-style-override
-    %-  trip
-    '''
-    code[class*=language-] {
-      font-family: monospace;
-    }
-    '''
-  ::
   ++  zero-md-src
     "https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"
   ::
@@ -77,9 +67,9 @@
             ;script(type "module", src zero-md-src);
             ;zero-md
               ;template
-                ;style: {md-style}
                 ;link(rel "stylesheet", href prism-css-src);
-                ;style: {prism-style-override};
+                ;style: {(style:web bowl)}
+                ;style: {(md-style:web bowl)}
               ==
               ;script(type "text/markdown"): {content.page}
             ==

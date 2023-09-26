@@ -5,6 +5,7 @@
 /*  codemirror-js   %js   /lib/codemirror/lib/codemirror/js
 /*  codemirror-css  %css  /lib/codemirror/lib/codemirror/css
 /*  markdown-js     %js   /lib/codemirror/mode/markdown/markdown/js
+/*  editor-js       %js   /web/wiki/editor/js
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -59,18 +60,6 @@
   =/  =page  (latest u.tale)
   ::
   |^  [%page render]
-  ::
-  ++  textarea-script
-    """
-    var editor = CodeMirror.fromTextArea(document.getElementById('content'), \{
-      mode: 'markdown',
-      highlightFormatting: true,
-      lineNumbers: true,
-      lineWrapping: true,
-      theme: 'default',
-      extraKeys: \{'Enter': 'newlineAndIndentContinueMarkdownList' }
-    });
-    """
   ::
   ++  render
     ^-  manx
@@ -135,7 +124,7 @@
           ;h3: Content
           ;textarea(id "content", name "content"): {content.page}
         ==
-        ;script: {textarea-script}
+        ;script: {(trip editor-js)}
       ==
     ==
   --

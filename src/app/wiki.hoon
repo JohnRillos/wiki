@@ -145,7 +145,8 @@
 ::
 ++  new-book
   |=  [%new-book id=@ta title=@t rules=access]
-  ?:  =(~.~ id)  ~|("Invalid wiki ID" !!)
+  ?:  |(=(~.~ id) !((sane %ta) id))
+    ~|("Invalid wiki ID" !!)
   =.  books  (~(put by books) [id [title ~ rules]])
   [~ state]
 ::
@@ -160,6 +161,7 @@
   |=  [%new-page book-id=@ta =path title=@t content=tape]
   ?:  =(~ path)  ~|('Path cannot be blank!' !!)
   ?^  (find "~" path)  ~|('Path cannot contain "/~/"' !!)
+  ?.  (levy path (sane %ta))  ~|('Invalid path!' !!)
   =/  =book  (~(got by books) book-id)
   ?:  (~(has by tales.book) path)  ~|("Page {<path>} already exists!" !!)
   ?:  =('' title)  ~|("Title cannot be blank!" !!)

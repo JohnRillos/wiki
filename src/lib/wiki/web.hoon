@@ -1,9 +1,21 @@
 |%
 ++  style
   |=  =bowl:gall
+  (read-file bowl /web/wiki/style/css)
+::
+++  md-style
+  |=  =bowl:gall
+  (read-file bowl /web/wiki/md-style/css)
+::
+:: used instead of /* for frequently edited files with many consumers
+:: guarantees consumers can get latest version without rebuilding
+::
+++  read-file
+  |=  [=bowl:gall =path]
+  ~+
   ^-  tape
   %-  trip
-  .^(@t %cx /[(crip <src.bowl>)]/wiki/[(crip <now.bowl>)]/web/wiki/style/css)
+  .^(@t %cx (weld /[(crip <src.bowl>)]/wiki/[(crip <now.bowl>)] path))
 ::
 ++  footer
   |=  [=bowl:gall site=cord]
