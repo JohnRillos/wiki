@@ -22,13 +22,21 @@ article {
   line-height: 1.6;
 }
 
+nav {
+  padding: 0.5em 0;
+  & a {
+    margin: 0 1em;
+  }
+}
+
 nav.page {
-  display: block
+  display: block;
+  border-bottom: 2px solid;
 }
 
 footer {
   border-top: 2px solid;
-  padding: 1em 0;
+  padding: 0.5em 0;
   & a {
     margin: 0 1em;
   }

@@ -56,7 +56,7 @@
           ;a/"{wik-dir}": {(trip title.book)}
         ==
         ;main
-          ;nav
+          ;nav.page
             ;a/"{wik-dir}{pag-dir}/~/edit": Edit
             ;a/"{wik-dir}{pag-dir}/~/history": History
           ==
