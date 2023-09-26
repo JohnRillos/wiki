@@ -1,0 +1,8 @@
+img {
+  margin: 1em;
+  max-height: 20em;
+}
+
+code[class*=language-] {
+  font-family: monospace;
+}
