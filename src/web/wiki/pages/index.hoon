@@ -9,7 +9,10 @@
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  !!
+  ^-  $@(brief:rudder action)
+  =/  args=(map @t @t)  (form-data:web order)
+  ?~  del-book=(~(get by args) 'del-book')  ~
+  [%del-book id=u.del-book]
 ::
 ++  final  (alert:rudder url.request.order build)
 ::
@@ -41,7 +44,16 @@
               |=  [id=@ta =book]
               ^-  manx
               ;li
-                ;a/"/wiki/{(trip id)}": {(trip title.book)}
+                ;form(method "post")
+                  ;a/"/wiki/{(trip id)}": {(trip title.book)}
+                  ; 
+                  ;button  :: to-do: confirmation dialog w/ htmx
+                    =type   "submit"
+                    =name   "del-book"
+                    =value  "{(trip id)}"
+                    ; Delete
+                  ==
+                ==
               ==
         ==
       ==

@@ -5,16 +5,12 @@
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
-=<
-::
 |_  [=bowl:gall =order:rudder books=(map @ta book)]
-::
-+*  help  ~(. +> [bowl order books])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
   ^-  $@(brief:rudder action)
-  =/  args=(map @t @t)  args:help
+  =/  args=(map @t @t)  (form-data:web order)
   ?~  what=(~(get by args) 'action')  ~
   |^  ?+  u.what  'Invalid post body'
       ::
@@ -37,7 +33,7 @@
   ^-  reply:rudder
   =/  next=@t
     ?.  success  url.request.order
-    =/  bid=@t  (~(got by args:help) 'book-id')
+    =/  bid=@t  (~(got by (form-data:web order)) 'book-id')
     (crip "/wiki/{(trip bid)}")
   ((alert:rudder next build))
 ::
@@ -116,14 +112,4 @@
       ==
     ==
   --
---
-::
-::  helper core (help)
-::
-|_  [=bowl:gall =order:rudder books=(map @ta book)]
-::
-++  args  ~+
-  ^-  (map @t @t)
-  ?~  body.request.order  ~
-  (frisk:rudder q.u.body.request.order)
 --

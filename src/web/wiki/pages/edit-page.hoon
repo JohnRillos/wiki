@@ -18,22 +18,15 @@
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
   ^-  $@(brief:rudder action)
-  =/  args=(map @t @t)  args:help
+  =/  args=(map @t @t)  (form-data:web order)
   ?~  what=(~(get by args) 'action')  ~
-  |^  ?+  u.what  'say what now'
-      ::
-          %mod-page
-        ?.  authenticated.order  'You must be logged in to edit an article!'
-        =/  page-title=@t  (~(got by args) 'page-title')
-        =/  content=tape  (trip (~(got by args) 'content'))
-        [%mod-page book-id:help page-path:help `page-title `content]
-      ==
-  ::
-  ++  tie
-    |=  =knot
-    ^-  @ta
-    (slav %ta (cat 3 '~.' knot))
-  --
+  ?+  u.what  'say what now'
+      %mod-page
+    ?.  authenticated.order  'You must be logged in to edit an article!'
+    =/  page-title=@t  (~(got by args) 'page-title')
+    =/  content=tape  (trip (~(got by args) 'content'))
+    [%mod-page book-id:help page-path:help `page-title `content]
+  ==
 ::
 ++  final
   |=  [success=? msg=brief:rudder]
@@ -84,7 +77,7 @@
         ;a(href "{wik-dir}{pag-dir}"): Cancel
         ::
         ;form(method "post")
-          ;table#add-page
+          ;table
             ;tr
               ;td
                 ;button
@@ -94,7 +87,7 @@
                   ; Submit Edit
                 ==
               ==
-              ;td:""
+              ;td;
             ==
             ;tr
               ;th: Page Path
@@ -133,11 +126,6 @@
 ::  helper core (help)
 ::
 |_  [=bowl:gall =order:rudder books=(map @ta book)]
-::
-++  args  ~+
-  ^-  (map @t @t)
-  ?~  body.request.order  ~
-  (frisk:rudder q.u.body.request.order)
 ::
 ++  book-id  ~+
   ^-  @ta

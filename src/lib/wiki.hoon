@@ -1,3 +1,6 @@
+::
+:: misc utility
+::
 /-  *wiki
 |%
 ::
@@ -9,6 +12,13 @@
   ?:  =('/' -.tape)  (stab cord)
   (stab (crip ['/' tape]))
 ::
+++  split-on
+  |*  [log=(list *) div=*]
+  ^-  [pre=_log suf=_log]
+  =/  i=(unit @)  (find [div]~ log)
+  ?~  i  [log ~]
+  (split log u.i)
+::
 ++  split
   |*  [log=(list *) i=@]
   ^-  [pre=_log suf=_log]
@@ -17,7 +27,7 @@
   ?:  =(0 i)  [pre log]
   $(i (dec i), pre (snoc pre -.log), log +.log)
 ::
-++  bush
+++  bush  :: to-do: move into /sur/wiki.hoon ?
   |$  [node leaf]
   $@(~ (map node (pair (bush node leaf) (unit leaf))))
 ::

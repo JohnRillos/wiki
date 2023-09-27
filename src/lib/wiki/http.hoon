@@ -1,3 +1,6 @@
+::
+:: HTTP routing utility
+::
 /-  *wiki
 /+  rudder
 /~  web  (page:rudder (map @ta book) action)  /web/wiki/pages

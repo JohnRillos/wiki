@@ -1,4 +1,21 @@
+::
+:: page-rendering utility
+::
+/+  rudder, *wiki
 |%
+::
+++  form-data
+  |=  =order:rudder
+  ^-  (map @t @t)
+  ?~  body.request.order  ~
+  (frisk:rudder q.u.body.request.order)
+::
+++  sane-url
+  |=  =cord
+  ^-  [=path query=tape]
+  =/  [pre=tape suf=tape]  (split-on (trip cord) '?')
+  [(stab (crip pre)) suf]
+::
 ++  style
   |=  =bowl:gall
   (read-file bowl /web/wiki/style/css)

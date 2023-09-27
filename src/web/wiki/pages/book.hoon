@@ -1,7 +1,7 @@
 ::  wiki overview
 ::
 /-  *wiki
-/+  rudder, web=wiki-web
+/+  rudder, web=wiki-web, *wiki
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -9,7 +9,13 @@
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  !!
+  ^-  $@(brief:rudder action)
+  =/  args=(map @t @t)  (form-data:web order)
+  ?~  del-page=(~(get by args) 'del-page')  ~
+  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
+  ?>  ?=([%wiki book-id=@ta ~] site)
+  =/  =path  (part u.del-page)
+  [%del-page book-id.site path]
 ::
 ++  final  (alert:rudder url.request.order build)
 ::
@@ -17,7 +23,7 @@
   |=  [arg=(list [k=@t v=@t]) msg=(unit [success=? text=@t])]
   ^-  reply:rudder
   ::
-  =/  site=(pole knot)  (stab url.request.order)
+  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
   ?>  ?=([%wiki book-id=@ta ~] site)
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
@@ -49,8 +55,17 @@
               ^-  manx
               =/  =page  (latest tale)
               ;li
-                ;a/"/wiki/{(trip book-id.site)}{(spud path)}"
-                  ; {(trip title.page)}
+                ;form(method "post")
+                  ;a/"/wiki/{(trip book-id.site)}{(spud path)}"
+                    ; {(trip title.page)}
+                  ==
+                  ; 
+                  ;button  :: to-do: confirmation dialog w/ htmx
+                    =type   "submit"
+                    =name   "del-page"
+                    =value  "{(spud path)}"
+                    ; Delete
+                  ==
                 ==
               ==
         ==

@@ -89,9 +89,10 @@
     ?-  -.act
       %new-book       (new-book:main act)
       %mod-book-name  (mod-book-name:main act)
+      %del-book       (del-book:main act)
       %new-page       (new-page:main act)
       %mod-page       (mod-page:main act)
-      %del-page       [~ state]
+      %del-page       (del-page:main act)
     ==
   ::
   ++  handle-http
@@ -147,7 +148,14 @@
   |=  [%new-book id=@ta title=@t rules=access]
   ?:  |(=(~.~ id) !((sane %ta) id))
     ~|("Invalid wiki ID" !!)
+  ?:  (~(has by books) id)  ~|("Wiki '{(trip id)}' already exists!" !!)
   =.  books  (~(put by books) [id [title ~ rules]])
+  [~ state]
+::
+++  del-book
+  |=  [%del-book id=@ta]
+  ~&  "Deleting wiki: {<id>}"
+  =.  books  (~(del by books) id)
   [~ state]
 ::
 ++  mod-book-name
@@ -171,15 +179,26 @@
   =.  books  (~(put by books) book-id book)
   [~ state]
 ::
+++  del-page
+  |=  [%del-page book-id=@ta =path]
+  =/  =book       (~(got by books) book-id)
+  =.  tales.book  (~(del by tales.book) path)
+  =.  books       (~(put by books) book-id book)
+  [~ state]
+::
 ++  mod-page
   |=  [%mod-page book-id=@ta =path title=(unit @t) content=(unit tape)]
   =/  =book  (~(got by books) book-id)
   =/  =tale  (~(got by tales.book) path)
   =/  =page  (latest tale)
   ?:  ?~(title | =('' u.title))  ~|("Title cannot be blank!" !!)
+  ?:  ?&  ?~(content & =(content.page u.content))
+          ?~(title & =(title.page u.title))
+      ==
+    [~ state]
   =.  title.page    (fall title title.page)
   =.  content.page  (fall content content.page)
-  =.  tale        (put:ton tale now.bowl page)
+  =.  tale          (put:ton tale now.bowl page)
   =.  tales.book  (~(put by tales.book) path tale)
   =.  books       (~(put by books) book-id book)
   [~ state]
