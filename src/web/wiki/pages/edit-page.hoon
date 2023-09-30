@@ -50,7 +50,7 @@
   =/  =book  u.buuk
   ?~  tale=(~(get by tales.book) page-path:help)
     [%code 404 (crip "Article {<page-path:help>} not found in {<title.book>}")]
-  =/  =page  (latest u.tale)
+  =/  =page  page:(latest u.tale)
   ::
   |^  [%page render]
   ::

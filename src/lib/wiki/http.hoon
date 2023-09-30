@@ -13,12 +13,11 @@
   ^-  route:rudder
   |=  =trail:rudder
   ^-  (unit place:rudder)
-  ?^  point=((point:rudder /wiki & ~(key by web)) trail)
-    point
   =/  site=(list @t)  site.trail
   =/  pat=(pole knot)  (need (decap:rudder /wiki site))
   |^  ?:  tail-fas        `[%away (snip site)]
       ?+  pat             page-resource
+        ~                 `[%page & %index]
         [sig %new ~]      `[%page & %new-book]
         [@ta ~]           `[%page auth %book]
         [@ta sig %new ~]  `[%page & %new-page]

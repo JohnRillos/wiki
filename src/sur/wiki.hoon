@@ -12,8 +12,8 @@
 ::
 ++  latest
   |=  =tale
-  ^-  page
-  (tail (need (pry:ton tale)))
+  ^-  [time=@da =page]
+  (need (pry:ton tale))
 ::
 +$  page
   $:  title=@t

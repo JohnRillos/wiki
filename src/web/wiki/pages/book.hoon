@@ -53,9 +53,10 @@
           ;*  %+  turn  ~(tap by tales.book)
               |=  [=path =tale]
               ^-  manx
-              =/  =page  (latest tale)
+              =/  =page  page:(latest tale)
               ;li
                 ;form(method "post")
+                  :: to-do: icon for public vs private
                   ;a/"/wiki/{(trip book-id.site)}{(spud path)}"
                     ; {(trip title.page)}
                   ==

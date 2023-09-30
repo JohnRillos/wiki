@@ -51,7 +51,7 @@
     ^-  manx
     =/  wik-dir=tape  (spud /wiki/[book-id:help])
     =/  pag-dir=tape  (spud page-path:help)
-    =/  last=page  (latest u.tale)
+    =/  last=page  page:(latest u.tale)
     ;html
       ;head
         ;title: {(trip title.last)}

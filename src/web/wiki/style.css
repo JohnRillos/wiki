@@ -22,6 +22,13 @@ article {
   line-height: 1.6;
 }
 
+#version-banner {
+  background-color: #fef6e7;
+  border: solid 0.5px;
+  border-color: #ac6600;
+  padding: 0.5em;
+}
+
 nav {
   padding: 0.5em 0;
   & a {

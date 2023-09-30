@@ -190,7 +190,7 @@
   |=  [%mod-page book-id=@ta =path title=(unit @t) content=(unit tape)]
   =/  =book  (~(got by books) book-id)
   =/  =tale  (~(got by tales.book) path)
-  =/  =page  (latest tale)
+  =/  =page  page:(latest tale)
   ?:  ?~(title | =('' u.title))  ~|("Title cannot be blank!" !!)
   ?:  ?&  ?~(content & =(content.page u.content))
           ?~(title & =(title.page u.title))

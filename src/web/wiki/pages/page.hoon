@@ -30,9 +30,13 @@
   =/  page-path=path  where:space-time:help
   ?~  tale=(~(get by tales.book) page-path)
     [%code 404 (crip "Article {<page-path>} not found in {<title.book>}")]
-  =/  peach=(each page @t)  (get-page:help u.tale)
+  =/  peach=(each [time=@da =page] @t)  (get-page:help u.tale)
   ?:  ?=(%| -.peach)  [%code 404 p.peach]
-  =/  =page  p.peach
+  =/  =page      page.p.peach
+  =/  as-of=@da  time.p.peach
+  =/  fresh=?    =(as-of time:(latest u.tale))
+  =/  permalink=?  ?!(=(~ when:space-time:help))
+  =/  author=tape  <our.bowl>  :: to-do: really track author
   ::
   |^  [%page render]
   ::
@@ -42,10 +46,19 @@
   ++  prism-css-src
     "https://cdn.jsdelivr.net/gh/PrismJS/prism@1/themes/prism.min.css"
   ::
-  ++  render
+  ++  render  :: to-do: display if this page is public or private
     ^-  manx
     =/  wik-dir=tape  (spud /wiki/[book-id:help])
     =/  pag-dir=tape  (spud page-path)
+    =/  version-notice=(unit tape)
+      ?.  permalink  ~
+      :-  ~
+      ?:  fresh
+        %+  weld
+        "This is the current version of this page. "
+        "Last edited by {author} at {<as-of>}."
+      "This is an old version of this page, as edited by {author} at {<as-of>}."
+    =/  footer-text=tape  "Edited by {author} at {<as-of>}." :: to-do: put in footer
     ;html
       ;head
         ;title: {(trip title.page)}
@@ -61,9 +74,11 @@
             ;a/"{wik-dir}{pag-dir}/~/history": History
           ==
           ;article
-            ;header
+            ;header#title
               ;h1: {(trip title.page)}
             ==
+            ;+  ?~  version-notice  stub:web
+                ;p#version-banner: {u.version-notice}
             ;script(type "module", src zero-md-src);
             ;zero-md
               ;template
@@ -106,7 +121,7 @@
 ::
 ++  get-page
   |=  =tale
-  ^-  (each page @t)
+  ^-  (each [time=@da =page] @t)
   =/  when=(unit (each @da @ud))  when:space-time
   ?~  when  [%& (latest tale)]
   ?-  -.u.when
@@ -116,17 +131,28 @@
 ::
 ++  page-tim
   |=  [=tale at=@da]
-  ^-  (each page @t)
+  ^-  (each [time=@da =page] @t)
   =/  before=^tale  (lot:ton tale `(add at 1) ~)
-  =/  puge=(unit page)  (bind (pry:ton before) tail)
+  =/  puge=(unit [time=@da =page])  (pry:ton before)
   ?~  puge  [%| (crip "Page did not exist at {<at>}")]
   [%& u.puge]
 ::
 ++  page-ver
   |=  [=tale version=@ud]
-  ^-  (each page @t)
+  ^-  (each [time=@da =page] @t)
   ?:  (gte version (wyt:ton tale))
     [%| (crip "Page has no version {<version>}")]
-  [%& (tail (snag version (bap:ton tale)))]
+  [%& (snag version (bap:ton tale))]
+::
+:: ++  time-to-ver
+::   |=  [=tale at=@da]
+::   ^-  @ud
+::   =/  story=(list [@da page])  (tap:ton tale)
+::   =/  ver=@ud  (dec (wyt:ton tale))
+::   |-
+::   =/  head=[@da page]  -.story
+::   ?:  =(at -.head)  ver
+::   ?<  =(0 ver)
+::   $(story +.story, ver (dec ver))
 ::
 --

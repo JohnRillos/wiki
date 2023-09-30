@@ -34,7 +34,11 @@
   %-  trip
   .^(@t %cx (weld /[(crip <our.bowl>)]/wiki/[(crip <now.bowl>)] path))
 ::
-++  footer
+++  stub
+  ^-  manx
+  ;div(style "display: none");
+::
+++  footer  :: to-do add a log out button
   |=  [=bowl:gall site=cord]
   ^-  manx
   ;footer
