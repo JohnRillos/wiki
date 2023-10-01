@@ -2,6 +2,9 @@
 :: page-rendering utility
 ::
 /+  rudder, *wiki
+/*  globe-svg   %svg   /web/wiki/icons/globe/svg
+/*  lock-svg    %svg   /web/wiki/icons/lock/svg
+::
 |%
 ::
 ++  form-data
@@ -50,4 +53,22 @@
         ==
     ;a/"https://urbit.org": Powered by Urbit
   ==
+::
+++  icon
+  |%
+::
+  ++  globe
+    ^~
+    ;div.access-icon
+      ;+  (need (de-xml:html globe-svg))
+      ;
+    ==
+  ::
+  ++  lock
+    ^~
+    ;div.access-icon
+      ;+  (need (de-xml:html lock-svg))
+      ;
+    ==
+  --
 --

@@ -9,16 +9,13 @@
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  ^-  $@(brief:rudder action)
-  =/  args=(map @t @t)  (form-data:web order)
-  ?~  del-book=(~(get by args) 'del-book')  ~
-  [%del-book id=u.del-book]
+  !!
 ::
 ++  final  (alert:rudder url.request.order build)
 ::
 ++  build
   |=  $:  arg=(list [k=@t v=@t])
-          msg=(unit [o=? =@t])
+          msg=(unit [success=? text=@t])
       ==
   ^-  reply:rudder
   ::
@@ -39,21 +36,15 @@
           ;button(type "button"): New Wiki
         ==
         ;h2: Your Wikis
-        ;ul
+        ;ul.wiki-list
           ;*  %+  turn  ~(tap by books)
               |=  [id=@ta =book]
               ^-  manx
-              ;li
-                ;form(method "post")
-                  ;a/"/wiki/{(trip id)}": {(trip title.book)}
-                  ; 
-                  ;button  :: to-do: confirmation dialog w/ htmx
-                    =type   "submit"
-                    =name   "del-book"
-                    =value  "{(trip id)}"
-                    ; Delete
-                  ==
-                ==
+              ;li.wiki-list-item
+                ;+  ?:  public-read.rules.book
+                      globe:icon:web
+                    lock:icon:web
+                ;a/"/wiki/{(trip id)}": {(trip title.book)}
               ==
         ==
       ==

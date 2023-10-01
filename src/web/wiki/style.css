@@ -52,3 +52,18 @@ footer {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
 }
+
+div.access-icon {
+  width: 1em;
+  display: inline-block;
+}
+
+ul.wiki-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+button#delete-wiki:hover {
+  color: white;
+  background-color: darkred;
+}

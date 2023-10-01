@@ -11,13 +11,20 @@
   |=  [headers=header-list:http body=(unit octs)]
   ^-  $@(brief:rudder action)
   =/  args=(map @t @t)  (form-data:web order)
-  ?~  del-page=(~(get by args) 'del-page')  ~
-  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
-  ?>  ?=([%wiki book-id=@ta ~] site)
-  =/  =path  (part u.del-page)
-  [%del-page book-id.site path]
+  ?^  del-page=(~(get by args) 'del-page')
+    =/  [site=(pole knot) *]  (sane-url:web url.request.order)
+    ?>  ?=([%wiki book-id=@ta ~] site)
+    =/  =path  (part u.del-page)
+    [%del-page book-id.site path]
+  ?~  del-book=(~(get by args) 'del-book')  ~
+  [%del-book id=u.del-book]
 ::
-++  final  (alert:rudder url.request.order build)
+++  final
+  |=  [success=? msg=brief:rudder]
+  ^-  reply:rudder
+  =/  back=?  &(success (~(has by (form-data:web order)) 'del-book'))
+  =/  next=@t  ?:(back '/wiki?msg=Wiki%20deleted' url.request.order)
+  ((alert:rudder next build))
 ::
 ++  build
   |=  [arg=(list [k=@t v=@t]) msg=(unit [success=? text=@t])]
@@ -45,8 +52,18 @@
         ;*  ?~  msg  ~
             ~[;/((trip text.u.msg))]
         ;h1: {(trip title.book)}
-        ;a/"/wiki/{(trip book-id.site)}/~/new"
-          ;button(type "button"): New Article
+        ;div#wiki-controls
+          ;a/"/wiki/{(trip book-id.site)}/~/new"
+            ;button(type "button"): New Article
+          ==
+          ;form(method "post")
+            ;button#delete-wiki  :: to-do: confirmation dialog w/ htmx
+              =type   "submit"
+              =name   "del-book"
+              =value  "{(trip book-id.site)}"
+              ; Delete Wiki
+            ==
+          ==
         ==
         ;h2: Articles
         ;ul
