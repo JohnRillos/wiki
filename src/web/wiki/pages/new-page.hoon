@@ -2,9 +2,9 @@
 ::
 /-  *wiki
 /+  rudder, web=wiki-web, *wiki
-/*  codemirror-js   %js   /lib/codemirror/lib/codemirror/js
-/*  codemirror-css  %css  /lib/codemirror/lib/codemirror/css
-/*  markdown-js     %js   /lib/codemirror/mode/markdown/markdown/js
+/*  codemirror-js   %js   /web/codemirror/lib/codemirror/js
+/*  codemirror-css  %css  /web/codemirror/lib/codemirror/css
+/*  markdown-js     %js   /web/codemirror/mode/markdown/markdown/js
 /*  editor-js       %js   /web/wiki/editor/js
 ::
 ^-  (page:rudder (map @ta book) action)

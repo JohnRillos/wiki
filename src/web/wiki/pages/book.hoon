@@ -2,6 +2,7 @@
 ::
 /-  *wiki
 /+  rudder, web=wiki-web, *wiki
+/*  htmx-js   %js   /web/htmx/js
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -40,13 +41,11 @@
   ::
   ++  render
     ^-  manx
-    :: to-do
-    :: =/  foo=(bush:wik knot page)  (path-bush:wik pages.book)
-    :: ~&  >>  "bush: {<foo>}"
     ;html
       ;head
         ;title: {(trip title.book)}
         ;style: {(style:web bowl)}
+        ;script: {(trip htmx-js)}
       ==
       ;body
         ;*  ?~  msg  ~
@@ -56,13 +55,12 @@
           ;a/"/wiki/{(trip book-id.site)}/~/new"
             ;button(type "button"): New Article
           ==
-          ;form(method "post")
-            ;button#delete-wiki  :: to-do: confirmation dialog w/ htmx
-              =type   "submit"
-              =name   "del-book"
-              =value  "{(trip book-id.site)}"
-              ; Delete Wiki
-            ==
+          ;+  %+  in-form:web  "Are you sure you want to delete this wiki?"
+          ;button#delete-wiki
+            =type   "submit"
+            =name   "del-book"
+            =value  "{(trip book-id.site)}"
+            ; Delete Wiki
           ==
         ==
         ;h2: Articles

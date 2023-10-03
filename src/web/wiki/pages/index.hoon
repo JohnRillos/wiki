@@ -41,9 +41,7 @@
               |=  [id=@ta =book]
               ^-  manx
               ;li.wiki-list-item
-                ;+  ?:  public-read.rules.book
-                      globe:icon:web
-                    lock:icon:web
+                ;+  ?:(public-read.rules.book globe:icon:web lock:icon:web)
                 ;a/"/wiki/{(trip id)}": {(trip title.book)}
               ==
         ==

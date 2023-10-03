@@ -41,6 +41,10 @@ nav.page {
   border-bottom: 2px solid;
 }
 
+form {
+  display: unset;
+}
+
 footer {
   border-top: 2px solid;
   padding: 0.5em 0;

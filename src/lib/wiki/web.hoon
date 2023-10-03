@@ -37,6 +37,31 @@
   %-  trip
   .^(@t %cx (weld /[(crip <our.bowl>)]/wiki/[(crip <now.bowl>)] path))
 ::
+:: ++  splice
+::   |=  [=manx =mart]
+::   ^-  ^manx
+::   manx(a.g (weld a.g.manx mart))
+::
+:: ++  follow
+::   |=  [=manx attributes=(list [@tas tape])]
+::   ^-  ^manx
+::   %+  splice  manx
+::   :~  [%hx-target "body"]
+::       [%hx-swap "outerHTML"]
+::       [%hx-push-url "true"]
+::   ==
+::
+++  confirm
+  |=  =tape
+  ^-  ^tape
+  (weld "return confirm('" (weld tape "');"))
+::
+++  in-form
+  |=  [warn=tape content=manx]
+  ;form(method "post", onsubmit (confirm warn))
+    ;+  content
+  ==
+::
 ++  stub
   ^-  manx
   ;div(style "display: none");
