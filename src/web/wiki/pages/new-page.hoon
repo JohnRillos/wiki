@@ -82,11 +82,16 @@
         ==
         ;h2: New Page
         ::
-        ;a(href wik-dir): Cancel
-        ::
         ;form(method "post")
-          ;button(type "submit", name "action", value "new-page"):"Create Page"
-          
+          ;div
+            ;button.submit
+              =type  "submit"
+              =name  "action"
+              =value  "new-page"
+              ; Create Page
+            ==
+            ;a(href wik-dir): Cancel
+          ==
           ;h3: Page Path
           ;span: /wiki/{(trip book-id:help)}/
           ;input

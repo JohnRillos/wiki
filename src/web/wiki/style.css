@@ -29,10 +29,13 @@ article {
   padding: 0.5em;
 }
 
-nav {
+nav, footer {
   padding: 0.5em 0;
-  & a {
-    margin: 0 1em;
+  & * {
+    margin-right: 1em;
+  }
+  & *:last-child {
+    margin-right: 0;
   }
 }
 
@@ -48,9 +51,6 @@ form {
 footer {
   border-top: 2px solid;
   padding: 0.5em 0;
-  & a {
-    margin: 0 1em;
-  }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -67,7 +67,40 @@ ul.wiki-list {
   padding: 0;
 }
 
-button#delete-wiki:hover {
+button {
+  border: solid 1px;
+  cursor: pointer;
+  font-size: unset;
+  padding: 4px 6px;
+  margin-right: 0.5em;
+}
+
+button:hover {
+  background-color: lightgray;
+}
+
+button:last-child {
+  margin-right: 0;
+}
+
+button.submit {
+  color: white;
+  background-color: #36c;
+  border-color: #36c;
+}
+
+button.submit:hover {
+  background-color: #37e;
+  border-color: #37e;
+}
+
+button.delete:hover {
   color: white;
   background-color: darkred;
+  border-color: darkred;
+}
+
+div.CodeMirror {
+  border: 1px solid gray;
+  max-width: 60em;
 }

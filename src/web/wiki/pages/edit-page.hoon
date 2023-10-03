@@ -74,24 +74,22 @@
         ==
         ;h1: Edit Page - {(trip title.page)}
         ::
-        ;a(href "{wik-dir}{pag-dir}"): Cancel
-        ::
         ;form(method "post")
           ;table
             ;tr
               ;td
-                ;button
+                ;button.submit
                   =type   "submit"
                   =name   "action"
                   =value  "mod-page"
                   ; Submit Edit
                 ==
+                ;a(href "{wik-dir}{pag-dir}"): Cancel
               ==
-              ;td;
             ==
             ;tr
-              ;th: Page Path
-              ;th: Page Title
+              ;th: Path
+              ;th: Title
             ==
             ;tr
               ;td
