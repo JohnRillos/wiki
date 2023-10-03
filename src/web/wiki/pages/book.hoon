@@ -2,7 +2,6 @@
 ::
 /-  *wiki
 /+  rudder, web=wiki-web, *wiki
-/*  htmx-js   %js   /web/htmx/js
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -45,18 +44,19 @@
       ;head
         ;title: {(trip title.book)}
         ;style: {(style:web bowl)}
-        ;script: {(trip htmx-js)}
       ==
       ;body
         ;*  ?~  msg  ~
             ~[;/((trip text.u.msg))]
         ;h1: {(trip title.book)}
-        ;div#wiki-controls
+        ;nav#wiki-controls
           ;a/"/wiki/{(trip book-id.site)}/~/new"
             ;button(type "button"): New Article
           ==
-          ;+  %+  in-form:web  "Are you sure you want to delete this wiki?"
-          ;button#delete-wiki
+          ;+
+          ?.  =(src.bowl our.bowl)  stub:web
+          %+  in-form:web  "Are you sure you want to delete this wiki?"
+          ;button.delete
             =type   "submit"
             =name   "del-book"
             =value  "{(trip book-id.site)}"
