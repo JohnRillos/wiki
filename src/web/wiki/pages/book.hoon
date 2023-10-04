@@ -48,7 +48,7 @@
       ;body
         ;*  ?~  msg  ~
             ~[;/((trip text.u.msg))]
-        ;h1: {(trip title.book)}
+        ;h1#wiki-title: {(trip title.book)}
         ;nav#wiki-controls
           ;a/"/wiki/{(trip book-id.site)}/~/new"
             ;button(type "button"): New Article

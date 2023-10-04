@@ -70,7 +70,7 @@
         ;*  ?~  msg  ~
             ~[;/((trip text.u.msg))]
         ;nav
-          ;a(href wik-dir): {(trip title.book)}
+          ;a#wiki-title/"{wik-dir}": {(trip title.book)}
         ==
         ;h1: Edit Page - {(trip title.page)}
         ::

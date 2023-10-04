@@ -58,25 +58,23 @@
         "This is the current version of this page. "
         "Last edited by {author} at {<as-of>}."
       "This is an old version of this page, as edited by {author} at {<as-of>}."
-    =/  footer-text=tape  "Edited by {author} at {<as-of>}." :: to-do: put in footer
+    :: =/  footer-text=tape  "Edited by {author} at {<as-of>}." :: to-do: put in footer
     ;html
       ;head
         ;title: {(trip title.page)}
         ;style: {(style:web bowl)}
       ==
-      ;body
-        ;nav.global
-          ;a/"{wik-dir}": {(trip title.book)}
-        ==
+      ;body#article-body
+        ;+  (global-nav:web bowl order [book-id:help book])
         ;main
-          ;nav.page
-            ;a/"{wik-dir}{pag-dir}/~/edit": Edit
-            ;a/"{wik-dir}{pag-dir}/~/history": History
+          ;header
+            ;h1#page-title: {(trip title.page)}
+            ;nav.page
+              ;a/"{wik-dir}{pag-dir}/~/edit": Edit
+              ;a/"{wik-dir}{pag-dir}/~/history": History
+            ==
           ==
           ;article
-            ;header#title
-              ;h1: {(trip title.page)}
-            ==
             ;+  ?~  version-notice  stub:web
                 ;p#version-banner: {u.version-notice}
             ;script(type "module", src zero-md-src);

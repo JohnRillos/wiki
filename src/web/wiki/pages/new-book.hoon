@@ -99,12 +99,13 @@
             ==
             ;tr
               ;td
-                ;button
+                ;button.submit
                   =type   "submit"
                   =name   "action"
                   =value  "new-book"
                   ; Create Wiki
                 ==
+                ;a(href "/wiki"): Cancel
               ==
             ==
           ==

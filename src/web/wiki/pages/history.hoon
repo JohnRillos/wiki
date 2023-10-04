@@ -59,7 +59,7 @@
       ==
       ;body
         ;nav
-          ;a(href wik-dir): {(trip title.book)}
+          ;a#wiki-title/"{wik-dir}": {(trip title.book)}
         ==
         ;main
           ;nav

@@ -40,7 +40,10 @@
 :: ++  splice
 ::   |=  [=manx =mart]
 ::   ^-  ^manx
-::   manx(a.g (weld a.g.manx mart))
+::   =/  atts  `(list (pair mane tape))`a.g.manx
+::   %=  manx
+::     a.g  ~(tap by (~(gas by (my atts)) mart))
+::   ==
 ::
 :: ++  follow
 ::   |=  [=manx attributes=(list [@tas tape])]
@@ -66,16 +69,26 @@
   ^-  manx
   ;div(style "display: none");
 ::
-++  footer  :: to-do add a log out button
+++  global-nav
+  |=  [=bowl:gall =order:rudder wik=[id=@ta =book]]
+  ^-  manx
+  =/  site=@t  url.request.order
+  ;nav.sidebar
+    ;a#wiki-title/"/wiki/{(trip id.wik)}": {(trip title.book.wik)}
+    ;div#global-menu
+      ;+  ?:  =(%pawn (clan:title src.bowl))
+            ;a/"/~/login?redirect={(trip site)}": Log in with Urbit
+          ?:  =(src.bowl our.bowl)  ;a/"/wiki": Your Wikis
+          ;a/"/apps/landscape/perma?ext=web+urbitgraph://~holnes/wiki/"
+            ; Made with %wiki
+          ==
+    ==
+  ==
+::
+++  footer
   |=  [=bowl:gall site=cord]
   ^-  manx
   ;footer
-    ;+  ?:  =(%pawn (clan:title src.bowl))
-          ;a/"/~/login?redirect={(trip site)}": Log in with Urbit
-        ?:  =(src.bowl our.bowl)  ;a/"/wiki": Your wikis
-        ;a/"/apps/landscape/perma?ext=web+urbitgraph://~holnes/wiki/"
-          ; Made with %wiki
-        ==
     ;a/"https://urbit.org": Powered by Urbit
   ==
 ::
@@ -84,16 +97,14 @@
 ::
   ++  globe
     ^~
-    ;div.access-icon
+    ;div.access-icon(title "public")
       ;+  (need (de-xml:html globe-svg))
-      ;
     ==
   ::
   ++  lock
     ^~
-    ;div.access-icon
+    ;div.access-icon(title "private")
       ;+  (need (de-xml:html lock-svg))
-      ;
     ==
   --
 --
