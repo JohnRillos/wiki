@@ -51,7 +51,7 @@
   |=  [arg=(list [k=@t v=@t]) msg=(unit [success=? text=@t])]
   ^-  reply:rudder
   ::
-  =/  site=(pole knot)  (stab url.request.order)
+  =/  [site=(pole knot) query=(map @t tape)]  (sane-url:web url.request.order)
   ?>  ?=([%wiki book-id=@ta *] site)
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
@@ -65,7 +65,9 @@
   ::
   ++  render
     ^-  manx
-    =/  wik-dir=tape  (spud /wiki/[book-id:help])
+    =/  wik-dir=tape  (spud /wiki/[book-id.site])
+    =/  target=(unit path)  (target-path:help query)
+    =/  default-path=tape  ?~(target "" (tail (spud u.target)))
     ;html
       ;head
         ;title: New Page - {(trip title.book)}
@@ -93,7 +95,7 @@
             ;a(href wik-dir): Cancel
           ==
           ;h3: Page Path
-          ;span: /wiki/{(trip book-id:help)}/
+          ;span: /wiki/{(trip book-id.site)}/
           ;input
             =type         "text"
             =name         "page-path"
@@ -101,6 +103,7 @@
             =required     "true"
             =pattern      path-regex
             =title        path-explain
+            =value        default-path
             ;
           ==
 
@@ -133,7 +136,13 @@
 ::
 ++  book-id
   ^-  @ta
-  =/  site=(pole knot)  (stab url.request.order)
+  =/  [site=(pole knot) query=(map @t tape)]  (sane-url:web url.request.order)
   ?>  ?=([%wiki book-id=@ta *] site)
   book-id.site
+::
+++  target-path
+  |=  query=(map @t tape)
+  ^-  (unit path)
+  =/  target=(unit tape)  (~(get by query) 'target')
+  (bind target (cork crip stab))
 --

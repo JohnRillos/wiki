@@ -15,12 +15,13 @@
   ^-  (unit place:rudder)
   =/  site=(list @t)  site.trail
   =/  pat=(pole knot)  (need (decap:rudder /wiki site))
-  |^  ?:  tail-fas        `[%away (snip site)]
-      ?+  pat             page-resource
-        ~                 `[%page & %index]
-        [sig %new ~]      `[%page & %new-book]
-        [@ta ~]           `[%page auth %book]
-        [@ta sig %new ~]  `[%page & %new-page]
+  |^  ?:  tail-fas              `[%away (snip site)]
+      ?+  pat                   page-resource
+        ~                       `[%page & %index]
+        [sig %new ~]            `[%page & %new-book]
+        [@ta ~]                 `[%page auth %book]
+        [@ta sig %new ~]        `[%page & %new-page]
+        [@ta sig %not-found ~]  `[%page auth %page-not-found]
       ==
   ::
   ++  auth

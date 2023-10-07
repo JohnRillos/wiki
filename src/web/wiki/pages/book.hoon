@@ -51,7 +51,7 @@
         ;h1#wiki-title: {(trip title.book)}
         ;nav#wiki-controls
           ;a/"/wiki/{(trip book-id.site)}/~/new"
-            ;button(type "button"): New Article
+            ;button(type "button"): New Page
           ==
           ;+
           ?.  =(src.bowl our.bowl)  stub:web

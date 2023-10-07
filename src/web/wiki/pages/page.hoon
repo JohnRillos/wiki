@@ -29,7 +29,9 @@
   =/  =book  u.buuk
   =/  page-path=path  where:space-time:help
   ?~  tale=(~(get by tales.book) page-path)
-    [%code 404 (crip "Article {<page-path>} not found in {<title.book>}")]
+    =/  loc=tape
+      (weld (spud /wiki/[book-id.site]/~/not-found) "?target={(spud page-path)}")
+    [%next (crip loc) ~]
   =/  peach=(each [time=@da =page] @t)  (get-page:help u.tale)
   ?:  ?=(%| -.peach)  [%code 404 p.peach]
   =/  =page      page.p.peach

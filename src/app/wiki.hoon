@@ -86,7 +86,6 @@
     |=  act=action
     ^-  (quip card _state)
     ?.  =(our.bowl src.bowl)  ~|('Unauthorized! ' !!)
-    ~&  >  act
     ?-  -.act
       %new-book       (new-book:main act)
       %mod-book-name  (mod-book-name:main act)
@@ -155,7 +154,6 @@
 ::
 ++  del-book
   |=  [%del-book id=@ta]
-  ~&  "Deleting wiki: {<id>}"
   =.  books  (~(del by books) id)
   [~ state]
 ::

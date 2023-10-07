@@ -1,7 +1,7 @@
 ::
 :: page-rendering utility
 ::
-/+  rudder, *wiki
+/+  rudder, string, *wiki
 /*  globe-svg   %svg   /web/wiki/icons/globe/svg
 /*  lock-svg    %svg   /web/wiki/icons/lock/svg
 ::
@@ -15,9 +15,26 @@
 ::
 ++  sane-url
   |=  =cord
-  ^-  [=path query=tape]
+  ~+
+  ^-  [=path query=(map @t tape)]
   =/  [pre=tape suf=tape]  (split-on (trip cord) '?')
-  [(stab (crip pre)) suf]
+  :-  (stab (crip pre))
+  (parse-query suf)
+::
+++  parse-query
+  |=  query=tape
+  ^-  (map @t tape)
+  ?:  =(0 (lent query))  ~
+  =.  query
+    ?.  =('?' -.query)  query
+    +.query
+  =/  chunks=(list tape)  (split:string "&" query)
+  =/  pairs=(list (pair @t tape))
+    %+  turn  chunks
+    |=  chunk=tape
+    =/  [l=tape n=tape r=tape]  (partition:string "=" chunk)
+    [(crip l) r]
+  (my pairs)
 ::
 ++  style
   |=  =bowl:gall
