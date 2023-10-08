@@ -137,7 +137,7 @@ div.CodeMirror {
   max-width: 60em;
 }
 
-body#article-body {
+body#with-sidebar {
   display: flex;
   flex-direction: row;
 }

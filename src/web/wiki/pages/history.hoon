@@ -57,18 +57,14 @@
         ;title: {(trip title.last)}
         ;style: {(style:web bowl)}
       ==
-      ;body
-        ;nav
-          ;a#wiki-title/"{wik-dir}": {(trip title.book)}
-        ==
+      ;body#with-sidebar
+        ;+  (global-nav:web bowl order [book-id.site book])
         ;main
-          ;nav
-            ;a(href "{wik-dir}{pag-dir}"): Back to Current Revision
-          ==
           ;article
             ;header
               ;h1: {(trip title.last)}: Revision History
             ==
+            ;a(href "{wik-dir}{pag-dir}"): Back to Current Revision
             ;ul
               ;*  %+  turn  (tap:ton u.tale)
                   |=  [date=@da =page]

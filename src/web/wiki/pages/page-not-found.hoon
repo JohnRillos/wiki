@@ -40,7 +40,7 @@
         ;title: Page Not Found
         ;style: {(style:web bowl)}
       ==
-      ;body#article-body
+      ;body#with-sidebar
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main
           ;h1#page-title: Page Not Found

@@ -47,37 +47,40 @@
         ;title: {(trip title.book)}
         ;style: {(style:web bowl)}
       ==
-      ;body(onload on-load)
-        ;h1#wiki-title: {(trip title.book)}
-        ;nav#wiki-controls
-          ;a/"/wiki/{(trip book-id.site)}/~/new"
-            ;button(type "button"): New Page
+      ;body#with-sidebar(onload on-load)
+        ;+  (global-nav:web bowl order [book-id.site book])
+        ;main
+          ;h1#wiki-title: {(trip title.book)}
+          ;nav#wiki-controls
+            ;a/"/wiki/{(trip book-id.site)}/~/new"
+              ;button(type "button"): New Page
+            ==
+            ;+
+            ?.  =(src.bowl our.bowl)  stub:web
+            %+  in-form:web  "Are you sure you want to delete this wiki?"
+            ;button.delete
+              =type   "submit"
+              =name   "del-book"
+              =value  "{(trip book-id.site)}"
+              ; Delete Wiki
+            ==
           ==
-          ;+
-          ?.  =(src.bowl our.bowl)  stub:web
-          %+  in-form:web  "Are you sure you want to delete this wiki?"
-          ;button.delete
-            =type   "submit"
-            =name   "del-book"
-            =value  "{(trip book-id.site)}"
-            ; Delete Wiki
-          ==
-        ==
-        ;h2: Articles
-        ;ul
-          ;*  %+  turn  ~(tap by tales.book)
-              |=  [=path =tale]
-              ^-  manx
-              =/  =page  page:(latest tale)
-              ;li
-                ;form(method "post")
-                  ;a/"/wiki/{(trip book-id.site)}{(spud path)}"
-                    ; {(trip title.page)}
+          ;h2: Pages
+          ;ul
+            ;*  %+  turn  ~(tap by tales.book)
+                |=  [=path =tale]
+                ^-  manx
+                =/  =page  page:(latest tale)
+                ;li
+                  ;form(method "post")
+                    ;a/"/wiki/{(trip book-id.site)}{(spud path)}"
+                      ; {(trip title.page)}
+                    ==
                   ==
                 ==
-              ==
+          ==
+          ;+  (footer:web bowl url.request.order)
         ==
-        ;+  (footer:web bowl url.request.order)
       ==
     ==
   --

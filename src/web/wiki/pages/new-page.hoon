@@ -76,50 +76,50 @@
       ;script: {(trip codemirror-js)}
       ;style: {(trip codemirror-css)}
       ;script: {(trip markdown-js)}
-      ;body
-        ;*  ?~  msg  ~
-            ~[;/((trip text.u.msg))]
-        ;nav
-          ;a#wiki-title/"{wik-dir}": {(trip title.book)}
-        ==
-        ;h2: New Page
-        ::
-        ;form(method "post")
-          ;div
-            ;button.submit
-              =type  "submit"
-              =name  "action"
-              =value  "new-page"
-              ; Create Page
+      ;body#with-sidebar
+        ;+  (global-nav:web bowl order [book-id.site book])
+        ;main
+          ;*  ?~  msg  ~
+              ~[;/((trip text.u.msg))]
+          ;h1: New Page
+          ::
+          ;form(method "post")
+            ;div
+              ;button.submit
+                =type  "submit"
+                =name  "action"
+                =value  "new-page"
+                ; Create Page
+              ==
+              ;a(href wik-dir): Cancel
             ==
-            ;a(href wik-dir): Cancel
-          ==
-          ;h3: Page Path
-          ;span: /wiki/{(trip book-id.site)}/
-          ;input
-            =type         "text"
-            =name         "page-path"
-            =placeholder  "my/page"
-            =required     "true"
-            =pattern      path-regex
-            =title        path-explain
-            =value        default-path
-            ;
-          ==
+            ;h3: Page Path
+            ;span: /wiki/{(trip book-id.site)}/
+            ;input
+              =type         "text"
+              =name         "page-path"
+              =placeholder  "my/page"
+              =required     "true"
+              =pattern      path-regex
+              =title        path-explain
+              =value        default-path
+              ;
+            ==
 
-          ;h3: Page Title
-          ;input
-            =type         "text"
-            =name         "page-title"
-            =placeholder  "My Page"
-            =required     "true"
-            ;
-          ==
+            ;h3: Page Title
+            ;input
+              =type         "text"
+              =name         "page-title"
+              =placeholder  "My Page"
+              =required     "true"
+              ;
+            ==
 
-          ;h3: Content
-          ;textarea(id "content", name "content", placeholder "Lorem ipsum");
+            ;h3: Content
+            ;textarea(id "content", name "content", placeholder "Lorem ipsum");
+          ==
+          ;script: {(trip editor-js)}
         ==
-        ;script: {(trip editor-js)}
       ==
     ==
   --

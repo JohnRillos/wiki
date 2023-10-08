@@ -78,7 +78,7 @@
         ;title: {(trip title.page)}
         ;style: {(style:web bowl)}
       ==
-      ;body#article-body
+      ;body#with-sidebar
         ;+  (global-nav:web bowl order [book-id:help book])
         ;main
           ;header

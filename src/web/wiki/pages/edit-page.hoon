@@ -60,62 +60,62 @@
     =/  pag-dir=tape  (spud page-path:help)
     ;html
       ;head
-        ;title: Edit Page - {(trip title.page)}
+        ;title: Edit - {(trip title.page)}
         ;style: {(style:web bowl)}
       ==
       ;script: {(trip codemirror-js)}
       ;style: {(trip codemirror-css)}
       ;script: {(trip markdown-js)}
-      ;body
-        ;*  ?~  msg  ~
-            ~[;/((trip text.u.msg))]
-        ;nav
-          ;a#wiki-title/"{wik-dir}": {(trip title.book)}
-        ==
-        ;h1: Edit Page - {(trip title.page)}
-        ::
-        ;form(method "post")
-          ;table
-            ;tr
-              ;td
-                ;button.submit
-                  =type   "submit"
-                  =name   "action"
-                  =value  "mod-page"
-                  ; Submit Edit
-                ==
-                ;a(href "{wik-dir}{pag-dir}"): Cancel
-              ==
-            ==
-            ;tr
-              ;th: Path
-              ;th: Title
-            ==
-            ;tr
-              ;td
-                ;input
-                  =type      "text"
-                  =name      "page-path"
-                  =value     (spud page-path:help)
-                  =disabled  "true"
-                  ;
+      ;body#with-sidebar
+        ;+  (global-nav:web bowl order [book-id.site book])
+        ;main
+          ;*  ?~  msg  ~
+              ~[;/((trip text.u.msg))]
+          ;h1: Edit Page - {(trip title.page)}
+          ::
+          ;form(method "post")
+            ;table
+              ;tr
+                ;td
+                  ;button.submit
+                    =type   "submit"
+                    =name   "action"
+                    =value  "mod-page"
+                    ; Submit Edit
+                  ==
+                  ;a(href "{wik-dir}{pag-dir}"): Cancel
                 ==
               ==
-              ;td
-                ;input
-                  =type      "text"
-                  =name      "page-title"
-                  =value     (trip title.page)
-                  =required  "true"
-                  ;
+              ;tr
+                ;th: Path
+                ;th: Title
+              ==
+              ;tr
+                ;td
+                  ;input
+                    =type      "text"
+                    =name      "page-path"
+                    =value     (spud page-path:help)
+                    =disabled  "true"
+                    ;
+                  ==
+                ==
+                ;td
+                  ;input
+                    =type      "text"
+                    =name      "page-title"
+                    =value     (trip title.page)
+                    =required  "true"
+                    ;
+                  ==
                 ==
               ==
             ==
+            ;h3: Content
+            ;textarea(id "content", name "content"): {content.page}
           ==
-          ;h3: Content
-          ;textarea(id "content", name "content"): {content.page}
+          ;script: {(trip editor-js)}
         ==
-        ;script: {(trip editor-js)}
       ==
     ==
   --
