@@ -40,10 +40,13 @@ a#wiki-title:hover {
 div#global-menu {
   background: #e8e8e8;
   border-radius: 8px;
-  padding: 0.5em;
+  padding: 1em;
   margin-top: 1em;
   & * {
     display: block;
+  }
+  & *:not(:last-child) {
+    margin-bottom: 1em;
   }
 }
 

@@ -103,6 +103,7 @@
   ;nav.sidebar
     ;a#wiki-title/"/wiki/{(trip id.wik)}": {(trip title.book.wik)}
     ;div#global-menu
+      ;a/"/wiki/{(trip id.wik)}": Home
       ;+  ?:  =(%pawn (clan:title src.bowl))
             ;a/"/~/login?redirect={(trip site)}": Log in with Urbit
           ?:  =(src.bowl our.bowl)  ;a/"/wiki": Your Wikis
