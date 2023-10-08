@@ -13,15 +13,27 @@
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  !!
+  ^-  $@(brief:rudder action)
+  =/  args=(map @t @t)  (form-data:web order)
+  ?.  (~(has by args) 'del-page')  ~
+  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
+  ?>  ?=([%wiki book-id=@ta *] site)
+  [%del-page book-id.site where:space-time:help]
 ::
-++  final  (alert:rudder url.request.order build)
+++  final
+  |=  [success=? msg=brief:rudder]
+  ^-  reply:rudder
+  =/  back=?  &(success (~(has by (form-data:web order)) 'del-page'))
+  =/  next=@t
+    ?.  back  url.request.order
+    (crip "/wiki/{(trip book-id:help)}?msg={(scow %ud 'Page deleted!')}")
+  ((alert:rudder next build))
 ::
 ++  build
   |=  [arg=(list [k=@t v=@t]) msg=(unit [? @t])]
   ^-  reply:rudder
   ::
-  =/  site=(pole knot)  (stab url.request.order)
+  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
   ?.  ?=([%wiki book-id=@ta *] site)
     [%code 404 'Invalid path']
   ?~  buuk=(~(get by books) book-id.site)
@@ -74,6 +86,14 @@
             ;nav.page
               ;a/"{wik-dir}{pag-dir}/~/edit": Edit
               ;a/"{wik-dir}{pag-dir}/~/history": History
+              ;+
+              ?.  =(src.bowl our.bowl)  stub:web
+              %+  in-form:web  "Are you sure you want to delete this page?"
+              ;button.delete
+                =type   "submit"
+                =name   "del-page"
+                ; Delete
+              ==
             ==
           ==
           ;article
@@ -102,13 +122,13 @@
 ::
 ++  book-id  ~+
   ^-  @ta
-  =/  site=(pole knot)  (stab url.request.order)
+  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
   ?>  ?=([%wiki book-id=@ta *] site)
   book-id.site
 ::
 ++  space-time  ~+
   ^-  [where=path when=(unit (each @da @ud))]
-  =/  site=(pole knot)  (stab url.request.order)
+  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
   ?>  ?=([%wiki book-id=@ta pat=*] site)
   =/  pat=(pole knot)  pat.site
   =/  n=@  (lent pat)

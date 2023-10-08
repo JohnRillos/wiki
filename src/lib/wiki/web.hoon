@@ -36,6 +36,16 @@
     [(crip l) r]
   (my pairs)
 ::
+++  query-msg
+  |=  query=(map @t tape)
+  ^-  (unit tape)
+  =/  msg=(unit tape)  (~(get by query) 'msg')
+  ?~  msg  ~
+  ::  msg may be encoded as @ud
+  =/  encoded=(unit @ud)  (slaw %ud (crip u.msg))
+  ?~  encoded  msg
+  `(trip `@t`u.encoded)
+::
 ++  style
   |=  =bowl:gall
   (read-file bowl /web/wiki/style/css)

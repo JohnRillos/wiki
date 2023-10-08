@@ -18,8 +18,14 @@
           msg=(unit [success=? text=@t])
       ==
   ^-  reply:rudder
+  =/  [site=(pole knot) query=(map @t tape)]  (sane-url:web url.request.order)
   ::
   |^  [%page render]
+  ::
+  ++  on-load
+    =/  alert=(unit tape)  (query-msg:web query)
+    ?~  alert  ""
+    "javascript:window.alert('{u.alert}')"
   ::
   ++  render
     ^-  manx
@@ -30,7 +36,7 @@
         ;meta(name "viewport", content "width=device-width, initial-scale=1");
         ;style: {(style:web bowl)}
       ==
-      ;body
+      ;body(onload on-load)
         ;h1: %wiki manager
         ;a/"/wiki/~/new"
           ;button(type "button"): New Wiki
