@@ -22,10 +22,13 @@
   ::
   |^  [%page render]
   ::
-  ++  on-load
+  ++  on-page-load
     =/  alert=(unit tape)  (query-msg:web query)
     ?~  alert  ""
-    "javascript:window.alert('{u.alert}')"
+    """
+    javascript:window.alert('{u.alert}');
+    window.history.pushState(\{}, document.title, window.location.pathname);
+    """
   ::
   ++  render
     ^-  manx
@@ -36,7 +39,7 @@
         ;meta(name "viewport", content "width=device-width, initial-scale=1");
         ;style: {(style:web bowl)}
       ==
-      ;body(onload on-load)
+      ;body(onload on-page-load)
         ;h1: %wiki manager
         ;a/"/wiki/~/new"
           ;button(type "button"): New Wiki

@@ -12,20 +12,16 @@
   ?:  =('/' -.tape)  (stab cord)
   (stab (crip ['/' tape]))
 ::
+:: same idea as partition:string but safer and maybe more efficient
+::
 ++  split-on
   |*  [log=(list *) div=*]
   ^-  [pre=_log suf=_log]
-  =/  i=(unit @)  (find [div]~ log)
-  ?~  i  [log ~]
-  (split log u.i)
-::
-++  split
-  |*  [log=(list *) i=@]
-  ^-  [pre=_log suf=_log]
   =/  pre=_log  ~
   |-
-  ?:  =(0 i)  [pre log]
-  $(i (dec i), pre (snoc pre -.log), log +.log)
+  ?:  =(~ log)      [pre ~]
+  ?:  =(div -.log)  [pre +.log]
+  $(pre (snoc pre -.log), log +.log)
 ::
 ++  bush  :: to-do: move into /sur/wiki.hoon ?
   |$  [node leaf]

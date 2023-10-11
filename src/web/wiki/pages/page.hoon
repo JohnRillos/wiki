@@ -26,7 +26,8 @@
   =/  back=?  &(success (~(has by (form-data:web order)) 'del-page'))
   =/  next=@t
     ?.  back  url.request.order
-    (crip "/wiki/{(trip book-id:help)}?msg={(scow %ud 'Page deleted!')}")
+    =/  msg=tape  (en-urlt:html "Page deleted!")
+    (crip "/wiki/{(trip book-id:help)}?msg={msg}")
   ((alert:rudder next build))
 ::
 ++  build
@@ -133,10 +134,10 @@
   =/  pat=(pole knot)  pat.site
   =/  n=@  (lent pat)
   ?:  (lth n 4)  [pat ~]
-  =/  [pre=path suf=(pole knot)]  (split pat (sub n 3))
+  =/  [pre=path suf=(pole knot)]  (split-on pat %~.~)
   ?+  suf  [pat ~]
-    [%~.~ %t day=@ta ~]  [pre `[%& (slav %da day.suf)]]
-    [%~.~ %v ver=@ta ~]  [pre `[%| (slav %ud ver.suf)]]
+    [%t day=@ta ~]  [pre `[%& (slav %da day.suf)]]
+    [%v ver=@ta ~]  [pre `[%| (slav %ud ver.suf)]]
   ==
 ::
 ++  get-page

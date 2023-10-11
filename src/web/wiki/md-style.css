@@ -3,13 +3,6 @@ img {
   max-height: 20em;
 }
 
-code:not(code[class*=language-]) {
-  background-color: rgba(130, 130, 130, 20%);
-  border-radius: 4px;
-  padding: 2px;
-  border: solid 1px rgb(130, 130, 130, 30%);
-}
-
 code[class*=language-] {
   font-family: monospace;
 }

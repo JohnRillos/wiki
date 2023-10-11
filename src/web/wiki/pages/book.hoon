@@ -1,7 +1,7 @@
 ::  wiki overview
 ::
 /-  *wiki
-/+  rudder, web=wiki-web, *wiki
+/+  multipart, rudder, web=wiki-web, *wiki
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -10,9 +10,16 @@
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
   ^-  $@(brief:rudder action)
+  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
+  ?>  ?=([%wiki book-id=@ta ~] site)
   =/  args=(map @t @t)  (form-data:web order)
-  ?~  del-book=(~(get by args) 'del-book')  ~
-  [%del-book id=u.del-book]
+  ?^  del-book=(~(get by args) 'del-book')
+    [%del-book book-id.site]
+  =/  data=(map @t (list part:multipart))  (multipart-map:web order)
+  =/  header-as-title=?  (~(has by data) 'header-as-title')
+  ?~  parts=(~(get by data) 'file')  ~
+  =/  files  (get-md-files:web u.parts)
+  [%imp-file book-id.site files header-as-title]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]
@@ -20,7 +27,8 @@
   =/  back=?  &(success (~(has by (form-data:web order)) 'del-book'))
   =/  next=@t
     ?.  back  url.request.order
-    (crip "/wiki?msg={(scow %ud 'Wiki deleted!')}")
+    =/  msg=tape  (en-urlt:html "Wiki deleted!")
+    (crip "/wiki?msg={msg}")
   ((alert:rudder next build))
 ::
 ++  build
@@ -35,10 +43,37 @@
   ::
   |^  [%page render]
   ::
-  ++  on-load
+  ++  on-page-load
     =/  alert=(unit tape)  (query-msg:web query)
     ?~  alert  ""
-    "javascript:window.alert('{u.alert}')"
+    """
+    javascript:window.alert('{u.alert}');
+    window.history.pushState(\{}, document.title, window.location.pathname);
+    """
+  ::
+  ++  file-import  :: todo: move this to its own page
+    ^-  manx
+    ?.  =(src.bowl our.bowl)  stub:web
+    ;form(method "post", enctype "multipart/form-data")
+      ;div
+        ;label(for "upload"): Upload Markdown folder
+        ;input#upload
+          =type  "file"
+          =name  "file"
+          =directory  ""
+          =webkitdirectory  ""
+          =mozdirectory  ""
+          ;
+        ==
+      ==
+      ;div
+        ;label(for "header-title-check"): Use First Header as Title
+        ;input#header-title-check(type "checkbox", name "header-as-title");
+      ==
+      ;div
+        ;button(type "submit"): Submit
+      ==
+    ==
   ::
   ++  render
     ^-  manx
@@ -47,7 +82,7 @@
         ;title: {(trip title.book)}
         ;style: {(style:web bowl)}
       ==
-      ;body#with-sidebar(onload on-load)
+      ;body#with-sidebar(onload on-page-load)
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main
           ;h1#wiki-title: {(trip title.book)}
@@ -65,6 +100,7 @@
               ; Delete Wiki
             ==
           ==
+          ;+  file-import
           ;h2: Pages
           ;ul
             ;*  %+  turn  ~(tap by tales.book)

@@ -1,5 +1,5 @@
 /-  *wiki
-/+  dbug, default-agent, rudder, verb, wiki-http
+/+  dbug, default-agent, regex, rudder, verb, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
 ::
@@ -93,6 +93,7 @@
       %new-page       (new-page:main act)
       %mod-page       (mod-page:main act)
       %del-page       (del-page:main act)
+      %imp-file       (imp-file:main act)  
     ==
   ::
   ++  handle-http
@@ -201,5 +202,30 @@
   =.  tales.book  (~(put by tales.book) path tale)
   =.  books       (~(put by books) book-id book)
   [~ state]
+::
+++  imp-file
+  |=  [%imp-file book-id=@ta files=(map path tape) header-as-title=?]
+  ~&  files
+  :_  state
+  %+  turn  ~(tap by files)
+  |=  [=path data=tape]
+  =/  [title=@t content=tape]
+    ?.  header-as-title  [(rear path) data]
+    (fall (title-from-header data) [(rear path) data])
+  (poke-self [%new-page book-id path title content])
+::
+++  title-from-header
+  |=  md=tape
+  ^-  (unit [title=@t content=tape])
+  =/  pattern  "#+\\s+[^\\n]+"
+  %+  bind  (rut:regex pattern md)
+  |=  [=pint match=tape]
+  :-  (crip (sub:regex "#+\\s+" "" match))
+  (tail (need (fort:regex ".*" q.pint md)))
+::
+++  poke-self
+  |=  =action
+  ^-  card
+  [%pass [-.action ~] %agent [our.bowl %wiki] %poke %wiki-action !>(action)]
 ::
 --

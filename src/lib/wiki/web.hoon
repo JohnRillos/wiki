@@ -1,7 +1,7 @@
 ::
 :: page-rendering utility
 ::
-/+  rudder, string, *wiki
+/+  multipart, regex, rudder, string, *wiki
 /*  globe-svg   %svg   /web/wiki/icons/globe/svg
 /*  lock-svg    %svg   /web/wiki/icons/lock/svg
 ::
@@ -25,26 +25,70 @@
   |=  query=tape
   ^-  (map @t tape)
   ?:  =(0 (lent query))  ~
-  =.  query
-    ?.  =('?' -.query)  query
-    +.query
-  =/  chunks=(list tape)  (split:string "&" query)
-  =/  pairs=(list (pair @t tape))
-    %+  turn  chunks
-    |=  chunk=tape
-    =/  [l=tape n=tape r=tape]  (partition:string "=" chunk)
-    [(crip l) r]
-  (my pairs)
+  (~(run by (frisk:rudder (crip query))) trip)
 ::
 ++  query-msg
   |=  query=(map @t tape)
   ^-  (unit tape)
   =/  msg=(unit tape)  (~(get by query) 'msg')
   ?~  msg  ~
-  ::  msg may be encoded as @ud
-  =/  encoded=(unit @ud)  (slaw %ud (crip u.msg))
-  ?~  encoded  msg
-  `(trip `@t`u.encoded)
+  (de-urlt:html u.msg)
+::
+++  multipart-map
+  |=  =order:rudder
+  ^-  (map @t (list part:multipart))
+  =/  parts=(unit (list [input=@t =part:multipart]))
+    (de-request:multipart header-list.request.order body.request.order)
+  ?~  parts  ~
+  %+  roll  u.parts
+  |=  [p=[input=@t =part:multipart] acc=(map @t (list part:multipart))]
+  ?.  (~(has by acc) input.p)  (~(put by acc) input.p ~[part.p])
+  (~(put by acc) input.p (snoc (~(got by acc) input.p) part.p))
+::
+:: todo: move file upload parsing to new lib maybe
+::
+++  get-md-files
+  |=  multi=(list part:multipart)
+  ^-  (map path tape)
+  %-  my
+  ^-  (list (pair path tape))
+  (murn multi parse-md-file)
+::
+++  parse-md-file
+  |=  =part:multipart
+  ^-  (unit [=path data=tape])
+  ?~  type.part  ~
+  ?.  =(~['text/markdown'] u.type.part)  ~
+  ?~  file.part  ~
+  =/  data=tape  (trip body.part)
+  |^  `[(parse-filepath u.file.part) data]
+  ::
+  ++  invalid-knot-char  "[^0-9a-z\\-_~\\.]"
+  ::
+  ++  parse-filepath
+    |=  filepath=@t
+    ^-  path
+    =/  split=(list tape)  (split:string "/" (trip filepath))
+    ?<  =(~ split)
+    =.  split  +.split :: remove redundant first path segment
+    =|  out=path
+    |-
+    ?:  =(~ split)  out
+    =/  seg=@ta
+      %-  coerce-to-knot
+      ?.  =(~ +.split)  -.split
+      (remove-extension -.split)
+    $(out (snoc out seg), split +.split)
+  ::
+  ++  coerce-to-knot
+    |=  =tape
+    ^-  knot
+    (crip (gsub:regex invalid-knot-char "-" (cass tape)))
+  ::
+  ++  remove-extension
+    |=  =tape
+    (flop r:(partition:string "." (flop tape)))
+  --
 ::
 ++  style
   |=  =bowl:gall
@@ -63,23 +107,6 @@
   ^-  tape
   %-  trip
   .^(@t %cx (weld /[(crip <our.bowl>)]/wiki/[(crip <now.bowl>)] path))
-::
-:: ++  splice
-::   |=  [=manx =mart]
-::   ^-  ^manx
-::   =/  atts  `(list (pair mane tape))`a.g.manx
-::   %=  manx
-::     a.g  ~(tap by (~(gas by (my atts)) mart))
-::   ==
-::
-:: ++  follow
-::   |=  [=manx attributes=(list [@tas tape])]
-::   ^-  ^manx
-::   %+  splice  manx
-::   :~  [%hx-target "body"]
-::       [%hx-swap "outerHTML"]
-::       [%hx-push-url "true"]
-::   ==
 ::
 ++  confirm
   |=  =tape
