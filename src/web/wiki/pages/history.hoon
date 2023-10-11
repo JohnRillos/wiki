@@ -64,13 +64,13 @@
             ;header
               ;h1: {(trip title.last)}: Revision History
             ==
-            ;a(href "{wik-dir}{pag-dir}"): Back to Current Revision
+            ;a/"..": Back to Current Revision
             ;ul
               ;*  %+  turn  (tap:ton u.tale)
                   |=  [date=@da =page]
                   ^-  manx
                   ;li
-                    ;a/"../~/t/{<date>}": {<date>}
+                    ;a/"{wik-dir}{pag-dir}?t={<date>}": {<date>}
                   ==
             ==
           ==

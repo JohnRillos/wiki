@@ -129,16 +129,14 @@
 ::
 ++  space-time  ~+
   ^-  [where=path when=(unit (each @da @ud))]
-  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
+  =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
   ?>  ?=([%wiki book-id=@ta pat=*] site)
-  =/  pat=(pole knot)  pat.site
-  =/  n=@  (lent pat)
-  ?:  (lth n 4)  [pat ~]
-  =/  [pre=path suf=(pole knot)]  (split-on pat %~.~)
-  ?+  suf  [pat ~]
-    [%t day=@ta ~]  [pre `[%& (slav %da day.suf)]]
-    [%v ver=@ta ~]  [pre `[%| (slav %ud ver.suf)]]
-  ==
+  :-  pat.site
+  =/  day=(unit @da)  (biff (~(get by query) 't') (cury slaw %da))
+  ?^  day  `[%& u.day]
+  =/  ver=(unit @ud)  (biff (~(get by query) 'v') (cury slaw %ud))
+  ?^  ver  `[%| u.ver]
+  ~
 ::
 ++  get-page
   |=  =tale

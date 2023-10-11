@@ -16,23 +16,23 @@
 ++  sane-url
   |=  =cord
   ~+
-  ^-  [=path query=(map @t tape)]
+  ^-  [=path query=(map @t @t)]
   =/  [pre=tape suf=tape]  (split-on (trip cord) '?')
   :-  (stab (crip pre))
   (parse-query suf)
 ::
 ++  parse-query
   |=  query=tape
-  ^-  (map @t tape)
+  ^-  (map @t @t)
   ?:  =(0 (lent query))  ~
-  (~(run by (frisk:rudder (crip query))) trip)
+  (frisk:rudder (crip query))
 ::
 ++  query-msg
-  |=  query=(map @t tape)
+  |=  query=(map @t @t)
   ^-  (unit tape)
-  =/  msg=(unit tape)  (~(get by query) 'msg')
+  =/  msg=(unit @t)  (~(get by query) 'msg')
   ?~  msg  ~
-  (de-urlt:html u.msg)
+  (de-urlt:html (trip u.msg))
 ::
 ++  multipart-map
   |=  =order:rudder

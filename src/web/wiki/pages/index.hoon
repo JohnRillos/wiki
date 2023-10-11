@@ -18,7 +18,7 @@
           msg=(unit [success=? text=@t])
       ==
   ^-  reply:rudder
-  =/  [site=(pole knot) query=(map @t tape)]  (sane-url:web url.request.order)
+  =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
   ::
   |^  [%page render]
   ::

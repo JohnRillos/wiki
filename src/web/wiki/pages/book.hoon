@@ -35,7 +35,7 @@
   |=  [arg=(list [k=@t v=@t]) msg=(unit [success=? text=@t])]
   ^-  reply:rudder
   ::
-  =/  [site=(pole knot) query=(map @t tape)]  (sane-url:web url.request.order)
+  =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
   ?>  ?=([%wiki book-id=@ta ~] site)
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]

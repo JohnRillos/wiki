@@ -21,7 +21,7 @@
   |=  [arg=(list [k=@t v=@t]) msg=(unit [? @t])]
   ^-  reply:rudder
   ::
-  =/  [site=(pole knot) query=(map @t tape)]  (sane-url:web url.request.order)
+  =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
   ?.  ?=([%wiki book-id=@ta *] site)  [%code 404 'Invalid path']
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
@@ -71,10 +71,10 @@
   book-id.site
 ::
 ++  target-path
-  |=  query=(map @t tape)
+  |=  query=(map @t @t)
   ^-  (unit path)
-  =/  target=(unit tape)  (~(get by query) 'target')
-  (bind target (cork crip stab))
+  =/  target=(unit @t)  (~(get by query) 'target')
+  (bind target stab)
 ::
 ++  can-create
   =(src.bowl our.bowl)
