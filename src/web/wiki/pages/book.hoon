@@ -10,8 +10,7 @@
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
   ^-  $@(brief:rudder action)
-  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
-  ?>  ?=([%wiki book-id=@ta ~] site)
+  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
   =/  args=(map @t @t)  (form-data:web order)
   ?^  del-book=(~(get by args) 'del-book')
     [%del-book book-id.site]
@@ -35,8 +34,7 @@
   |=  [arg=(list [k=@t v=@t]) msg=(unit [success=? text=@t])]
   ^-  reply:rudder
   ::
-  =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
-  ?>  ?=([%wiki book-id=@ta ~] site)
+  =/  [site=wiki-path query=(map @t @t)]  (wiki-url:web url.request.order)
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk

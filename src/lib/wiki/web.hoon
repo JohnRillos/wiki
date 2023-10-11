@@ -1,6 +1,7 @@
 ::
 :: page-rendering utility
 ::
+/-  *wiki
 /+  multipart, regex, rudder, string, *wiki
 /*  globe-svg   %svg   /web/wiki/icons/globe/svg
 /*  lock-svg    %svg   /web/wiki/icons/lock/svg
@@ -13,6 +14,12 @@
   ?~  body.request.order  ~
   (frisk:rudder q.u.body.request.order)
 ::
+++  wiki-url
+  |=  =cord
+  ^-  [=wiki-path query=(map @t @t)]
+  =/  [=path que=(map @t @t)]  (sane-url cord)
+  [(wiki-path path) que]
+::
 ++  sane-url
   |=  =cord
   ~+
@@ -24,7 +31,7 @@
 ++  parse-query
   |=  query=tape
   ^-  (map @t @t)
-  ?:  =(0 (lent query))  ~
+  ?:  =(~ query)  ~
   (frisk:rudder (crip query))
 ::
 ++  query-msg

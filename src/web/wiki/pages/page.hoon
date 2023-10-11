@@ -16,9 +16,8 @@
   ^-  $@(brief:rudder action)
   =/  args=(map @t @t)  (form-data:web order)
   ?.  (~(has by args) 'del-page')  ~
-  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
-  ?>  ?=([%wiki book-id=@ta *] site)
-  [%del-page book-id.site where:space-time:help]
+  =/  [=wiki-path *]  (wiki-url:web url.request.order)
+  [%del-page book-id.wiki-path where:space-time:help]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]
@@ -34,9 +33,7 @@
   |=  [arg=(list [k=@t v=@t]) msg=(unit [? @t])]
   ^-  reply:rudder
   ::
-  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
-  ?.  ?=([%wiki book-id=@ta *] site)
-    [%code 404 'Invalid path']
+  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk
@@ -123,15 +120,12 @@
 ::
 ++  book-id  ~+
   ^-  @ta
-  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
-  ?>  ?=([%wiki book-id=@ta *] site)
-  book-id.site
+  book-id:wiki-path:(wiki-url:web url.request.order)
 ::
 ++  space-time  ~+
   ^-  [where=path when=(unit (each @da @ud))]
-  =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
-  ?>  ?=([%wiki book-id=@ta pat=*] site)
-  :-  pat.site
+  =/  [=wiki-path query=(map @t @t)]  (wiki-url:web url.request.order)
+  :-  loc.wiki-path
   =/  day=(unit @da)  (biff (~(get by query) 't') (cury slaw %da))
   ?^  day  `[%& u.day]
   =/  ver=(unit @ud)  (biff (~(get by query) 'v') (cury slaw %ud))

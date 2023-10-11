@@ -21,8 +21,7 @@
   |=  [arg=(list [k=@t v=@t]) msg=(unit [? @t])]
   ^-  reply:rudder
   ::
-  =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
-  ?.  ?=([%wiki book-id=@ta *] site)  [%code 404 'Invalid path']
+  =/  [site=wiki-path query=(map @t @t)]  (wiki-url:web url.request.order)
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk

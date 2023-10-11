@@ -43,4 +43,6 @@
       :: [%pardon book-id=@ta =ship]
   ==
 ::
++$  wiki-path  [%wiki book-id=@ta loc=path]
+::
 --

@@ -51,8 +51,7 @@
   |=  [arg=(list [k=@t v=@t]) msg=(unit [success=? text=@t])]
   ^-  reply:rudder
   ::
-  =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
-  ?>  ?=([%wiki book-id=@ta *] site)
+  =/  [site=wiki-path query=(map @t @t)]  (wiki-url:web url.request.order)
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk
@@ -134,11 +133,7 @@
   ?~  body.request.order  ~
   (frisk:rudder q.u.body.request.order)
 ::
-++  book-id
-  ^-  @ta
-  =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
-  ?>  ?=([%wiki book-id=@ta *] site)
-  book-id.site
+++  book-id  book-id:wiki-path:(wiki-url:web url.request.order)
 ::
 ++  target-path
   |=  query=(map @t @t)
