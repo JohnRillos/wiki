@@ -217,7 +217,7 @@
 ++  title-from-header
   |=  md=tape
   ^-  (unit [title=@t content=tape])
-  =/  pattern  "#+\\s+[^\\n]+"
+  =/  pattern  "#+\\s+[^\\0a]+"
   %+  bind  (rut:regex pattern md)
   |=  [=pint match=tape]
   :-  (crip (sub:regex "#+\\s+" "" match))

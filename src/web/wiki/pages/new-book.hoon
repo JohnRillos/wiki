@@ -48,10 +48,9 @@
   ++  knot-regex  "[0-9a-z\\-_~\\.]+"
   ::
   ++  knot-explain
-    """
-    Lowercase letters, numbers, hyphen (-), underscore (_), period (.),
-    and tilde (~)
-    """
+    %-  trip
+    'Lowercase letters, numbers, hyphen (-), underscore (_), period (.), \
+    /and tilde (~)'
   ::
   ++  render
     ^-  manx
