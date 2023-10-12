@@ -36,7 +36,7 @@
       [%new-page book-id=@ta =path title=@t content=tape]
       [%del-page book-id=@ta =path]
       [%mod-page book-id=@ta =path title=(unit @t) content=(unit tape)]
-      [%imp-file book-id=@ta files=(map path tape) header-as-title=?]
+      [%imp-file book-id=@ta files=(map path tape) =title-source]
       :: [%knight book-id=@ta =ship]
       :: [%demote book-id=@ta =ship]
       :: [%banish book-id=@ta =ship]
@@ -44,5 +44,7 @@
   ==
 ::
 +$  wiki-path  [%wiki book-id=@ta loc=path]
+::
++$  title-source  ?(%header %filename)
 ::
 --

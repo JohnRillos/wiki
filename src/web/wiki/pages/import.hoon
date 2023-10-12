@@ -12,10 +12,12 @@
   ^-  $@(brief:rudder action)
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
   =/  data=(map @t (list part:multipart))  (multipart-map:web order)
-  =/  header-as-title=?  (~(has by data) 'header-as-title')
+  =/  title-option  (~(get by data) 'title-source')
+  ?~  title-option  ~
+  =/  =title-source  (title-source body:(head u.title-option))
   ?~  parts=(~(get by data) 'file')  ~
   =/  files  (get-md-files:web u.parts)
-  [%imp-file book-id.site files header-as-title]
+  [%imp-file book-id.site files title-source]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]
@@ -59,11 +61,11 @@
             ==
             ;fieldset.box-item
               ;legend: Options
-              ;label(for "header-title-check"): Use first header as title
-              ;input#header-title-check
-                =type  "checkbox"
-                =name  "header-as-title"
-                ;
+              ;label(for "title-source"): Get page title from 
+              ;select#title-strategy
+                =name  "title-source"
+                ;option(value "filename"): filename
+                ;option(value "header"): first header
               ==
             ==
             ;button.submit.box-item(type "submit"): Upload

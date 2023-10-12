@@ -108,6 +108,10 @@ button {
   margin-right: 0.5em;
 }
 
+select {
+  font-size: unset;
+}
+
 button:hover {
   background-color: lightgray;
 }
@@ -132,19 +136,6 @@ button.delete:hover {
   background-color: darkred;
   border-color: darkred;
 }
-
-/* form#import {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  & .flex-item {
-    margin-bottom: 1em;
-  }
-  & div.file-upload {
-    border: 1px solid;
-    padding: 1em;
-  }
-} */
 
 .column-box {
   display: flex;

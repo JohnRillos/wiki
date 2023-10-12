@@ -204,20 +204,24 @@
   [~ state]
 ::
 ++  imp-file
-  |=  [%imp-file book-id=@ta files=(map path tape) header-as-title=?]
+  |=  [%imp-file book-id=@ta files=(map path tape) =title-source]
   ~&  files
   :_  state
   %+  turn  ~(tap by files)
   |=  [=path data=tape]
   =/  [title=@t content=tape]
-    ?.  header-as-title  [(rear path) data]
-    (fall (title-from-header data) [(rear path) data])
+    %+  fall
+      ?-  title-source
+        %filename  `[(rear path) data]
+        %header    (title-from-header data)
+      ==
+    [(rear path) data]
   (poke-self [%new-page book-id path title content])
 ::
 ++  title-from-header
   |=  md=tape
   ^-  (unit [title=@t content=tape])
-  =/  pattern  "#+\\s+[^\\0a]+"
+  =/  pattern  "#+\\s+[^\0a]+"
   %+  bind  (rut:regex pattern md)
   |=  [=pint match=tape]
   :-  (crip (sub:regex "#+\\s+" "" match))
