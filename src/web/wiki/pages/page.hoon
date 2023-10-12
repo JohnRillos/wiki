@@ -2,6 +2,7 @@
 ::
 /-  *wiki
 /+  rudder, web=wiki-web, *wiki
+/*  mermaid-zero-js  %js  /web/wiki/mermaid-zero/js
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -52,11 +53,16 @@
   ::
   |^  [%page render]
   ::
+  ++  mermaid-src
+    "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  ::
   ++  zero-md-src
     "https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"
   ::
   ++  prism-css-src
     "https://cdn.jsdelivr.net/gh/PrismJS/prism@1/themes/prism.min.css"
+  ::
+  ++  mermaid-script  ^~  (trip mermaid-zero-js)
   ::
   ++  render  :: to-do: display if this page is public or private
     ^-  manx
@@ -97,8 +103,11 @@
           ;article
             ;+  ?~  version-notice  stub:web
                 ;p#version-banner: {u.version-notice}
+            ;script(defer "", src mermaid-src);
             ;script(type "module", src zero-md-src);
-            ;zero-md
+            ;zero-md#zero
+              =no-shadow      ""
+              =manual-render  ""
               ;template
                 ;link(rel "stylesheet", href prism-css-src);
                 ;style: {(style:web bowl)}
@@ -106,6 +115,7 @@
               ==
               ;script(type "text/markdown"): {content.page}
             ==
+            ;script: {mermaid-script}
           ==
           ;+  (footer:web bowl url.request.order)
         ==
