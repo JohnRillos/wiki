@@ -78,6 +78,7 @@ nav.page {
 
 form {
   display: unset;
+  margin-block-end: unset;
 }
 
 footer {
@@ -130,6 +131,34 @@ button.delete:hover {
   color: white;
   background-color: darkred;
   border-color: darkred;
+}
+
+/* form#import {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  & .flex-item {
+    margin-bottom: 1em;
+  }
+  & div.file-upload {
+    border: 1px solid;
+    padding: 1em;
+  }
+} */
+
+.column-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  & .box-item {
+    margin-top: 0em;
+    margin-bottom: 1em;
+  }
+}
+
+div.file-upload {
+  border: 1px solid;
+  padding: 1em;
 }
 
 div.CodeMirror {

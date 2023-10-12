@@ -12,13 +12,8 @@
   ^-  $@(brief:rudder action)
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
   =/  args=(map @t @t)  (form-data:web order)
-  ?^  del-book=(~(get by args) 'del-book')
-    [%del-book book-id.site]
-  =/  data=(map @t (list part:multipart))  (multipart-map:web order)
-  =/  header-as-title=?  (~(has by data) 'header-as-title')
-  ?~  parts=(~(get by data) 'file')  ~
-  =/  files  (get-md-files:web u.parts)
-  [%imp-file book-id.site files header-as-title]
+  ?~  del-book=(~(get by args) 'del-book')  ~
+  [%del-book book-id.site]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]
@@ -49,30 +44,6 @@
     window.history.pushState(\{}, document.title, window.location.pathname);
     """
   ::
-  ++  file-import  :: todo: move this to its own page
-    ^-  manx
-    ?.  =(src.bowl our.bowl)  stub:web
-    ;form(method "post", enctype "multipart/form-data")
-      ;div
-        ;label(for "upload"): Upload Markdown folder
-        ;input#upload
-          =type  "file"
-          =name  "file"
-          =directory  ""
-          =webkitdirectory  ""
-          =mozdirectory  ""
-          ;
-        ==
-      ==
-      ;div
-        ;label(for "header-title-check"): Use First Header as Title
-        ;input#header-title-check(type "checkbox", name "header-as-title");
-      ==
-      ;div
-        ;button(type "submit"): Submit
-      ==
-    ==
-  ::
   ++  render
     ^-  manx
     ;html
@@ -88,17 +59,20 @@
             ;a/"/wiki/{(trip book-id.site)}/~/new"
               ;button(type "button"): New Page
             ==
-            ;+
-            ?.  =(src.bowl our.bowl)  stub:web
-            %+  in-form:web  "Are you sure you want to delete this wiki?"
-            ;button.delete
-              =type   "submit"
-              =name   "del-book"
-              =value  "{(trip book-id.site)}"
-              ; Delete Wiki
+            ;*  ?.  =(src.bowl our.bowl)  ~
+            :~
+              ;a/"/wiki/{(trip book-id.site)}/~/import"
+                ;button(type "button"): Import
+              ==
+              %+  in-form:web  "Are you sure you want to delete this wiki?"
+              ;button.delete
+                =type   "submit"
+                =name   "del-book"
+                =value  "{(trip book-id.site)}"
+                ; Delete Wiki
+              ==
             ==
           ==
-          ;+  file-import
           ;h2: Pages
           ;ul
             ;*  %+  turn  ~(tap by tales.book)
