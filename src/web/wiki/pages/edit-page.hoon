@@ -24,7 +24,7 @@
       %mod-page
     ?.  authenticated.order  'You must be logged in to edit an article!'
     =/  page-title=@t  (~(got by args) 'page-title')
-    =/  content=tape  (trip (~(got by args) 'content'))
+    =/  content=wain  (to-wain:format (~(got by args) 'content'))
     [%mod-page book-id:help page-path:help `page-title `content]
   ==
 ::

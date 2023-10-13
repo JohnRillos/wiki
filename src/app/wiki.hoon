@@ -166,7 +166,7 @@
   [~ state]
 ::
 ++  new-page
-  |=  [%new-page book-id=@ta =path title=@t content=tape]
+  |=  [%new-page book-id=@ta =path title=@t content=wain]
   ?:  =(~ path)  ~|('Path cannot be blank!' !!)
   ?^  (find "~" path)  ~|('Path cannot contain "/~/"' !!)
   ?.  (levy path (sane %ta))  ~|('Invalid path!' !!)
@@ -187,7 +187,7 @@
   [~ state]
 ::
 ++  mod-page
-  |=  [%mod-page book-id=@ta =path title=(unit @t) content=(unit tape)]
+  |=  [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
   =/  =book  (~(got by books) book-id)
   =/  =tale  (~(got by tales.book) path)
   =/  =page  page:(latest tale)
@@ -204,12 +204,11 @@
   [~ state]
 ::
 ++  imp-file
-  |=  [%imp-file book-id=@ta files=(map path tape) =title-source]
-  ~&  files
+  |=  [%imp-file book-id=@ta files=(map path wain) =title-source]
   :_  state
   %+  turn  ~(tap by files)
-  |=  [=path data=tape]
-  =/  [title=@t content=tape]
+  |=  [=path data=wain]
+  =/  [title=@t content=wain]
     %+  fall
       ?-  title-source
         %filename  `[(title-from-filename path) data]
@@ -219,13 +218,16 @@
   (poke-self [%new-page book-id path title content])
 ::
 ++  title-from-header
-  |=  md=tape
-  ^-  (unit [title=@t content=tape])
-  =/  pattern  "#+\\s+[^\0a]+"
-  %+  bind  (rut:regex pattern md)
-  |=  [=pint match=tape]
-  :-  (crip (sub:regex "#+\\s+" "" match))
-  (lstrip:string (tail (need (fort:regex ".*" q.pint md))))
+  |=  md=wain
+  ^-  (unit [title=@t content=wain])
+  =/  pattern  "#+\\s+.+"
+  ?:  (lth (lent md) 3)                ~
+  =/  first-line  (trip -.md)
+  ?.  (has:regex pattern first-line)   ~
+  ?.  (is-space:string (trip -.+.md))  ~
+  :-  ~
+  :-  (crip (sub:regex "#+\\s+" "" first-line)) :: 1st line = title
+  +.+.md                                        :: skip 2nd line
 ::
 ++  title-from-filename
   |=  =path

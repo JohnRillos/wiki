@@ -27,7 +27,7 @@
         =/  =path
           ~|  'Invalid page path'  (part (~(got by args) 'page-path'))
         =/  page-title=@t  (~(got by args) 'page-title')
-        =/  content=tape  (trip (~(got by args) 'content'))
+        =/  content=wain  (to-wain:format (~(got by args) 'content'))
         [%new-page book-id:help path page-title content]
       ==
   ::

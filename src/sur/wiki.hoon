@@ -17,7 +17,7 @@
 ::
 +$  page
   $:  title=@t
-      content=tape
+      content=wain
   ==
 ::
 +$  access
@@ -33,10 +33,10 @@
       [%mod-book-name id=@ta title=@t]
       :: [%mod-rule-read id=@ta public-read=?]
       :: [%mod-rule-edit id=@ta public-edit=?]
-      [%new-page book-id=@ta =path title=@t content=tape]
+      [%new-page book-id=@ta =path title=@t content=wain]
       [%del-page book-id=@ta =path]
-      [%mod-page book-id=@ta =path title=(unit @t) content=(unit tape)]
-      [%imp-file book-id=@ta files=(map path tape) =title-source]
+      [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
+      [%imp-file book-id=@ta files=(map path wain) =title-source]
       :: [%knight book-id=@ta =ship]
       :: [%demote book-id=@ta =ship]
       :: [%banish book-id=@ta =ship]

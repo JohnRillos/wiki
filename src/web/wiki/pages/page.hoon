@@ -117,7 +117,10 @@
                 ;style: {(style:web bowl)}
                 ;style: {(md-style:web bowl)}
               ==
-              ;script(type "text/markdown"): {content.page}
+              ;script
+                =type  "text/markdown"
+                ; {(trip (of-wain:format content.page))}
+              ==
             ==
             ;script: {mermaid-script}
           ==

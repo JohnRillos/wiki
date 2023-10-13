@@ -42,7 +42,7 @@
     =/  md=wain
       :-  (crip "# {(trip title.page)}")
       :-  ''
-      (turn (split:string "/0a" content.page) crip)
+      content.page
     (tail (md-to-mime md))
   --
 --

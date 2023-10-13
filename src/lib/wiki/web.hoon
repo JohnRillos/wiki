@@ -56,18 +56,18 @@
 ::
 ++  get-md-files
   |=  multi=(list part:multipart)
-  ^-  (map path tape)
+  ^-  (map path wain)
   %-  my
-  ^-  (list (pair path tape))
+  ^-  (list (pair path wain))
   (murn multi parse-md-file)
 ::
 ++  parse-md-file
   |=  =part:multipart
-  ^-  (unit [=path data=tape])
+  ^-  (unit [=path data=wain])
   ?~  type.part  ~
   ?.  =(~['text/markdown'] u.type.part)  ~
   ?~  file.part  ~
-  =/  data=tape  (trip body.part)
+  =/  data=wain  (to-wain:format body.part)
   |^  `[(parse-filepath u.file.part) data]
   ::
   ++  invalid-knot-char  "[^0-9a-z\\-_~\\.]"
