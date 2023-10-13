@@ -212,10 +212,10 @@
   =/  [title=@t content=tape]
     %+  fall
       ?-  title-source
-        %filename  `[(rear path) data]
+        %filename  `[(title-from-filename path) data]
         %header    (title-from-header data)
       ==
-    [(rear path) data]
+    [(title-from-filename path) data]
   (poke-self [%new-page book-id path title content])
 ::
 ++  title-from-header
@@ -226,6 +226,11 @@
   |=  [=pint match=tape]
   :-  (crip (sub:regex "#+\\s+" "" match))
   (lstrip:string (tail (need (fort:regex ".*" q.pint md))))
+::
+++  title-from-filename
+  |=  =path
+  ^-  @t
+  (crip (title:string (gsub:regex "_" " " (trip (rear path)))))
 ::
 ++  poke-self
   |=  =action
