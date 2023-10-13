@@ -1,5 +1,5 @@
 /-  *wiki
-/+  dbug, default-agent, regex, rudder, verb, wiki-http
+/+  dbug, default-agent, regex, rudder, string, verb, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
 ::
@@ -93,7 +93,7 @@
       %new-page       (new-page:main act)
       %mod-page       (mod-page:main act)
       %del-page       (del-page:main act)
-      %imp-file       (imp-file:main act)  
+      %imp-file       (imp-file:main act)
     ==
   ::
   ++  handle-http
@@ -225,7 +225,7 @@
   %+  bind  (rut:regex pattern md)
   |=  [=pint match=tape]
   :-  (crip (sub:regex "#+\\s+" "" match))
-  (tail (need (fort:regex ".*" q.pint md)))
+  (lstrip:string (tail (need (fort:regex ".*" q.pint md))))
 ::
 ++  poke-self
   |=  =action

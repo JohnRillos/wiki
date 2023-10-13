@@ -90,6 +90,10 @@
             ;nav.page
               ;a/"{wik-dir}{pag-dir}/~/edit": Edit
               ;a/"{wik-dir}{pag-dir}/~/history": History
+              ;a/"{wik-dir}{pag-dir}/~/download?t={<as-of>}"
+                =download  "{(trip (rear page-path))}.md"
+                ; Download
+              ==
               ;+
               ?.  =(src.bowl our.bowl)  stub:web
               %+  in-form:web  "Are you sure you want to delete this page?"

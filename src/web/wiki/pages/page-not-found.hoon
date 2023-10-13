@@ -26,7 +26,6 @@
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk
   =/  target=(unit path)  (target-path:help query)
-  ~&  >  "target: {<target>}"
   ?~  target  [%code 400 'Invalid query']
   ?<  (~(has by tales.book) u.target)
   ::

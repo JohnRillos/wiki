@@ -38,11 +38,12 @@
     :-  ~
     :-  %page
     =/  n=@  (lent pat)
-    ?:  (lth n 3)       [auth %page]
+    ?:  (lth n 3)        [auth %page]
     =/  suf=path  (slag (sub n 2) pat)
-    ?+  suf             [auth %page]
-      [sig %edit ~]     [& %edit-page]
-      [sig %history ~]  [auth %history]
+    ?+  suf              [auth %page]
+      [sig %edit ~]      [& %edit-page]
+      [sig %history ~]   [auth %history]
+      [sig %download ~]  [auth %download]
     ==
   --
 ::
