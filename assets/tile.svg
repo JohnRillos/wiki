@@ -9,9 +9,10 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="127.16584mm"
-   height="100.28013mm"
-   viewBox="0 0 127.16584 100.28013"
+   width="140mm"
+   height="140mm"
+   viewBox="0 0 140 140"
+   style="background: white"
    version="1.1"
    id="svg8"
    sodipodi:docname="wiki_logo.svg"
@@ -69,13 +70,13 @@
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="187.45294"
-     inkscape:cy="186.95318"
+     inkscape:zoom="1.4"
+     inkscape:cx="180.492"
+     inkscape:cy="256.50145"
      inkscape:document-units="mm"
-     inkscape:current-layer="g995"
+     inkscape:current-layer="layer1"
      showgrid="false"
      fit-margin-top="25"
      fit-margin-bottom="25"
@@ -86,7 +87,8 @@
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     showguides="false" />
+     showguides="false"
+     inkscape:pagecheckerboard="true" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -100,62 +102,35 @@
     </rdf:RDF>
   </metadata>
   <g
-     style="display:inline;opacity:1"
-     inkscape:label="Layer 2 copy"
-     id="g995"
-     inkscape:groupmode="layer">
-    <ellipse
-       mask="none"
-       ry="41.680035"
-       rx="52.964973"
-       cy="46.060234"
-       cx="64.569267"
-       id="ellipse993"
-       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.79566312;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.71754313;stroke-opacity:1" />
-  </g>
-  <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(13.421618,-204.9215)"
+     transform="translate(20.484137,-169.14375)"
      style="display:inline">
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:89.98550415px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:2.2496376"
-       x="7.0963488"
-       y="291.83932"
+       x="5.2870822"
+       y="276.26065"
        id="text20"
        transform="scale(1.0270834,0.97363077)"
        mask="none"><tspan
          sodipodi:role="line"
          id="tspan18"
-         x="7.0963488"
-         y="291.83932"
+         x="5.2870822"
+         y="276.26065"
          style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-family:'URW Bookman';-inkscape-font-specification:'URW Bookman Light';stroke-width:2.2496376">W</tspan></text>
-    <ellipse
-       mask="none"
-       ry="41.680035"
-       rx="52.96497"
-       cy="251.51089"
-       cx="51.147648"
-       id="ellipse1012"
-       style="display:none;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.79566312;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.71754313;stroke-opacity:1" />
     <circle
        style="fill:#000000;stroke-width:0.26458332"
        id="path22"
-       cx="50.976292"
-       cy="269.38834"
+       cx="49.118023"
+       cy="254.22044"
        r="4.8776689" />
     <circle
        style="fill:#000000;stroke-width:0.26458332"
        id="path22-8"
-       cx="36.626667"
-       cy="247.52824"
+       cx="34.768398"
+       cy="232.36035"
        r="4.8776689" />
   </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer2"
-     inkscape:label="Layer 2"
-     style="display:inline;opacity:1" />
 </svg>
