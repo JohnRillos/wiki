@@ -2,7 +2,7 @@
     info+'Encyclopedia Urbitica'
     color+0xff.ffff
     base+'wiki'
-    image+'https://raw.githubusercontent.com/JohnRillos/wiki/master/assets/tile.svg'
+    image+'https://raw.githubusercontent.com/JohnRillos/wiki/dev/assets/tile.svg'
     site+/wiki
     version+[0 0 1]
     website+'https://example.com'
