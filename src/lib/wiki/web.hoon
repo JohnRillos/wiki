@@ -56,46 +56,48 @@
 ::
 ++  get-md-files
   |=  multi=(list part:multipart)
-  ^-  (map path wain)
+  ^-  (map @t wain)
   %-  my
-  ^-  (list (pair path wain))
-  (murn multi parse-md-file)
+  ^-  (list (pair @t wain))
+  |^  (murn multi parse-md-file)
+  ::
+  ++  parse-md-file
+    |=  =part:multipart
+    ^-  (unit [filepath=@t data=wain])
+    ?~  type.part  ~
+    ?.  =(~['text/markdown'] u.type.part)  ~
+    ?~  file.part  ~
+    =/  data=wain  (to-wain:format body.part)
+    `[u.file.part data]
+  --
 ::
-++  parse-md-file
-  |=  =part:multipart
-  ^-  (unit [=path data=wain])
-  ?~  type.part  ~
-  ?.  =(~['text/markdown'] u.type.part)  ~
-  ?~  file.part  ~
-  =/  data=wain  (to-wain:format body.part)
-  |^  `[(parse-filepath u.file.part) data]
+++  parse-filepath
+  |=  filepath=@t
+  ^-  [=path filename=tape]
+  =/  split=(list tape)  (split:string "/" (trip filepath))
+  ?<  =(~ split)
+  :_  (rear split)
+  =.  split  +.split :: remove redundant first path segment
+  =|  out=path
+  |^  |-
+      ?:  =(~ split)  out
+      =/  seg=@ta
+        %-  coerce-to-knot
+        ?.  =(~ +.split)  -.split
+        (remove-extension -.split)
+      $(out (snoc out seg), split +.split)
   ::
   ++  invalid-knot-char  "[^0-9a-z\\-_~\\.]"
-  ::
-  ++  parse-filepath
-    |=  filepath=@t
-    ^-  path
-    =/  split=(list tape)  (split:string "/" (trip filepath))
-    ?<  =(~ split)
-    =.  split  +.split :: remove redundant first path segment
-    =|  out=path
-    |-
-    ?:  =(~ split)  out
-    =/  seg=@ta
-      %-  coerce-to-knot
-      ?.  =(~ +.split)  -.split
-      (remove-extension -.split)
-    $(out (snoc out seg), split +.split)
   ::
   ++  coerce-to-knot
     |=  =tape
     ^-  knot
     (crip (gsub:regex invalid-knot-char "-" (cass tape)))
-  ::
-  ++  remove-extension
-    |=  =tape
-    (flop r:(partition:string "." (flop tape)))
   --
+::
+++  remove-extension
+  |=  =tape
+  (flop r:(partition:string "." (flop tape)))
 ::
 ++  style
   |=  =bowl:gall

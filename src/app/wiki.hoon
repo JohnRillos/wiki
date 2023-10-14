@@ -1,5 +1,5 @@
 /-  *wiki
-/+  dbug, default-agent, regex, rudder, string, verb, wiki-http
+/+  dbug, default-agent, regex, rudder, string, verb, web=wiki-web, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
 ::
@@ -204,17 +204,18 @@
   [~ state]
 ::
 ++  imp-file
-  |=  [%imp-file book-id=@ta files=(map path wain) =title-source]
+  |=  [%imp-file book-id=@ta files=(map @t wain) =title-source]
   :_  state
   %+  turn  ~(tap by files)
-  |=  [=path data=wain]
+  |=  [filepath=@t data=wain]
+  =/  [=path filename=tape]  (parse-filepath:web filepath)
   =/  [title=@t content=wain]
     %+  fall
       ?-  title-source
-        %filename  `[(title-from-filename path) data]
+        %filename  `[(title-from-filename filename) data]
         %header    (title-from-header data)
       ==
-    [(title-from-filename path) data]
+    [(title-from-filename filename) data]
   (poke-self [%new-page book-id path title content])
 ::
 ++  title-from-header
@@ -230,9 +231,12 @@
   +.+.md                                        :: skip 2nd line
 ::
 ++  title-from-filename
-  |=  =path
+  |=  filename=tape
   ^-  @t
-  (crip (title:string (gsub:regex "_" " " (trip (rear path)))))
+  %-  crip
+  %-  title:string
+  %-  remove-extension:web
+  (gsub:regex "[_\\+]" " " filename)
 ::
 ++  poke-self
   |=  =action
