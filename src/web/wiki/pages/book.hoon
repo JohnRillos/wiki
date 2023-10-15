@@ -9,11 +9,7 @@
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  ^-  $@(brief:rudder action)
-  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
-  =/  args=(map @t @t)  (form-data:web order)
-  ?~  del-book=(~(get by args) 'del-book')  ~
-  [%del-book book-id.site]
+  !!
 ::
 ++  final
   |=  [success=? msg=brief:rudder]
@@ -35,7 +31,7 @@
   =/  =book  u.buuk
   ::
   |^  [%page render]
-  ::
+  :::
   ++  on-page-load
     =/  alert=(unit tape)  (query-msg:web query)
     ?~  alert  ""
@@ -60,17 +56,9 @@
               ;button(type "button"): New Page
             ==
             ;*  ?.  =(src.bowl our.bowl)  ~
-            :~
-              ;a/"/wiki/{(trip book-id.site)}/~/import"
-                ;button(type "button"): Import
-              ==
-              %+  in-form:web  "Are you sure you want to delete this wiki?"
-              ;button.delete
-                =type   "submit"
-                =name   "del-book"
-                =value  "{(trip book-id.site)}"
-                ; Delete Wiki
-              ==
+            :_  ~
+            ;a/"/wiki/{(trip book-id.site)}/~/import"
+              ;button(type "button"): Import
             ==
           ==
           ;h2: Pages

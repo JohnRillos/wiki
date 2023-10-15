@@ -150,6 +150,7 @@
   ?:  |(=(~.~ id) !((sane %ta) id))
     ~|("Invalid wiki ID" !!)
   ?:  (~(has by books) id)  ~|("Wiki '{(trip id)}' already exists!" !!)
+  ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   =.  books  (~(put by books) [id [title ~ rules]])
   [~ state]
 ::
@@ -161,6 +162,7 @@
 ++  mod-book-name
   |=  [%mod-book-name id=@ta title=@t]
   =/  =book  (~(got by books) id)
+  ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   =.  title.book  title
   =.  books  (~(put by books) id book)
   [~ state]

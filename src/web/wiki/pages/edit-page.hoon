@@ -19,14 +19,11 @@
   |=  [headers=header-list:http body=(unit octs)]
   ^-  $@(brief:rudder action)
   =/  args=(map @t @t)  (form-data:web order)
-  ?~  what=(~(get by args) 'action')  ~
-  ?+  u.what  'say what now'
-      %mod-page
-    ?.  authenticated.order  'You must be logged in to edit an article!'
-    =/  page-title=@t  (~(got by args) 'page-title')
-    =/  content=wain  (to-wain:format (~(got by args) 'content'))
-    [%mod-page book-id:help page-path:help `page-title `content]
-  ==
+  ?>  ?=(%mod-page (~(got by args) 'action'))
+  ?.  authenticated.order  'You must be logged in to edit an article!'
+  =/  page-title=@t  (~(got by args) 'page-title')
+  =/  content=wain  (to-wain:format (~(got by args) 'content'))
+  [%mod-page book-id:help page-path:help `page-title `content]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]

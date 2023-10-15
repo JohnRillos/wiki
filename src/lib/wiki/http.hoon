@@ -22,6 +22,7 @@
         [@ta ~]                 `[%page auth %book]
         [@ta sig %new ~]        `[%page & %new-page]
         [@ta sig %import ~]     `[%page & %import]
+        [@ta sig %settings ~]   `[%page & %book-settings]
         [@ta sig %not-found ~]  `[%page auth %page-not-found]
       ==
   ::

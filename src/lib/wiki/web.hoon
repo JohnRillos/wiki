@@ -140,12 +140,18 @@
     ;a#wiki-title/"/wiki/{(trip id.wik)}": {(trip title.book.wik)}
     ;div#global-menu
       ;a/"/wiki/{(trip id.wik)}": Home
-      ;+  ?:  =(%pawn (clan:title src.bowl))
-            ;a/"/~/login?redirect={(trip site)}": Log in with Urbit
-          ?:  =(src.bowl our.bowl)  ;a/"/wiki": Your Wikis
-          ;a/"/apps/landscape/perma?ext=web+urbitgraph://~holnes/wiki/"
-            ; Made with %wiki
-          ==
+      ;*
+      ?:  =(%pawn (clan:title src.bowl))
+        :_  ~
+        ;a/"/~/login?redirect={(trip site)}": Log in with Urbit
+      ?.  =(src.bowl our.bowl)
+        :_  ~
+        ;a/"/apps/landscape/perma?ext=web+urbitgraph://~holnes/wiki/"
+          ; Made with %wiki
+        ==
+      :~  ;a/"/wiki/{(trip id.wik)}/~/settings": Settings
+          ;a/"/wiki": All Wikis
+      ==
     ==
   ==
 ::
@@ -158,7 +164,7 @@
 ::
 ++  icon
   |%
-::
+  ::
   ++  globe
     ^~
     ;div.access-icon(title "public")
