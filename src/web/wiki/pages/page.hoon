@@ -78,10 +78,7 @@
       "This is an old version of this page, as edited by {author} at {<as-of>}."
     :: =/  footer-text=tape  "Edited by {author} at {<as-of>}." :: to-do: put in footer
     ;html
-      ;head
-        ;title: {(trip title.page)}
-        ;style: {(style:web bowl)}
-      ==
+      ;+  (doc-head:web bowl (trip title.page))
       ;body#with-sidebar
         ;+  (global-nav:web bowl order [book-id:help book])
         ;main

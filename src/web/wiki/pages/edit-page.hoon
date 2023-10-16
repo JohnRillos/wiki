@@ -56,10 +56,7 @@
     =/  wik-dir=tape  (spud /wiki/[book-id:help])
     =/  pag-dir=tape  (spud page-path:help)
     ;html
-      ;head
-        ;title: Edit - {(trip title.page)}
-        ;style: {(style:web bowl)}
-      ==
+      ;+  (doc-head:web bowl "Edit - {(trip title.page)}")
       ;script: {(trip codemirror-js)}
       ;style: {(trip codemirror-css)}
       ;script: {(trip markdown-js)}

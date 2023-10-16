@@ -33,12 +33,7 @@
   ++  render
     ^-  manx
     ;html
-      ;head
-        ;title:"%wiki"
-        ;meta(charset "utf-8");
-        ;meta(name "viewport", content "width=device-width, initial-scale=1");
-        ;style: {(style:web bowl)}
-      ==
+      ;+  (doc-head:web bowl "%wiki")
       ;body(onload on-page-load)
         ;h1: %wiki manager
         ;a/"/wiki/~/new"

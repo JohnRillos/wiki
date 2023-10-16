@@ -155,6 +155,19 @@
     ==
   ==
 ::
+++  doc-head
+  |=  [=bowl:gall title=tape]
+  ^-  manx
+  ;head
+    ;title: {title}
+    ;meta(charset "utf-8");
+    ;meta(name "viewport", content "width=device-width, initial-scale=1");
+    ;link/"/wiki/~/assets/favicon-16.png"(rel "icon", type "image/png");
+    ;link/"/wiki/~/assets/favicon-32.png"(rel "icon", type "image/png");
+    ;link/"/wiki/~/assets/favicon-48.png"(rel "icon", type "image/png");
+    ;style: {(style bowl)}
+  ==
+::
 ++  footer
   |=  [=bowl:gall site=cord]
   ^-  manx

@@ -53,10 +53,7 @@
     =/  pag-dir=tape  (spud page-path:help)
     =/  last=page  page:(latest u.tale)
     ;html
-      ;head
-        ;title: {(trip title.last)}
-        ;style: {(style:web bowl)}
-      ==
+      ;+  (doc-head:web bowl "History - {(trip title.last)}")
       ;body#with-sidebar
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main

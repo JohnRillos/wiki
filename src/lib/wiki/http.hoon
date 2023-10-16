@@ -18,6 +18,7 @@
   |^  ?:  tail-fas              `[%away (snip site)]
       ?+  pat                   page-resource
         ~                       `[%page & %index]
+        [sig %assets *]         `[%page | %asset]
         [sig %new ~]            `[%page & %new-book]
         [@ta ~]                 `[%page auth %book]
         [@ta sig %new ~]        `[%page & %new-page]

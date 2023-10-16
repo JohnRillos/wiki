@@ -39,10 +39,7 @@
   ++  render
     ^-  manx
     ;html
-      ;head
-        ;title: Import - {(trip title.book)}
-        ;style: {(style:web bowl)}
-      ==
+      ;+  (doc-head:web bowl "Import - {(trip title.book)}")
       ;body#with-sidebar
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main

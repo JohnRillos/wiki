@@ -2,6 +2,7 @@
 ::
 /-  *wiki
 /+  rudder, string, web=wiki-web, *wiki
+/$  page-to-md  %wiki-page-0  %md
 /$  md-to-mime  %md  %mime
 ::
 ^-  (page:rudder (map @ta book) action)
@@ -38,12 +39,7 @@
     ^-  simple-payload:http
     :-  [200 ['content-type' 'text/markdown'] ~]
     ^-  (unit octs)
-    :-  ~
-    =/  md=wain
-      :-  (crip "# {(trip title.page)}")
-      :-  ''
-      content.page
-    (tail (md-to-mime md))
+    `(tail (md-to-mime (page-to-md [%0 page])))
   --
 --
 ::

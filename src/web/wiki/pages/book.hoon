@@ -43,10 +43,7 @@
   ++  render
     ^-  manx
     ;html
-      ;head
-        ;title: {(trip title.book)}
-        ;style: {(style:web bowl)}
-      ==
+      ;+  (doc-head:web bowl (trip title.book))
       ;body#with-sidebar(onload on-page-load)
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main

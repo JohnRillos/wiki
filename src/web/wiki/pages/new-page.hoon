@@ -68,10 +68,7 @@
     =/  target=(unit path)  (target-path:help query)
     =/  default-path=tape  ?~(target "" (tail (spud u.target)))
     ;html
-      ;head
-        ;title: New Page - {(trip title.book)}
-        ;style: {(style:web bowl)}
-      ==
+      ;+  (doc-head:web bowl "New Page - {(trip title.book)}")
       ;script: {(trip codemirror-js)}
       ;style: {(trip codemirror-css)}
       ;script: {(trip markdown-js)}
