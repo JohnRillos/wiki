@@ -1,5 +1,14 @@
 |%
 ::
++$  versioned-state
+  $%  state-0
+  ==
+::
++$  state-0
+  $:  %0
+    books=(map @ta book)
+  ==
+::
 +$  book
   $:  title=@t
       tales=(map path tale)

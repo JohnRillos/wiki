@@ -3,9 +3,9 @@
 /-  *wiki
 /+  multipart, rudder, web=wiki-web, *wiki
 ::
-^-  (page:rudder (map @ta book) action)
+^-  (page:rudder state-0 action)
 ::
-|_  [=bowl:gall =order:rudder books=(map @ta book)]
+|_  [=bowl:gall =order:rudder state-0]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]

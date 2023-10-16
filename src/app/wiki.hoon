@@ -9,14 +9,6 @@
 ::
 +$  card  card:agent:gall
 ::
-+$  versioned-state
-  $%  state-0
-  ==
-::
-+$  state-0
-  $:  %0
-    books=(map @ta book)
-  ==
 --
 ::
 ::  state
@@ -37,7 +29,7 @@
 |_  =bowl:gall
 +*  this       .
     default  ~(. (default-agent this %|) bowl)
-    http     ~(. wiki-http books)
+    http     ~(. wiki-http state)
     main     ~(. +> bowl)
 ::
 ++  on-init
@@ -99,21 +91,21 @@
   ++  handle-http
     |=  =order:rudder
     ^-  (quip card _this)
-    |^  =/  out=(quip card _+.state)
-          (serve [bowl order +.state])
-        [-.out this(+.state +.out)]
+    |^  =/  out=(quip card _state)
+          (serve [bowl order state])
+        [-.out this(state +.out)]
     ::
     ++  serve
-      %-  (steer:rudder _+.state action)
+      %-  (steer:rudder _state action)
       :^    web:http            :: pages
           http-route:http       :: route
-        (fours:rudder +.state)  :: adlib
+        (fours:rudder state)    :: adlib
       |=  act=action            :: solve
-      ^-  $@(brief:rudder [brief:rudder (list card) _+.state])
-      ?.  authenticated.order  ['Unauthorized!' ~ +.state]
+      ^-  $@(brief:rudder [brief:rudder (list card) _state])
+      ?.  authenticated.order  ['Unauthorized!' ~ state]
       =^  cards  this
         (on-poke %wiki-action !>(act))
-      ['Successfully processed' cards +.state]
+      ['Successfully processed' cards state]
     --
   --
 ::

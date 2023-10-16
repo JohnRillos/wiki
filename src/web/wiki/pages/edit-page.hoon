@@ -7,11 +7,11 @@
 /*  markdown-js     %js   /web/codemirror/mode/markdown/markdown/js
 /*  editor-js       %js   /web/wiki/editor/js
 ::
-^-  (page:rudder (map @ta book) action)
+^-  (page:rudder state-0 action)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder books=(map @ta book)]
+|_  [=bowl:gall =order:rudder state-0]
 ::
 +*  help  ~(. +> [bowl order books])
 ::

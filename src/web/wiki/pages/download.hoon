@@ -5,11 +5,11 @@
 /$  page-to-md  %wiki-page-0  %md
 /$  md-to-mime  %md  %mime
 ::
-^-  (page:rudder (map @ta book) action)
+^-  (page:rudder state-0 action)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder books=(map @ta book)]
+|_  [=bowl:gall =order:rudder state-0]
 ::
 +*  help  ~(. +> [bowl order books])
 ::

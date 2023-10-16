@@ -3,9 +3,9 @@
 ::
 /-  *wiki
 /+  rudder
-/~  web  (page:rudder (map @ta book) action)  /web/wiki/pages
+/~  web  (page:rudder state-0 action)  /web/wiki/pages
 ::
-|_  books=(map @ta book)
+|_  state-0
 ::
 +$  sig  %~.~
 ::
