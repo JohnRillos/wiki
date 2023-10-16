@@ -1,11 +1,11 @@
 ::  load public asset file
 ::
 /-  *wiki
-/+  rudder, string, web=wiki-web, *wiki
-/$  png-to-mime  %png  %mime
-/*  favicon-16  %png  /web/wiki/icons/favicon-16/png
-/*  favicon-32  %png  /web/wiki/icons/favicon-32/png
-/*  favicon-48  %png  /web/wiki/icons/favicon-48/png
+/+  rudder, server, string, web=wiki-web, *wiki
+/*  favicon-16  %mime  /web/wiki/assets/favicon-16/png
+/*  favicon-32  %mime  /web/wiki/assets/favicon-32/png
+/*  favicon-48  %mime  /web/wiki/assets/favicon-48/png
+/*  tile        %mime  /web/wiki/assets/tile/svg
 ::
 ^-  (page:rudder (map @ta book) action)
 ::
@@ -20,21 +20,23 @@
 ++  build
   |=  [arg=(list [k=@t v=@t]) msg=(unit [? @t])]
   ^-  reply:rudder
-  ::
   =/  [site=(pole knot) *]  (sane-url:web url.request.order)
   ?>  ?=([%wiki %~.~ %assets filepath=*] site)
   |^  ?+  filepath.site  [%code 404 'Not found']
-        [%~.favicon-16.png ~]  (mime-to-reply (png-to-mime favicon-16))
-        [%~.favicon-32.png ~]  (mime-to-reply (png-to-mime favicon-32))
-        [%~.favicon-48.png ~]  (mime-to-reply (png-to-mime favicon-48))
+        [%~.favicon-16.png ~]  (png-reply favicon-16)
+        [%~.favicon-32.png ~]  (png-reply favicon-32)
+        [%~.favicon-48.png ~]  (png-reply favicon-48)
+        [%~.tile.svg ~]        (svg-reply tile)
       ==
   ::
-  ++  mime-to-reply
-    |=  [=mite =octs]
+  ++  png-reply
+    |=  =mime
     ^-  reply:rudder
-    :-  %full
-    ^-  simple-payload:http
-    :_  `octs
-    [200 ['content-type' (crip (tail (spud mite)))] ~]
+    [%full (png-response:gen:server +.mime)]
+  ::
+  ++  svg-reply
+    |=  =mime
+    ^-  reply:rudder
+    [%full (svg-response:gen:server +.mime)]
   --
 --
