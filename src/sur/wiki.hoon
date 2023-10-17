@@ -52,7 +52,7 @@
       :: [%pardon book-id=@ta =ship]
   ==
 ::
-+$  wiki-path  [%wiki book-id=@ta loc=path]
++$  wiki-path  [[book-id=@ta loc=path] host=(unit @p)]
 ::
 +$  title-source  ?(%header %filename)
 ::

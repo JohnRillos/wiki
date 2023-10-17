@@ -18,7 +18,21 @@
   |=  =cord
   ^-  [=wiki-path query=(map @t @t)]
   =/  [=path que=(map @t @t)]  (sane-url cord)
-  [(wiki-path path) que]
+  [(to-wiki-path path) que]
+::
+++  to-wiki-path
+  |=  pat=(pole knot)
+  ^-  wiki-path
+  ~|  'Invalid path'
+  ?+  pat  !!
+  ::
+      [%wiki %~.~ %p p=@ta l=[@ta *]]
+    :-  l.pat
+    ~|  "Invalid @p: {(trip p.pat)}"
+    `(slav %p p.pat)
+  ::
+    [%wiki @ta *]  [+.pat ~]
+  ==
 ::
 ++  sane-url
   |=  =cord

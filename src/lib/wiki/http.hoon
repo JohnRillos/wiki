@@ -27,6 +27,10 @@
         [@ta sig %not-found ~]  `[%page auth %page-not-found]
       ==
   ::
+  ++  far :: to-do: wrap remote-compatible paths ^
+    |$  pattern
+    ?([sig %p @ta pattern] pattern)
+  ::
   ++  auth
     ^-  ?
     =/  book-id=@ta  -.pat

@@ -31,7 +31,7 @@
   =/  =book  u.buuk
   ::
   |^  [%page render]
-  :::
+  ::
   ++  on-page-load
     =/  alert=(unit tape)  (query-msg:web query)
     ?~  alert  ""
