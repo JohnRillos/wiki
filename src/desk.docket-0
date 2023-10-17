@@ -1,10 +1,10 @@
-:~  title+'Wiki'
+:~  title+'Wiki (alpha)'
     info+'Encyclopedia Urbitica'
     color+0xff.ffff
     base+'wiki'
     image+'/wiki/~/assets/tile.svg'
     site+/wiki
     version+[0 0 1]
-    website+'https://example.com'
+    website+'https://github.com/JohnRillos/wiki'
     license+'MIT'
 ==
