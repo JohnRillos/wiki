@@ -196,8 +196,9 @@ ul#search-results {
 li.search-result {
   display: grid;
   min-width: 15em;
-  & a {
+  & * {
     color: unset;
+    margin: 0;
     padding: 0.25em 0.5em;
   }
 }

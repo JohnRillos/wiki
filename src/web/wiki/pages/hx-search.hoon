@@ -30,6 +30,11 @@
     =/  no-results=?   =(~ search-results)
     ;ul#search-results
       ;*
+      ?:  no-results
+        :_  ~
+        ;li.search-result
+          ;p: No Results
+        ==
       %+  turn  search-results
       |=  [page-path=path =page]
       ;li.search-result

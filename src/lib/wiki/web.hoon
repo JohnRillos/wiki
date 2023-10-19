@@ -215,7 +215,7 @@
         =placeholder  "Search (Ctrl-K)"
         =hx-get       search-url
         =hx-params    "*"
-        =hx-trigger   "keyup changed delay:500ms, search"
+        =hx-trigger   "keyup changed delay:100ms, search"
         =hx-target    "#search-results-container"
         ;
       ==
