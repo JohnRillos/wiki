@@ -107,7 +107,9 @@
               ==
             ==
             ;h3: Content
-            ;textarea(id "content", name "content"): {content.page}
+            ;textarea(id "content", name "content")
+              ; {(trip (of-wain:format content.page))}
+            ==
           ==
           ;script: {(trip editor-js)}
         ==
