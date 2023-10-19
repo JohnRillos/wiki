@@ -65,6 +65,7 @@
         ;main
           ;*  ?~  msg  ~
               ~[;/((trip text.u.msg))]
+          ;+  (search-bar:web `book-id.site ~)
           ;h1: Edit Page - {(trip title.page)}
           ::
           ;form(method "post")

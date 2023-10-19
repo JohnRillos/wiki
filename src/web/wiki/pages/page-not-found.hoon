@@ -38,6 +38,7 @@
       ;body#with-sidebar
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main
+          ;+  (search-bar:web `book-id.site ~)
           ;h1#page-title: Page Not Found
           ;p
             ;span: There is no page at path 

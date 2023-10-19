@@ -57,6 +57,7 @@
       ;body#with-sidebar
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main
+          ;+  (search-bar:web `book-id.site ~)
           ;article
             ;header
               ;h1: {(trip title.last)}: Revision History

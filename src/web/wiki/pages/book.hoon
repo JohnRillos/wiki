@@ -47,7 +47,8 @@
       ;body#with-sidebar(onload on-page-load)
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main
-          ;h1#wiki-title: {(trip title.book)}
+          ;+  (search-bar:web `book-id.site ~)
+          ;h1#page-title: Main Page
           ;nav#wiki-controls
             ;a/"/wiki/{(trip book-id.site)}/~/new"
               ;button(type "button"): New Page

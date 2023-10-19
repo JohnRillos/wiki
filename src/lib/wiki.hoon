@@ -23,6 +23,27 @@
   ?:  =(div -.log)  [pre +.log]
   $(pre (snoc pre -.log), log +.log)
 ::
+++  alpha-less
+  |=  [a=tape b=tape]
+  =.  a  (cass a)
+  =.  b  (cass b)
+  |-
+  ?:  =(~ a)         &
+  ?:  =(~ b)         |
+  ?:  (lth -.a -.b)  &
+  ?.  =(-.a -.b)     |
+  $(a +.a, b +.b)
+::
+++  skil :: skim until limit
+  |*  [big=(list *) limit=@ chek=$-(* ?)]
+  ^-  _big
+  =/  out=_big  ~
+  |-
+  ?:  |(=(0 limit) =(~ big))  out
+  ?.  (chek -.big)
+    $(big +.big)
+  $(big +.big, limit (dec limit), out [-.big out])
+::
 ++  bush  :: to-do: move into /sur/wiki.hoon ?
   |$  [node leaf]
   $@(~ (map node (pair (bush node leaf) (unit leaf))))

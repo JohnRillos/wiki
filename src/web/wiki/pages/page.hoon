@@ -80,8 +80,10 @@
     ;html
       ;+  (doc-head:web bowl (trip title.page))
       ;body#with-sidebar
+        :: todo: make some sort of flex container that keeps title + search level, but puts search on top if there isn't room on one line
         ;+  (global-nav:web bowl order [book-id:help book])
         ;main
+          ;+  (search-bar:web `book-id:help ~)
           ;header
             ;h1#page-title: {(trip title.page)}
             ;nav.page

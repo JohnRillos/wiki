@@ -43,7 +43,8 @@
       ;body#with-sidebar
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main
-          ;h1#wiki-title: Import Pages
+          ;+  (search-bar:web `book-id.site ~)
+          ;h1: Import Pages
           ;form.column-box(method "post", enctype "multipart/form-data")
             ;div.file-upload.box-item
               ;p.box-item: Select a folder of markdown (.md) files

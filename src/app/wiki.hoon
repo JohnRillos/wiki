@@ -229,6 +229,7 @@
   ^-  @t
   %-  crip
   %-  title:string
+  %-  strip:string
   %-  remove-extension:web
   (gsub:regex "[_\\+]" " " filename)
 ::

@@ -77,6 +77,7 @@
         ;main
           ;*  ?~  msg  ~
               ~[;/((trip text.u.msg))]
+          ;+  (search-bar:web `book-id.site ~)
           ;h1: New Page
           ::
           ;form(method "post")

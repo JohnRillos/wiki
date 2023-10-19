@@ -3,8 +3,10 @@
 ::
 /-  *wiki
 /+  multipart, regex, rudder, string, *wiki
+/*  htmx-js     %js    /web/htmx/js
 /*  globe-svg   %svg   /web/wiki/icons/globe/svg
 /*  lock-svg    %svg   /web/wiki/icons/lock/svg
+/*  search-svg  %svg   /web/wiki/icons/search/svg
 ::
 |%
 ::
@@ -180,6 +182,45 @@
     ;link/"/wiki/~/assets/favicon-32.png"(rel "icon", type "image/png");
     ;link/"/wiki/~/assets/favicon-48.png"(rel "icon", type "image/png");
     ;style: {(style bowl)}
+    ;script: {^~((trip htmx-js))}
+  ==
+::
+++  search-keybind-script
+  ^~
+  %-  trip
+  '''
+  document.addEventListener("keydown", e => {
+    if (e.key.toLowerCase() === 'k' && e.ctrlKey) {
+      e.preventDefault();
+      document.getElementById("search-input").focus();
+    }
+  });
+  '''
+::
+++  search-bar
+  |=  [book-id=(unit @ta) host=(unit @p)]
+  ^-  manx
+  =/  search-url=tape
+    ?~  book-id    !!  :: todo: global search: /wiki/~/search
+    ?~  host       "/wiki/{(trip u.book-id)}/~/search"
+    "/wiki/~/p/{<u.host>}/{(trip u.book-id)}/~/search"
+  ;div#search
+    ;script: {search-keybind-script}
+    ;div#search-bar
+      ;+  search:icon
+      ;input#search-input
+        =type         "search"
+        =name         "q"
+        =style        "margin-left: 4px"
+        =placeholder  "Search (Ctrl-K)"
+        =hx-get       search-url
+        =hx-params    "*"
+        =hx-trigger   "keyup changed delay:500ms, search"
+        =hx-target    "#search-results-container"
+        ;
+      ==
+    ==
+    ;div#search-results-container;
   ==
 ::
 ++  footer
@@ -202,6 +243,12 @@
     ^~
     ;div.access-icon(title "private")
       ;+  (need (de-xml:html lock-svg))
+    ==
+  ::
+  ++  search
+    ^~
+    ;div.search-icon(title "search")
+      ;+  (need (de-xml:html search-svg))
     ==
   --
 --
