@@ -144,16 +144,11 @@
     ;+  content
   ==
 ::
-++  defaulted
-  |=  [default=tape =marl]
-  ^-  ^marl
-  %+  turn  marl
-  |=  =manx
-  =/  mart=(list (pair mane tape))  a.g.manx
-  =/  marp=(map mane tape)  (my mart)
-  ?~  val=(~(get by marp) %value)  manx
-  ?.  =(default u.val)             manx
-  manx(a.g [[%selected ""] mart])
+++  check-if
+  |=  [if=? =manx]
+  ^-  ^manx
+  ?.  if  manx
+  manx(a.g [[%checked ""] a.g.manx])
 ::
 ++  stub
   ^-  manx

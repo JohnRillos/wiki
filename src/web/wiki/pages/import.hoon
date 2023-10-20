@@ -57,7 +57,7 @@
                 ;
               ==
             ==
-            ;fieldset.box-item
+            ;fieldset
               ;legend: Options
               ;label(for "title-source"): Get page title from 
               ;select#title-source

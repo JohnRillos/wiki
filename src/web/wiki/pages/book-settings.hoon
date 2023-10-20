@@ -67,19 +67,19 @@
           ;+  (search-bar:web `book-id.site ~)
           ;h1: Wiki Settings
           ;div.column-box
-            ;fieldset.box-item
+            ;fieldset
               ;legend: Wiki Name
               ;+  setting-book-name
             ==
           ==
           ;div.column-box
-            ;fieldset.box-item
-              ;legend: Access Permissions
+            ;fieldset
+              ;legend: Visibility
               ;+  setting-rule-read
             ==
           ==
           ;div.column-box
-            ;fieldset.box-item
+            ;fieldset
               ;legend: Danger Zone
               ;+  setting-delete-book
             ==
@@ -113,29 +113,22 @@
       =/  get-value-js=tape  "document.getElementById('rule-read').value"
       =/  confirm=tape
         "Are you sure you want to make this wiki $\{{get-value-js}}?"
-      =/  default=tape  ?:(public-read.rules.book "public" "private")
-      =/  options=marl  %+  defaulted:web  default
-                        ;=  ;option(value "public"): Public
-                            ;option(value "private"): Private
-                        ==
       %+  in-form:web  confirm
       ;div
-        ;div.row-box.box-item
-          ;label.box-item(for "rule-read"): Visibility: 
-          ;select#rule-read.box-item(name "rule-read")
-            ;*  options
-          ==
-          ;button.box-item(type "submit", name "action", value "mod-rule-read")
-            ; Update
+        ;div.box-item
+          ;+  %+  check-if:web  public-read.rules.book
+          ;input#public-read(type "radio", name "rule-read", value "public");
+          ;label(for "public-read"): Only you can view this wiki.
+        ==
+        ;div.box-item
+          ;+  %+  check-if:web  !public-read.rules.book
+          ;input#private-read(type "radio", name "rule-read", value "private");
+          ;label(for "private-read")
+            ; Anyone with the URL can view this wiki.
           ==
         ==
-        ;p
-          ;u: Private
-          ; : Only the host can view the wiki.
-        ==
-        ;p
-          ;u: Public
-          ; : Anyone with the URL can view this wiki, without logging in.
+        ;button(type "submit", name "action", value "mod-rule-read")
+          ; Update
         ==
       ==
     ::

@@ -146,24 +146,16 @@ button.delete:hover {
   border-color: darkred;
 }
 
+fieldset {
+  margin-bottom: 1em;
+}
+
 .column-box {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   & .box-item {
-    margin: 0 0 1em 0;
-  }
-}
-
-.row-box {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  & .box-item {
-    margin: 0 0.5em 0 0;
-  }
-  & .box-item:last-child {
-    margin: 0;
+    margin: 0 0 0.5em 0;
   }
 }
 
