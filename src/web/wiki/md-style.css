@@ -6,3 +6,28 @@ img {
 code[class*=language-] {
   font-family: monospace;
 }
+
+table {
+  border-collapse: collapse;
+  border: 2px solid black;
+}
+
+thead {
+  border-bottom: 2px solid gray;
+  background-color: lightgray;
+}
+
+tbody {
+  & tr:hover {
+    background-color: #ececec;
+  }
+}
+
+tr {
+  border-bottom: 1px solid gray;
+}
+
+th, td {
+  border-right: 1px solid gray;
+  padding: 0.5em;
+}
