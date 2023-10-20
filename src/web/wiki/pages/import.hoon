@@ -68,7 +68,7 @@
             ==
             ;button.submit.box-item(type "submit"): Upload
           ==
-          ;+  (footer:web bowl url.request.order)
+          ;+  (footer:web book)
         ==
       ==
     ==

@@ -49,7 +49,7 @@
                 ;button(type "button"): Create Page
               ==
           ==
-          ;+  (footer:web bowl url.request.order)
+          ;+  (footer:web book)
         ==
       ==
     ==

@@ -76,7 +76,6 @@
         "This is the current version of this page. "
         "Last edited by {author} at {<as-of>}."
       "This is an old version of this page, as edited by {author} at {<as-of>}."
-    :: =/  footer-text=tape  "Edited by {author} at {<as-of>}." :: to-do: put in footer
     ;html
       ;+  (doc-head:web bowl (trip title.page))
       ;body#with-sidebar
@@ -123,7 +122,7 @@
             ==
             ;script: {mermaid-script}
           ==
-          ;+  (footer:web bowl url.request.order)
+          ;+  (footer:web book)
         ==
       ==
     ==

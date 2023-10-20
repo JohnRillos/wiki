@@ -230,10 +230,22 @@
   ==
 ::
 ++  footer
-  |=  [=bowl:gall site=cord]
+  |=  =book
   ^-  manx
+  =/  viz=manx
+    ?:  public-read.rules.book
+      ;div.note
+        ;+  globe:icon
+        ;span: This wiki is public
+      ==
+    ;div.note
+      ;+  lock:icon
+      ;span: This wiki is private
+    ==
   ;footer
+    ;+  viz
     ;a/"https://urbit.org": Powered by Urbit
+    ;a/"https://github.com/JohnRillos/wiki": Made with %wiki
   ==
 ::
 ++  icon

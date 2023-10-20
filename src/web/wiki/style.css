@@ -65,7 +65,7 @@ article {
   padding: 0.5em;
 }
 
-nav.page, footer {
+nav.page {
   padding: 0.5em 0;
   & * {
     margin-right: 2em;
@@ -86,8 +86,20 @@ form {
 }
 
 footer {
+  margin-top: 1rem;
   border-top: 2px solid;
-  padding: 0.5em 0;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: small;
+  & * {
+    display: flex
+  }
+}
+
+.note {
+  opacity: 50%;
 }
 
 h1, h2, h3, h4, h5, h6 {
