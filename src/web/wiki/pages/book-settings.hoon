@@ -118,14 +118,12 @@
         ;div.box-item
           ;+  %+  check-if:web  public-read.rules.book
           ;input#public-read(type "radio", name "rule-read", value "public");
-          ;label(for "public-read"): Only you can view this wiki.
+          ;label(for "public-read"): Anyone with the URL can view this wiki.
         ==
         ;div.box-item
           ;+  %+  check-if:web  !public-read.rules.book
           ;input#private-read(type "radio", name "rule-read", value "private");
-          ;label(for "private-read")
-            ; Anyone with the URL can view this wiki.
-          ==
+          ;label(for "private-read"): Only you can view this wiki.
         ==
         ;button(type "submit", name "action", value "mod-rule-read")
           ; Update
