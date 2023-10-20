@@ -40,7 +40,7 @@
   $%  [%new-book id=@ta title=@t rules=access]
       [%del-book id=@ta]
       [%mod-book-name id=@ta title=@t]
-      :: [%mod-rule-read id=@ta public-read=?]
+      [%mod-rule-read id=@ta public-read=?]
       :: [%mod-rule-edit id=@ta public-edit=?]
       [%new-page book-id=@ta =path title=@t content=wain]
       [%del-page book-id=@ta =path]

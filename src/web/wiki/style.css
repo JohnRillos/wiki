@@ -151,8 +151,19 @@ button.delete:hover {
   flex-direction: column;
   align-items: flex-start;
   & .box-item {
-    margin-top: 0em;
-    margin-bottom: 1em;
+    margin: 0 0 1em 0;
+  }
+}
+
+.row-box {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  & .box-item {
+    margin: 0 0.5em 0 0;
+  }
+  & .box-item:last-child {
+    margin: 0;
   }
 }
 

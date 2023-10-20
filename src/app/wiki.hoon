@@ -81,6 +81,7 @@
     ?-  -.act
       %new-book       (new-book:main act)
       %mod-book-name  (mod-book-name:main act)
+      %mod-rule-read  (mod-rule-read:main act)
       %del-book       (del-book:main act)
       %new-page       (new-page:main act)
       %mod-page       (mod-page:main act)
@@ -156,6 +157,13 @@
   =/  =book  (~(got by books) id)
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   =.  title.book  title
+  =.  books  (~(put by books) id book)
+  [~ state]
+::
+++  mod-rule-read
+  |=  [%mod-rule-read id=@ta public-read=?]
+  =/  =book  (~(got by books) id)
+  =.  public-read.rules.book  public-read
   =.  books  (~(put by books) id book)
   [~ state]
 ::

@@ -136,13 +136,24 @@
 ++  confirm
   |=  =tape
   ^-  ^tape
-  (weld "return confirm('" (weld tape "');"))
+  (weld "return confirm(`" (weld tape "`);"))
 ::
 ++  in-form
   |=  [warn=tape content=manx]
   ;form(method "post", onsubmit (confirm warn))
     ;+  content
   ==
+::
+++  defaulted
+  |=  [default=tape =marl]
+  ^-  ^marl
+  %+  turn  marl
+  |=  =manx
+  =/  mart=(list (pair mane tape))  a.g.manx
+  =/  marp=(map mane tape)  (my mart)
+  ?~  val=(~(get by marp) %value)  manx
+  ?.  =(default u.val)             manx
+  manx(a.g [[%selected ""] mart])
 ::
 ++  stub
   ^-  manx

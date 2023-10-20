@@ -17,8 +17,14 @@
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
   =/  args=(map @t @t)  (form-data:web order)
   ?+  (~(got by args) 'action')  !!
-    %mod-book-name  [%mod-book-name book-id.site (~(got by args) 'book-name')]
-    %del-book       [%del-book book-id.site]
+      %mod-book-name
+    [%mod-book-name book-id.site (~(got by args) 'book-name')]
+  ::
+      %mod-rule-read
+    [%mod-rule-read book-id.site =('public' (~(got by args) 'rule-read'))]
+  ::
+      %del-book
+    [%del-book book-id.site]
   ==
 ::
 ++  final
@@ -53,6 +59,7 @@
   ::
   ++  render
     ^-  manx
+    |^
     ;html
       ;+  (doc-head:web bowl "Settings - {(trip title.book)}")
       ;body#with-sidebar(onload on-page-load)
@@ -80,11 +87,17 @@
               ==
             ==
           ==
-          ;+
-          %+  in-form:web  "Are you sure you want to delete this wiki?"
+          ;div.column-box
+            ;fieldset.box-item
+              ;legend: Access Permissions
+              ;+  setting-rule-read
+            ==
+          ==
           ;div.column-box
             ;fieldset.box-item
               ;legend: Danger Zone
+              ;+
+              %+  in-form:web  "Are you sure you want to delete this wiki?"
               ;button.delete
                 =type   "submit"
                 =name   "action"
@@ -97,5 +110,37 @@
         ==
       ==
     ==
+    :::
+    ++  setting-rule-read
+      ^-  manx
+      =/  get-value-js=tape  "document.getElementById('rule-read').value"
+      =/  confirm=tape
+        "Are you sure you want to make this wiki $\{{get-value-js}}?"
+      =/  default=tape  ?:(public-read.rules.book "public" "private")
+      =/  options=marl  %+  defaulted:web  default
+                        ;=  ;option(value "public"): Public
+                            ;option(value "private"): Private
+                        ==
+      %+  in-form:web  confirm
+      ;div
+        ;div.row-box.box-item
+          ;label.box-item(for "rule-read"): Visibility: 
+          ;select#rule-read.box-item(name "rule-read")
+            ;*  options
+          ==
+          ;button.box-item(type "submit", name "action", value "mod-rule-read")
+            ; Update
+          ==
+        ==
+        ;p
+          ;u: Private
+          ; : Only the host can view the wiki.
+        ==
+        ;p
+          ;u: Public
+          ; : Anyone with the URL can view this wiki, without logging in.
+        ==
+      ==
+    --
   --
 --

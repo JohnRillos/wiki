@@ -60,7 +60,7 @@
             ;fieldset.box-item
               ;legend: Options
               ;label(for "title-source"): Get page title from 
-              ;select#title-strategy
+              ;select#title-source
                 =name  "title-source"
                 ;option(value "filename"): filename
                 ;option(value "header"): first header
