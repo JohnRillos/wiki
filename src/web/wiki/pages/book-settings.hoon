@@ -1,7 +1,6 @@
 ::  wiki settings
 ::
 ::  to-do:
-::  * option to change public <-> private
 ::  * option to add logo
 ::
 /-  *wiki
@@ -67,24 +66,10 @@
         ;main
           ;+  (search-bar:web `book-id.site ~)
           ;h1: Wiki Settings
-          ;+
-          %+  in-form:web  "Are you sure you want to rename this wiki?"
           ;div.column-box
             ;fieldset.box-item
               ;legend: Wiki Name
-              ;input
-                =type      "text"
-                =name      "book-name"
-                =value     (trip title.book)
-                =required  "true"
-                ;
-              ==
-              ;button
-                =type   "submit"
-                =name   "action"
-                =value  "mod-book-name"
-                ; Rename
-              ==
+              ;+  setting-book-name
             ==
           ==
           ;div.column-box
@@ -96,21 +81,33 @@
           ;div.column-box
             ;fieldset.box-item
               ;legend: Danger Zone
-              ;+
-              %+  in-form:web  "Are you sure you want to delete this wiki?"
-              ;button.delete
-                =type   "submit"
-                =name   "action"
-                =value  "del-book"
-                ; Delete Wiki
-              ==
+              ;+  setting-delete-book
             ==
           ==
           ;+  (footer:web bowl url.request.order)
         ==
       ==
     ==
-    :::
+    ::
+    ++  setting-book-name
+      ^-  manx
+      %+  in-form:web  "Are you sure you want to rename this wiki?"
+      ;div
+        ;input
+          =type      "text"
+          =name      "book-name"
+          =value     (trip title.book)
+          =required  "true"
+          ;
+        ==
+        ;button
+          =type   "submit"
+          =name   "action"
+          =value  "mod-book-name"
+          ; Rename
+        ==
+      ==
+    ::
     ++  setting-rule-read
       ^-  manx
       =/  get-value-js=tape  "document.getElementById('rule-read').value"
@@ -140,6 +137,16 @@
           ;u: Public
           ; : Anyone with the URL can view this wiki, without logging in.
         ==
+      ==
+    ::
+    ++  setting-delete-book
+      ^-  manx
+      %+  in-form:web  "Are you sure you want to delete this wiki?"
+      ;button.delete
+        =type   "submit"
+        =name   "action"
+        =value  "del-book"
+        ; Delete Wiki
       ==
     --
   --
