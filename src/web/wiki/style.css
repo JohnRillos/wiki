@@ -1,6 +1,13 @@
 body {
   font-family: sans-serif;
   color: black;
+  margin: 0px;
+}
+
+body#with-sidebar {
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
 }
 
 main {
@@ -8,6 +15,39 @@ main {
   max-width: 50em;
   margin-left: 2em;
   margin-right: 2em;
+}
+
+#index-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: lightgray;
+}
+
+ul.wiki-list {
+  display: flex;
+  flex-flow: row;
+  & li {
+    border: 2px solid gray;
+    border-radius: 16px;
+    margin: 0.5rem;
+    font-size: large;
+    background-color: white;;
+    & a {
+      color: inherit;
+      display: flex;
+      padding: 1rem;
+      align-items: center;
+      .access-icon {
+        margin-right: 0.5rem;
+      }
+    }
+    & a:hover {
+      color:#3366cc;
+    }
+  }
 }
 
 a {
@@ -65,19 +105,16 @@ article {
   padding: 0.5em;
 }
 
-nav.page {
+nav.page, nav#wiki-controls {
   padding: 0.5em 0;
+  display: block;
+  border-bottom: 2px solid;
   & * {
     margin-right: 2em;
   }
   & *:last-child {
     margin-right: 0;
   }
-}
-
-nav.page {
-  display: block;
-  border-bottom: 2px solid;
 }
 
 form {
@@ -123,6 +160,7 @@ ul.wiki-list {
 
 button {
   border: solid 1px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: unset;
   padding: 4px 6px;
@@ -225,11 +263,6 @@ li.search-result:hover {
 div.CodeMirror {
   border: 1px solid gray;
   max-width: 60em;
-}
-
-body#with-sidebar {
-  display: flex;
-  flex-direction: row;
 }
 
 code:not(code[class*=language-]) {

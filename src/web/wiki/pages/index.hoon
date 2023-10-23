@@ -35,19 +35,22 @@
     ;html
       ;+  (doc-head:web bowl "%wiki")
       ;body(onload on-page-load)
-        ;h1: %wiki manager
-        ;a/"/wiki/~/new"
-          ;button(type "button"): New Wiki
-        ==
-        ;h2: Your Wikis
-        ;ul.wiki-list
-          ;*  %+  turn  ~(tap by books)
-              |=  [id=@ta =book]
-              ^-  manx
-              ;li.wiki-list-item
-                ;+  ?:(public-read.rules.book globe:icon:web lock:icon:web)
-                ;a/"/wiki/{(trip id)}": {(trip title.book)}
-              ==
+        ;div#index-container
+          ;h1: %wiki
+          ;a/"/wiki/~/new"
+            ;button.submit(type "button"): New Wiki
+          ==
+          ;ul.wiki-list
+            ;*  %+  turn  ~(tap by books)
+                |=  [id=@ta =book]
+                ^-  manx
+                ;li.wiki-list-item
+                  ;a/"/wiki/{(trip id)}"
+                    ;+  ?:(public-read.rules.book globe:icon:web lock:icon:web)
+                    ; {(trip title.book)}
+                  ==
+                ==
+          ==
         ==
       ==
     ==
