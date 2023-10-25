@@ -216,6 +216,7 @@
       ?-  title-source
         %filename  `[(title-from-filename filename) data]
         %header    (title-from-header data)
+        %front-matter  (title-from-front-matter data)
       ==
     [(title-from-filename filename) data]
   (poke-self [%new-page book-id path title content])
@@ -240,6 +241,22 @@
   %-  strip:string
   %-  remove-extension:web
   (gsub:regex "[_\\+]" " " filename)
+::
+++  title-from-front-matter
+  |=  md=wain
+  ^-  (unit [title=@t content=wain])
+  =/  toml-loc=(list @)  (fand ~['+++'] md)
+  ?.  &((gte (lent toml-loc) 2) =(0 -.toml-loc))  ~
+  =/  toml=wain  (scag +((snag 1 toml-loc)) md)
+  =/  lines=(list @t)
+    %+  skim  toml
+    |=  t=@t
+    (starts-with:string (trip t) "title = ")
+  ?:  =(~ lines)  ~
+  =/  line=@t  (snag 0 lines)
+  =/  title=@t  (crip (gsub:regex "(^\")|(\"$)" "" (slag 8 (trip line))))
+  =/  content=wain  (slag (add 2 (snag 1 toml-loc)) md)
+  `[title content]
 ::
 ++  poke-self
   |=  =action

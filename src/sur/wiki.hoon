@@ -54,7 +54,7 @@
 ::
 +$  wiki-path  [[book-id=@ta loc=path] host=(unit @p)]
 ::
-+$  title-source  ?(%header %filename)
++$  title-source  ?(%header %filename %front-matter)
 ::
 +$  page-0  [%0 title=@t content=wain]
 ::

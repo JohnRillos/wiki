@@ -64,6 +64,7 @@
                 =name  "title-source"
                 ;option(value "filename"): filename
                 ;option(value "header"): first header
+                ;option(value "front-matter"): front matter
               ==
             ==
             ;button.submit.box-item(type "submit"): Upload
