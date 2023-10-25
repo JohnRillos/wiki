@@ -7,6 +7,17 @@ code[class*=language-] {
   font-family: monospace;
 }
 
+.token.operator {
+  background: unset
+}
+
+blockquote {
+  border-left: 2px solid #956747;
+  margin: 0;
+  padding: 0.5rem 2rem;
+  background-color: rgba(208, 200, 192, 0.25)
+}
+
 table {
   border-collapse: collapse;
   border: 2px solid black;

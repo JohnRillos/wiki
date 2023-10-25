@@ -61,7 +61,7 @@
           ==
           ;h2: Pages
           ;ul
-            ;*  %+  turn  ~(tap by tales.book)
+            ;*  %+  turn  ~(tap by tales.book) :: todo: sort by path
                 |=  [=path =tale]
                 ^-  manx
                 =/  =page  page:(latest tale)

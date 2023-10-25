@@ -1,7 +1,7 @@
 ::  Article editing page
 ::
 /-  *wiki
-/+  rudder, web=wiki-web
+/+  rudder, web=wiki-web, *wiki
 /*  codemirror-js   %js   /web/codemirror/lib/codemirror/js
 /*  codemirror-css  %css  /web/codemirror/lib/codemirror/css
 /*  markdown-js     %js   /web/codemirror/mode/markdown/markdown/js
@@ -22,7 +22,7 @@
   ?>  ?=(%mod-page (~(got by args) 'action'))
   ?.  authenticated.order  'You must be logged in to edit an article!'
   =/  page-title=@t  (~(got by args) 'page-title')
-  =/  content=wain  (to-wain:format (~(got by args) 'content'))
+  =/  content=wain  (to-wain:format (sane-newline (~(got by args) 'content')))
   [%mod-page book-id:help page-path:help `page-title `content]
 ::
 ++  final

@@ -117,7 +117,7 @@
               ==
               ;script
                 =type  "text/markdown"
-                ; {(trip (of-wain:format content.page))}
+                ; {(trip (of-wain:format (filter-front-matter:help content.page)))}
               ==
             ==
             ;script: {mermaid-script}
@@ -172,15 +172,12 @@
     [%| (crip "Page has no version {<version>}")]
   [%& (snag version (bap:ton tale))]
 ::
-:: ++  time-to-ver
-::   |=  [=tale at=@da]
-::   ^-  @ud
-::   =/  story=(list [@da page])  (tap:ton tale)
-::   =/  ver=@ud  (dec (wyt:ton tale))
-::   |-
-::   =/  head=[@da page]  -.story
-::   ?:  =(at -.head)  ver
-::   ?<  =(0 ver)
-::   $(story +.story, ver (dec ver))
+++  filter-front-matter :: todo: do cooler stuff with front matter
+  |=  content=wain
+  ^-  wain
+  =/  toml-loc=(list @)  (fand ~['+++'] content)
+  ?:  &((gte (lent toml-loc) 2) =(0 -.toml-loc))
+    (oust [-.toml-loc (add -.+.toml-loc 2)] content)
+  content :: todo handle yaml
 ::
 --

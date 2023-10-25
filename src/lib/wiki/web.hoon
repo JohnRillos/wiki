@@ -83,7 +83,7 @@
     ?~  type.part  ~
     ?.  =(~['text/markdown'] u.type.part)  ~
     ?~  file.part  ~
-    =/  data=wain  (to-wain:format body.part)
+    =/  data=wain  (to-wain:format (sane-newline body.part))
     `[u.file.part data]
   --
 ::

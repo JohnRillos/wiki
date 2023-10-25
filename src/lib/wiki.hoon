@@ -2,6 +2,7 @@
 :: misc utility
 ::
 /-  *wiki
+/+  regex
 |%
 ::
 ++  part
@@ -33,6 +34,11 @@
   ?:  (lth -.a -.b)  &
   ?.  =(-.a -.b)     |
   $(a +.a, b +.b)
+::
+++  sane-newline
+  |=  =cord
+  %-  crip
+  (gsub:regex "\0d" "" (trip cord))
 ::
 ++  skil :: skim until limit
   |*  [big=(list *) limit=@ chek=$-(* ?)]
