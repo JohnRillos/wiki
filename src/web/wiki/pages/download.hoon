@@ -2,14 +2,14 @@
 ::
 /-  *wiki
 /+  rudder, string, web=wiki-web, *wiki
-/$  page-to-md  %wiki-page-0  %md
+/$  page-to-md  %wiki-page-1  %md
 /$  md-to-mime  %md  %mime
 ::
-^-  (page:rudder state-0 action)
+^-  (page:rudder state-1 action)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder state-0]
+|_  [=bowl:gall =order:rudder state-1]
 ::
 +*  help  ~(. +> [bowl order books])
 ::
@@ -39,7 +39,7 @@
     ^-  simple-payload:http
     :-  [200 ['content-type' 'text/markdown'] ~]
     ^-  (unit octs)
-    `(tail (md-to-mime (page-to-md [%0 page])))
+    `(tail (md-to-mime (page-to-md page)))
   --
 --
 ::

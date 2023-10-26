@@ -3,11 +3,11 @@
 /-  *wiki
 /+  rudder, web=wiki-web
 ::
-^-  (page:rudder state-0 action)
+^-  (page:rudder state-1 action)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder state-0]
+|_  [=bowl:gall =order:rudder state-1]
 ::
 +*  help  ~(. +> [bowl order books])
 ::
@@ -67,8 +67,12 @@
               ;*  %+  turn  (tap:ton u.tale)
                   |=  [date=@da =page]
                   ^-  manx
+                  =/  editor=tape
+                    ?:  =(%pawn (clan:title edit-by.page))  "a guest user"
+                    <edit-by.page>
                   ;li
                     ;a/"{wik-dir}{pag-dir}?t={<date>}": {<date>}
+                    ;span:  by {editor}
                   ==
             ==
           ==

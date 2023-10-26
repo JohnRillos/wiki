@@ -7,7 +7,7 @@
 /*  globe-svg   %svg   /web/wiki/icons/globe/svg
 /*  lock-svg    %svg   /web/wiki/icons/lock/svg
 /*  search-svg  %svg   /web/wiki/icons/search/svg
-::
+:::
 |%
 ::
 ++  form-data
@@ -154,6 +154,29 @@
   ^-  manx
   ;div(style "display: none");
 ::
+++  log-out
+  |=  =bowl:gall
+  ^-  tape
+  """
+  function delete_cookie( name, path, domain ) \{
+    if( get_cookie( name ) ) \{
+      console.log('deleting cookie...');
+      document.cookie = name + "=" +
+        ((path) ? ";path="+path:"")+
+        ((domain)?";domain="+domain:"") +
+        ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+    }
+  }
+  function get_cookie(name) \{
+      console.log('getting cookie...');
+    return document.cookie.split(';').some(c => \{
+        return c.trim().startsWith(name + '=');
+    });
+  }
+  delete_cookie('urbauth-{<our.bowl>}', '/', 'localhost');
+  location.reload(true);
+  """
+::
 ++  global-nav
   |=  [=bowl:gall =order:rudder wik=[id=@ta =book]]
   ^-  manx
@@ -167,12 +190,20 @@
         :_  ~
         ;a/"/~/login?redirect={(trip site)}": Log in with Urbit
       ?.  =(src.bowl our.bowl)
-        :_  ~
-        ;a/"/apps/landscape/perma?ext=web+urbitgraph://~holnes/wiki/"
-          ; Made with %wiki
+        :~  ;p: User: {<src.bowl>}
+            ;button
+              =type  "button"
+              =onclick  (log-out bowl)
+              ; Log out
+            ==
         ==
       :~  ;a/"/wiki/{(trip id.wik)}/~/settings": Settings
           ;a/"/wiki": All Wikis
+          ;button
+            =type  "button"
+            =onclick  (log-out bowl)
+            ; Log out
+          ==
       ==
     ==
   ==

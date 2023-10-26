@@ -7,11 +7,11 @@
 /*  markdown-js     %js   /web/codemirror/mode/markdown/markdown/js
 /*  editor-js       %js   /web/wiki/editor/js
 ::
-^-  (page:rudder state-0 action)
+^-  (page:rudder state-1 action)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder state-0]
+|_  [=bowl:gall =order:rudder state-1]
 ::
 +*  help  ~(. +> [bowl order books])
 ::
@@ -20,7 +20,8 @@
   ^-  $@(brief:rudder action)
   =/  args=(map @t @t)  (form-data:web order)
   ?>  ?=(%mod-page (~(got by args) 'action'))
-  ?.  authenticated.order  'You must be logged in to edit an article!'
+  :: ?.  authenticated.order  
+  ::   'You must be logged in to edit an article!'
   =/  page-title=@t  (~(got by args) 'page-title')
   =/  content=wain  (to-wain:format (sane-newline (~(got by args) 'content')))
   [%mod-page book-id:help page-path:help `page-title `content]
@@ -45,6 +46,7 @@
   ?~  buuk=(~(get by books) book-id:help)
     [%code 404 (crip "Wiki {<book-id:help>} not found")]
   =/  =book  u.buuk
+  ?>  (may-edit bowl book)
   ?~  tale=(~(get by tales.book) page-path:help)
     [%code 404 (crip "Article {<page-path:help>} not found in {<title.book>}")]
   =/  =page  page:(latest u.tale)

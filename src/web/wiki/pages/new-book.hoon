@@ -3,9 +3,9 @@
 /-  *wiki
 /+  rudder, web=wiki-web
 ::
-^-  (page:rudder state-0 action)
+^-  (page:rudder state-1 action)
 ::
-|_  [=bowl:gall =order:rudder state-0]
+|_  [=bowl:gall =order:rudder state-1]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -19,7 +19,8 @@
           ~|  'Invalid wiki ID'  (tie (~(got by args) 'book-id'))
         =/  book-title=@t  (~(got by args) 'book-title')
         =/  pub-read=?  (~(has by args) 'public-read')
-        [%new-book book-id book-title pub-read]
+        =/  =rule-edit  [%.n %.n]  :: todo: input public-edit
+        [%new-book book-id book-title [pub-read rule-edit]]
       ==
     ::
     ++  tie

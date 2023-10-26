@@ -3,9 +3,9 @@
 /-  *wiki
 /+  multipart, rudder, web=wiki-web, *wiki
 ::
-^-  (page:rudder state-0 action)
+^-  (page:rudder state-1 action)
 ::
-|_  [=bowl:gall =order:rudder state-0]
+|_  [=bowl:gall =order:rudder state-1]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -50,15 +50,16 @@
           ;+  (search-bar:web `book-id.site ~)
           ;h1#page-title: Main Page
           ;nav#wiki-controls
-            ;a/"/wiki/{(trip book-id.site)}/~/new"
-              ;button(type "button"): New Page
-            ==
-            ;*  ?.  =(src.bowl our.bowl)  ~
-            :_  ~
-            ;a/"/wiki/{(trip book-id.site)}/~/import"
-              ;button(type "button"): Import
+            ;*  ?.  (may-edit bowl book)  ~
+            ;=  ;a/"/wiki/{(trip book-id.site)}/~/new"
+                  ;button(type "button"): New Page
+                ==
+                ;a/"/wiki/{(trip book-id.site)}/~/import"
+                  ;button(type "button"): Import
+                ==
             ==
           ==
+          :: todo: special UI for "no pages" 
           ;h2: Pages
           ;ul
             ;*  %+  turn  ~(tap by tales.book) :: todo: sort by path

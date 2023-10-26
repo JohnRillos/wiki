@@ -3,11 +3,11 @@
 /-  *wiki
 /+  rudder, web=wiki-web, *wiki
 ::
-^-  (page:rudder state-0 action)
+^-  (page:rudder state-1 action)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder state-0]
+|_  [=bowl:gall =order:rudder state-1]
 ::
 +*  help  ~(. +> [bowl order books])
 ::

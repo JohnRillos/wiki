@@ -6,9 +6,9 @@
 /-  *wiki
 /+  multipart, rudder, web=wiki-web, *wiki
 ::
-^-  (page:rudder state-0 action)
+^-  (page:rudder state-1 action)
 ::
-|_  [=bowl:gall =order:rudder state-0]
+|_  [=bowl:gall =order:rudder state-1]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -21,6 +21,15 @@
   ::
       %mod-rule-read
     [%mod-rule-read book-id.site =('public' (~(got by args) 'rule-read'))]
+  ::
+      %mod-rule-edit
+    =/  =rule-edit
+      ?+  (~(got by args) 'rule-edit')  !!
+        %host  [%.n %.n]
+        %user  [%.y %.n]
+        %anon  [%.y %.y]
+      ==
+    [%mod-rule-edit book-id.site rule-edit]
   ::
       %del-book
     [%del-book book-id.site]
@@ -80,6 +89,12 @@
           ==
           ;div.column-box
             ;fieldset
+              ;legend: Collaboration
+              ;+  setting-rule-edit
+            ==
+          ==
+          ;div.column-box
+            ;fieldset
               ;legend: Danger Zone
               ;+  setting-delete-book
             ==
@@ -113,7 +128,7 @@
       =/  get-value-js=tape  "document.getElementById('rule-read').value"
       =/  confirm=tape
         "Are you sure you want to make this wiki $\{{get-value-js}}?"
-      %+  in-form:web  confirm
+      %+  in-form:web  confirm  :: todo: fix this
       ;div
         ;div.box-item
           ;+  %+  check-if:web  public-read.rules.book
@@ -126,6 +141,32 @@
           ;label(for "private-read"): Only you can view this wiki.
         ==
         ;button(type "submit", name "action", value "mod-rule-read")
+          ; Update
+        ==
+      ==
+    ::
+    ++  setting-rule-edit
+      ^-  manx
+      =/  confirm=tape  "Are you sure?"  :: todo
+      =/  =rule-edit  edit.rules.book
+      %+  in-form:web  confirm
+      ;div
+        ;div.box-item
+          ;+  %+  check-if:web  !public.rule-edit
+          ;input#host-edit(type "radio", name "rule-edit", value "host");
+          ;label(for "host-edit"): Only you can edit this wiki.
+        ==
+        ;div.box-item
+          ;+  %+  check-if:web  &(public.rule-edit !comet.rule-edit)
+          ;input#user-edit(type "radio", name "rule-edit", value "user");
+          ;label(for "user-edit"): Any Urbit user can create or edit pages, except guests (comets).
+        ==
+        ;div.box-item
+          ;+  %+  check-if:web  &(public.rule-edit comet.rule-edit)
+          ;input#anon-edit(type "radio", name "rule-edit", value "anon");
+          ;label(for "anon-edit"): Anybody can create or edit pages, even anonymous guests.
+        ==
+        ;button(type "submit", name "action", value "mod-rule-edit")
           ; Update
         ==
       ==

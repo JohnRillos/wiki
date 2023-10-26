@@ -7,11 +7,11 @@
 /*  markdown-js     %js   /web/codemirror/mode/markdown/markdown/js
 /*  editor-js       %js   /web/wiki/editor/js
 ::
-^-  (page:rudder state-0 action)
+^-  (page:rudder state-1 action)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder state-0]
+|_  [=bowl:gall =order:rudder state-1]
 ::
 +*  help  ~(. +> [bowl order books])
 ::
@@ -56,6 +56,7 @@
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk
+  ?>  (may-edit bowl book)
   ::
   |^  [%page render]
   ::

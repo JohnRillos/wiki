@@ -1,5 +1,6 @@
 /-  *wiki
-/+  dbug, default-agent, regex, rudder, string, verb, web=wiki-web, wiki-http
+/+  dbug, default-agent, regex, rudder, string, verb
+/+  *wiki, web=wiki-web, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
 ::
@@ -13,7 +14,7 @@
 ::
 ::  state
 ::
-=|  state-0
+=|  state-1
 =*  state  -
 ::
 ::  debugging tools
@@ -35,7 +36,7 @@
 ++  on-init
   ^-  (quip card _this)
   =^  cards  state
-    =|  state=state-0
+    =|  state=state-1
     =.  books.state  ~
     :_  state
     [%pass /eyre/connect %arvo %e %connect [~ /[dap.bowl]] dap.bowl]~
@@ -52,12 +53,46 @@
   ::
   ++  build-state
     |=  old=versioned-state
-    ^-  (quip card state-0)
+    ^-  (quip card state-1)
     =|  cards=(list card)
     |-
-    ?-  -.old
-      %0  [cards old]
-    ==
+    |^  ?-  -.old
+          %1  [cards old]
+          %0  $(old (state-0-to-1 old))
+        ==
+    ::
+    ++  state-0-to-1
+      |=  =state-0
+      ^-  state-1
+      |^  [%1 (~(run by books.state-0) grad-book)]
+      ::
+      ++  grad-book
+        |=  =book-0
+        ^-  book
+        %=  book-0
+          tales  (~(run by tales.book-0) grad-tale)
+          rules  (grad-rules rules.book-0)
+        ==
+      ::
+      ++  grad-tale
+        |=  =tale-0
+        ^-  tale
+        (~(run by tale-0) grad-page)
+      ::
+      ++  grad-page
+        |=  =page-0
+        ^-  page
+        %=  page-0
+          content  [content.page-0 our.bowl]
+        ==
+      ::
+      ++  grad-rules
+        |=  =access-0
+        ^-  access
+        [public-read.access-0 [%.n %.n]]
+      --
+    ::
+    --
   --
 ::
 ++  on-poke
@@ -77,11 +112,15 @@
   ++  handle-action
     |=  act=action
     ^-  (quip card _state)
-    ?.  =(our.bowl src.bowl)  ~|('Unauthorized! ' !!)
+    :: ?.  =(our.bowl src.bowl)
+    ::   ~&  >>>  "Unauthorized poke from {<src.bowl>}"
+    ::   ~|('Unauthorized! ' !!)
+    ~&  >>  "Poke from {<src.bowl>}"
     ?-  -.act
       %new-book       (new-book:main act)
       %mod-book-name  (mod-book-name:main act)
       %mod-rule-read  (mod-rule-read:main act)
+      %mod-rule-edit  (mod-rule-edit:main act)
       %del-book       (del-book:main act)
       %new-page       (new-page:main act)
       %mod-page       (mod-page:main act)
@@ -103,7 +142,9 @@
         (fours:rudder state)    :: adlib
       |=  act=action            :: solve
       ^-  $@(brief:rudder [brief:rudder (list card) _state])
-      ?.  authenticated.order  ['Unauthorized!' ~ state]
+      :: ?.  authenticated.order
+      ::   ~&  >>>  "Unauthenticated post from {<src.bowl>}"
+      ::   ['Unauthorized!' ~ state]
       =^  cards  this
         (on-poke %wiki-action !>(act))
       ['Successfully processed' cards state]
@@ -140,6 +181,8 @@
 ::
 ++  new-book
   |=  [%new-book id=@ta title=@t rules=access]
+  ?.  =(src.bowl our.bowl)
+    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %new-book"  !!
   ?:  |(=(~.~ id) !((sane %ta) id))
     ~|("Invalid wiki ID" !!)
   ?:  (~(has by books) id)  ~|("Wiki '{(trip id)}' already exists!" !!)
@@ -149,11 +192,15 @@
 ::
 ++  del-book
   |=  [%del-book id=@ta]
+  ?.  =(src.bowl our.bowl)
+    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %del-book"  !!
   =.  books  (~(del by books) id)
   [~ state]
 ::
 ++  mod-book-name
   |=  [%mod-book-name id=@ta title=@t]
+  ?.  =(src.bowl our.bowl)
+    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-book-name"  !!
   =/  =book  (~(got by books) id)
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   =.  title.book  title
@@ -162,8 +209,19 @@
 ::
 ++  mod-rule-read
   |=  [%mod-rule-read id=@ta public-read=?]
+  ?.  =(src.bowl our.bowl)
+    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-rule-read"  !!
   =/  =book  (~(got by books) id)
   =.  public-read.rules.book  public-read
+  =.  books  (~(put by books) id book)
+  [~ state]
+::
+++  mod-rule-edit
+  |=  [%mod-rule-edit id=@ta =rule-edit]
+  ?.  =(src.bowl our.bowl)
+    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-rule-edit"  !!
+  =/  =book  (~(got by books) id)
+  =.  edit.rules.book  rule-edit
   =.  books  (~(put by books) id book)
   [~ state]
 ::
@@ -173,9 +231,11 @@
   ?^  (find "~" path)  ~|('Path cannot contain "/~/"' !!)
   ?.  (levy path (sane %ta))  ~|('Invalid path!' !!)
   =/  =book  (~(got by books) book-id)
+  ?.  (may-edit bowl book)
+    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %new-page"  !!
   ?:  (~(has by tales.book) path)  ~|("Page {<path>} already exists!" !!)
   ?:  =('' title)  ~|("Title cannot be blank!" !!)
-  =/  =page  [title content]
+  =/  =page  [title content src.bowl]
   =/  =tale  (gas:ton *tale [now.bowl page]~)
   =.  tales.book  (~(put by tales.book) path tale)
   =.  books  (~(put by books) book-id book)
@@ -183,6 +243,8 @@
 ::
 ++  del-page
   |=  [%del-page book-id=@ta =path]
+  ?.  =(src.bowl our.bowl)
+      ~&  >>>  "Unauthorized poke from {<src.bowl>}: %del-page"  !!
   =/  =book       (~(got by books) book-id)
   =.  tales.book  (~(del by tales.book) path)
   =.  books       (~(put by books) book-id book)
@@ -191,6 +253,8 @@
 ++  mod-page
   |=  [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
   =/  =book  (~(got by books) book-id)
+  ?.  (may-edit bowl book)
+    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-page"  !!
   =/  =tale  (~(got by tales.book) path)
   =/  =page  page:(latest tale)
   ?:  ?~(title | =('' u.title))  ~|("Title cannot be blank!" !!)
@@ -200,6 +264,7 @@
     [~ state]
   =.  title.page    (fall title title.page)
   =.  content.page  (fall content content.page)
+  =.  edit-by.page  src.bowl
   =.  tale          (put:ton tale now.bowl page)
   =.  tales.book  (~(put by tales.book) path tale)
   =.  books       (~(put by books) book-id book)
@@ -207,6 +272,9 @@
 ::
 ++  imp-file
   |=  [%imp-file book-id=@ta files=(map @t wain) =title-source]
+  =/  =book  (~(got by books) book-id)
+  ?.  (may-edit bowl book)
+    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %imp-file"  !!
   :_  state
   %+  turn  ~(tap by files)
   |=  [filepath=@t data=wain]

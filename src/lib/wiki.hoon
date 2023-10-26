@@ -5,6 +5,13 @@
 /+  regex
 |%
 ::
+++  may-edit
+  |=  [=bowl:gall =book]
+  ^-  ?
+  ?:  =(src.bowl our.bowl)  &
+  ?:  =(%pawn (clan:title src.bowl))  comet.edit.rules.book
+  public.edit.rules.book
+::
 ++  part
   |=  =cord
   ^-  path
@@ -49,7 +56,7 @@
   ?.  (chek -.big)
     $(big +.big)
   $(big +.big, limit (dec limit), out [-.big out])
-::
+:::
 ++  bush  :: to-do: move into /sur/wiki.hoon ?
   |$  [node leaf]
   $@(~ (map node (pair (bush node leaf) (unit leaf))))

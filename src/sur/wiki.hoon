@@ -2,12 +2,20 @@
 ::
 +$  versioned-state
   $%  state-0
+      state-1
   ==
 ::
 +$  state-0
   $:  %0
+    books=(map @ta book-0)
+  ==
+::
++$  state-1
+  $:  %1
     books=(map @ta book)
   ==
+::
+::
 ::
 +$  book
   $:  title=@t
@@ -27,21 +35,25 @@
 +$  page
   $:  title=@t
       content=wain
+      edit-by=@p
   ==
 ::
 +$  access
   $:  public-read=?
-      :: public-edit=?
+      edit=rule-edit
       :: mods=(set @p)
       :: bans=(set @p)
   ==
+::
+++  rule-edit :: maybe
+  ?([public=%.n comet=%.n] [public=%.y comet=?])
 ::
 +$  action
   $%  [%new-book id=@ta title=@t rules=access]
       [%del-book id=@ta]
       [%mod-book-name id=@ta title=@t]
       [%mod-rule-read id=@ta public-read=?]
-      :: [%mod-rule-edit id=@ta public-edit=?]
+      [%mod-rule-edit id=@ta =rule-edit]
       [%new-page book-id=@ta =path title=@t content=wain]
       [%del-page book-id=@ta =path]
       [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
@@ -56,6 +68,22 @@
 ::
 +$  title-source  ?(%header %filename %front-matter)
 ::
-+$  page-0  [%0 title=@t content=wain]
+::
+::
++$  book-0
+  $:  title=@t
+      tales=(map path tale-0)
+      rules=access-0
+  ==
+::
++$  tale-0  ((mop @da page-0) gth)
+::
++$  page-0  [title=@t content=wain]
+::
++$  access-0  [public-read=?]
+::
+::
+::
++$  page-1  [title=@t content=wain edit-by=@p]
 ::
 --

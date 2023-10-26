@@ -4,11 +4,11 @@
 /+  rudder, web=wiki-web, *wiki
 /*  mermaid-zero-js  %js  /web/wiki/mermaid-zero/js
 ::
-^-  (page:rudder state-0 action)
+^-  (page:rudder state-1 action)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder state-0]
+|_  [=bowl:gall =order:rudder state-1]
 ::
 +*  help  ~(. +> [bowl order books])
 ::
@@ -49,7 +49,9 @@
   =/  as-of=@da  time.p.peach
   =/  fresh=?    =(as-of time:(latest u.tale))
   =/  permalink=?  ?!(=(~ when:space-time:help))
-  =/  author=tape  <our.bowl>  :: to-do: really track author
+  =/  author=tape
+    ?:  =(%pawn (clan:title edit-by.page))  "a guest user"
+    <edit-by.page>
   ::
   |^  [%page render]
   ::
@@ -86,7 +88,8 @@
           ;header
             ;h1#page-title: {(trip title.page)}
             ;nav.page
-              ;a/"{wik-dir}{pag-dir}/~/edit": Edit
+              ;+  ?.  (may-edit bowl book)  stub:web
+                  ;a/"{wik-dir}{pag-dir}/~/edit": Edit
               ;a/"{wik-dir}{pag-dir}/~/history": History
               ;a/"{wik-dir}{pag-dir}/~/download?t={<as-of>}"
                 =download  "{(trip (rear page-path))}.md"
