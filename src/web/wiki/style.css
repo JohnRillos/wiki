@@ -26,6 +26,12 @@ main {
   background-color: lightgray;
 }
 
+#new-wiki-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 ul.wiki-list {
   display: flex;
   flex-flow: row;

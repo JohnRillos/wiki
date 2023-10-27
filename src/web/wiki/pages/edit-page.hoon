@@ -20,8 +20,6 @@
   ^-  $@(brief:rudder action)
   =/  args=(map @t @t)  (form-data:web order)
   ?>  ?=(%mod-page (~(got by args) 'action'))
-  :: ?.  authenticated.order  
-  ::   'You must be logged in to edit an article!'
   =/  page-title=@t  (~(got by args) 'page-title')
   =/  content=wain  (to-wain:format (sane-newline (~(got by args) 'content')))
   [%mod-page book-id:help page-path:help `page-title `content]

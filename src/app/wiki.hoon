@@ -112,10 +112,6 @@
   ++  handle-action
     |=  act=action
     ^-  (quip card _state)
-    :: ?.  =(our.bowl src.bowl)
-    ::   ~&  >>>  "Unauthorized poke from {<src.bowl>}"
-    ::   ~|('Unauthorized! ' !!)
-    ~&  >>  "Poke from {<src.bowl>}"
     ?-  -.act
       %new-book       (new-book:main act)
       %mod-book-name  (mod-book-name:main act)
@@ -142,9 +138,6 @@
         (fours:rudder state)    :: adlib
       |=  act=action            :: solve
       ^-  $@(brief:rudder [brief:rudder (list card) _state])
-      :: ?.  authenticated.order
-      ::   ~&  >>>  "Unauthenticated post from {<src.bowl>}"
-      ::   ['Unauthorized!' ~ state]
       =^  cards  this
         (on-poke %wiki-action !>(act))
       ['Successfully processed' cards state]

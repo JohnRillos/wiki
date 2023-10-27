@@ -7,7 +7,7 @@
 /*  globe-svg   %svg   /web/wiki/icons/globe/svg
 /*  lock-svg    %svg   /web/wiki/icons/lock/svg
 /*  search-svg  %svg   /web/wiki/icons/search/svg
-:::
+::
 |%
 ::
 ++  form-data
@@ -158,22 +158,20 @@
   |=  =bowl:gall
   ^-  tape
   """
-  function delete_cookie( name, path, domain ) \{
-    if( get_cookie( name ) ) \{
-      console.log('deleting cookie...');
+  function delete_cookie(name, path, domain) \{
+    if (get_cookie(name)) \{
       document.cookie = name + "=" +
-        ((path) ? ";path="+path:"")+
-        ((domain)?";domain="+domain:"") +
+        ((path) ? ";path=" + path : "")+
+        ((domain) ? ";domain=" + domain : "") +
         ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
     }
   }
   function get_cookie(name) \{
-      console.log('getting cookie...');
     return document.cookie.split(';').some(c => \{
         return c.trim().startsWith(name + '=');
     });
   }
-  delete_cookie('urbauth-{<our.bowl>}', '/', 'localhost');
+  delete_cookie('urbauth-{<our.bowl>}', '/', window.location.hostname);
   location.reload(true);
   """
 ::

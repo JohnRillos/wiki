@@ -18,8 +18,13 @@
         =/  book-id=@ta
           ~|  'Invalid wiki ID'  (tie (~(got by args) 'book-id'))
         =/  book-title=@t  (~(got by args) 'book-title')
-        =/  pub-read=?  (~(has by args) 'public-read')
-        =/  =rule-edit  [%.n %.n]  :: todo: input public-edit
+        =/  pub-read=?  =('public' (~(got by args) 'rule-read'))
+        =/  =rule-edit
+          ?+  (~(got by args) 'rule-edit')  !!
+            %host  [%.n %.n]
+            %user  [%.y %.n]
+            %anon  [%.y %.y]
+          ==
         [%new-book book-id book-title [pub-read rule-edit]]
       ==
     ::
@@ -55,17 +60,16 @@
   ::
   ++  render
     ^-  manx
+    |^
     ;html
       ;+  (doc-head:web bowl "New Wiki")
-      ;body
-        ;h1: %wiki
-        ;h2: New Wiki
-        ;table#add-book
-          ;form(method "post")
+      ;body#new-wiki-container
+        ;h1: New Wiki
+        ;form(method "post")
+          ;table#add-book
             ;tr
-              ;th:"Wiki ID"
-              ;th:"Wiki Title"
-              ;th:"Public Read Access"
+              ;th: Wiki ID
+              ;th: Wiki Title
             ==
             ;tr
               ;td
@@ -88,24 +92,64 @@
                   ;
                 ==
               ==
-              ;td
-                ;input(type "checkbox", name "public-read");
-              ==
-            ==
-            ;tr
-              ;td
-                ;button.submit
-                  =type   "submit"
-                  =name   "action"
-                  =value  "new-book"
-                  ; Create Wiki
-                ==
-                ;a(href "/wiki"): Cancel
-              ==
             ==
           ==
+          ;div.column-box
+            ;fieldset
+              ;legend: Visibility
+              ;+  setting-rule-read
+            ==
+          ==
+          ;div.column-box
+            ;fieldset
+              ;legend: Collaboration
+              ;+  setting-rule-edit
+            ==
+          ==
+          ;button.submit
+            =type   "submit"
+            =name   "action"
+            =value  "new-book"
+            ; Create Wiki
+          ==
+          ;a(href "/wiki"): Cancel
         ==
       ==
     ==
+    ::
+    ++  setting-rule-read
+      ^-  manx
+      ;div
+        ;div.box-item
+          ;input#public-read(type "radio", name "rule-read", value "public");
+          ;label(for "public-read"): Anyone with the URL can view this wiki.
+        ==
+        ;div.box-item
+          ;input#private-read(type "radio", name "rule-read", value "private");
+          ;label(for "private-read"): Only you can view this wiki.
+        ==
+      ==
+    ::
+    ++  setting-rule-edit
+      ^-  manx
+      ;div
+        ;div.box-item
+          ;input#host-edit(type "radio", name "rule-edit", value "host");
+          ;label(for "host-edit"): Only you can edit this wiki.
+        ==
+        ;div.box-item
+          ;input#user-edit(type "radio", name "rule-edit", value "user");
+          ;label(for "user-edit")
+            ; Any Urbit user can create or edit pages, except guests (comets).
+          ==
+        ==
+        ;div.box-item
+          ;input#anon-edit(type "radio", name "rule-edit", value "anon");
+          ;label(for "anon-edit")
+            ; Anybody can create or edit pages, even anonymous guests.
+          ==
+        ==
+      ==
+    --
   --
 --

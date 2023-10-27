@@ -23,7 +23,6 @@
   |^  ?+  u.what  'say what now'
       ::
           %new-page
-        ?.  authenticated.order  'You must be logged in to create an article!'
         =/  =path
           ~|  'Invalid page path'  (part (~(got by args) 'page-path'))
         =/  page-title=@t  (~(got by args) 'page-title')
