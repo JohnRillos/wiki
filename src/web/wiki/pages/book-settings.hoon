@@ -125,7 +125,8 @@
     ::
     ++  setting-rule-read
       ^-  manx
-      =/  get-value-js=tape  "document.getElementById('rule-read').value"
+      =/  get-value-js=tape
+        "document.getElementById('public-read').checked ? 'public' : 'private'"
       =/  confirm=tape
         "Are you sure you want to make this wiki $\{{get-value-js}}?"
       %+  in-form:web  confirm  :: todo: fix this
@@ -147,7 +148,7 @@
     ::
     ++  setting-rule-edit
       ^-  manx
-      =/  confirm=tape  "Are you sure?"  :: todo
+      =/  confirm=tape  "Are you sure?"
       =/  =rule-edit  edit.rules.book
       %+  in-form:web  confirm
       ;div
