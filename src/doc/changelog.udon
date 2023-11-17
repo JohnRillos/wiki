@@ -1,5 +1,13 @@
 ;>
 
+## 0.1.1
+
+Date: ~2023.11.16
+- write documentation
+- prevent wiki from being public-edit and private-read at the same time
+- fix bug preventing confirmation dialog from rendering
+
+
 ## 0.1.0
 
 Date: ~2023.10.27 (Assembly Lisboa)

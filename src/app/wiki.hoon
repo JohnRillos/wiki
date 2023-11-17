@@ -206,6 +206,8 @@
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-rule-read"  !!
   =/  =book  (~(got by books) id)
   =.  public-read.rules.book  public-read
+  =.  edit.rules.book         ?.  public-read  [%.n %.n] :: disable public edit
+                              edit.rules.book
   =.  books  (~(put by books) id book)
   [~ state]
 ::
@@ -214,6 +216,9 @@
   ?.  =(src.bowl our.bowl)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-rule-edit"  !!
   =/  =book  (~(got by books) id)
+  ?:  &(!public-read.rules.book public.rule-edit)
+    ~|  "Cannot enable public edits on private wiki. Enable public-read first"
+    !!
   =.  edit.rules.book  rule-edit
   =.  books  (~(put by books) id book)
   [~ state]

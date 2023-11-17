@@ -153,20 +153,27 @@
       %+  in-form:web  confirm
       ;div
         ;div.box-item
-          ;+  %+  check-if:web  !public.rule-edit
+          ;+
+          %+  check-if:web  !public.rule-edit
+          %+  disable-if:web  !public-read.rules.book
           ;input#host-edit(type "radio", name "rule-edit", value "host");
           ;label(for "host-edit"): Only you can edit this wiki.
         ==
         ;div.box-item
-          ;+  %+  check-if:web  &(public.rule-edit !comet.rule-edit)
+          ;+
+          %+  check-if:web  &(public.rule-edit !comet.rule-edit)
+          %+  disable-if:web  !public-read.rules.book
           ;input#user-edit(type "radio", name "rule-edit", value "user");
           ;label(for "user-edit"): Any Urbit user can create or edit pages, except guests (comets).
         ==
         ;div.box-item
-          ;+  %+  check-if:web  &(public.rule-edit comet.rule-edit)
+          ;+
+          %+  check-if:web  &(public.rule-edit comet.rule-edit)
+          %+  disable-if:web  !public-read.rules.book
           ;input#anon-edit(type "radio", name "rule-edit", value "anon");
           ;label(for "anon-edit"): Anybody can create or edit pages, even anonymous guests.
         ==
+        ;+  %+  disable-if:web  !public-read.rules.book
         ;button(type "submit", name "action", value "mod-rule-edit")
           ; Update
         ==
