@@ -177,6 +177,10 @@ select {
   font-size: unset;
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
 button:hover {
   background-color: lightgray;
 }

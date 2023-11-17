@@ -42,7 +42,7 @@
     ^-  ?
     =/  book-id=@ta  -.pat
     ?~  book=(~(get by books) book-id)  &
-    !public.edit.rules.u.book
+    |(!public-read.rules.u.book !public.edit.rules.u.book)
   ::
   ++  tail-fas  ?=([%$ *] (flop pat)) :: detect trailing /
   ::

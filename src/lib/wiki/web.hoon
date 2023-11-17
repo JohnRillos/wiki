@@ -150,6 +150,12 @@
   ?.  if  manx
   manx(a.g [[%checked ""] a.g.manx])
 ::
+++  disable-if
+  |=  [if=? =manx]
+  ^-  ^manx
+  ?.  if  manx
+  manx(a.g [[%disabled ""] a.g.manx])
+::
 ++  stub
   ^-  manx
   ;div(style "display: none");
