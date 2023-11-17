@@ -1,8 +1,79 @@
 ;>
-- Developer: 
+- Developer: ~rivmud-fabwen
 - License: MIT
-- App link:
-- Source repo:
-- Bug reports:
+- Source repo: [https://github.com/JohnRillos/wiki](https://github.com/JohnRillos/wiki)
+- Bug reports: [https://github.com/JohnRillos/wiki/issues](https://github.com/JohnRillos/wiki/issues)
 
-%wiki is an Urbit app.
+%wiki is an app for creating, publishing, and contributing to wikis.
+
+
+## Feature Requests
+
+If you have a feature request or inquiry, please join the group `~rivmud-fabwen/wiki`
+and post in the discussion chat, or DM ~rivmud-fabwen.
+
+
+## Writing Wiki Pages
+
+%wiki pages are written in Markdown. We try to support most common Markdown 
+syntax, but if something isn't working right let us know.
+
+Like GitHub, %wiki also supports embedded [Mermaid flow charts](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams).
+
+
+## Bulk Importing Markdown Files
+
+You can import pages from a folder of .md files, by clicking "Import" on 
+your wiki's main page. This should be useful if you want to migrate an Obsidian 
+vault, or use a separate tool to write before publishing with %wiki.
+
+
+## Privacy and User Permissions
+
+On the Settings page, wiki admins can control who can view or edit the wiki.
+
+
+### Visibility
+
+Private wikis can only be seen or edited by the host. They can be used for
+personal note-keeping, or writing drafts before making the wiki public later.
+
+Public wikis work like normal websites. Anyone with the URL can view it, as 
+long as your Urbit is online and accessible from the internet.
+
+Currently, there is no way to view a public wiki without the host's URL, unlike
+how other content is commonly distributed in Urbit. This will probably change, 
+since we have plans to let users view remote wikis through their own Urbits, so 
+the host wouldn't need to expose their Urbit to the internet and viewers 
+wouldn't need another URL.
+
+
+### Collaboration
+
+You can configure your wiki so only you can edit it, any Urbit user can edit 
+it, or anybody on the internet can edit it. If you allow other users to edit, 
+they will be able to create and edit pages, but cannot change the wiki's 
+settings or delete pages.
+
+
+##  Revisions and Permalinks
+
+You can view the page's edit history at `/wiki/my-wiki/my/page/~/history`.
+
+The normal URL for the _latest_ version of a page is `/wiki/my-wiki/my/page`.
+
+You can also permalink to specific versions of the page:
+
+
+### By timestamp
+
+Example: `/wiki/my-wiki/my/page?t=~2023.12.31..23.59.59`
+- The date is @da notation in UTC time.
+- The date does not need to be exact, this will always show you the page as it 
+  existed at that timestamp.
+
+
+### By version number
+
+Example: `/wiki/my-wiki/my/page?v=3`
+- The first version of the page is `0`.

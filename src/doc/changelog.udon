@@ -1,6 +1,36 @@
 ;>
 
+## 0.1.0
+
+Date: ~2023.10.27 (Assembly Lisboa)
+- public beta release
+- better new wiki page
+- multiplayer: support edits from users logged in via EAuth
+
+
+## 0.0.4
+
+Date: ~2023.10.26
+- parse imported page title from TOML front matter
+- nicer index page
+
+
+## 0.0.3
+
+Date: ~2023.10.20
+- better styling for markdown tables
+- footer shows if wiki is public/private
+- link to source code in footer
+- host can change wiki's visibility
+
+
+## 0.0.2
+
+Date: ~2023.10.18
+- search bar
+
+
 ## 0.0.1
 
-Date: ~2000.1.1
-- initial
+Date: ~2023.10.16
+- public alpha release
