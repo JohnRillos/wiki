@@ -15,8 +15,6 @@
     books=(map @ta book)
   ==
 ::
-::
-::
 +$  book
   $:  title=@t
       tales=(map path tale)
@@ -45,7 +43,7 @@
       :: bans=(set @p)
   ==
 ::
-++  rule-edit :: maybe
+++  rule-edit
   ?([public=%.n comet=%.n] [public=%.y comet=?])
 ::
 +$  action
@@ -67,6 +65,14 @@
 +$  wiki-path  [[book-id=@ta loc=path] host=(unit @p)]
 ::
 +$  title-source  ?(%header %filename %front-matter)
+::
++$  cover
+  $:  book-id=@ta
+      title=@t
+      rules=access
+  ==
+::
++$  booklet  [=cover =path =tale]
 ::
 ::
 ::

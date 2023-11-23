@@ -1,8 +1,9 @@
 /-  *wiki
-/+  dbug, default-agent, regex, rudder, string, verb
+/+  dbug, default-agent, regex, rudder, server, string, verb
 /+  *wiki, web=wiki-web, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
+/$  html-to-mime  %html  %mime
 ::
 ::  types core
 ::
@@ -30,7 +31,7 @@
 |_  =bowl:gall
 +*  this       .
     default  ~(. (default-agent this %|) bowl)
-    http     ~(. wiki-http state)
+    serv     ~(. wiki-http state)
     main     ~(. +> bowl)
 ::
 ++  on-init
@@ -128,19 +129,43 @@
     |=  =order:rudder
     ^-  (quip card _this)
     |^  =/  out=(quip card _state)
+          ?:  is-remote  handle-http-remote
           (serve [bowl order state])
         [-.out this(state +.out)]
     ::
+    ++  is-remote
+      =/  [site=(pole knot) *]  (sane-url:web url.request.order)
+      ?.  ?=([%wiki %~.~ %p who=@ta *] site)  |
+      ?!(=(who.site our.bowl))  :: not sure what this'll do
+    ::
     ++  serve
       %-  (steer:rudder _state action)
-      :^    web:http            :: pages
-          http-route:http       :: route
+      :^    web:serv            :: pages
+          http-route:serv       :: route
         (fours:rudder state)    :: adlib
       |=  act=action            :: solve
       ^-  $@(brief:rudder [brief:rudder (list card) _state])
       =^  cards  this
         (on-poke %wiki-action !>(act))
       ['Successfully processed' cards state]
+    ::
+    ++  handle-http-remote
+      ^-  (quip card _state)
+      =/  [site=(pole knot) *]  (sane-url:web url.request.order)
+      ?>  ?=([%wiki %~.~ %p who=@ta *] site)
+      =/  =ship  (slav %p who.site)    :: hardcode for now
+      =/  time=@da  now.bowl           :: todo: get from index if possible
+      =/  base=path  /g/x/[(crip <time>)]/wiki/$
+      =/  book-id=@ta     ~.public     :: hardcode for now
+      =/  page-path=path  /test/page   :: hardcode for now
+      =/  loc=path  :(weld base /booklet-0/[book-id] page-path)
+      =/  =task:ames  [%keen ship loc]
+      =/  =note-arvo  [%a task]
+      =/  req-id=@ta  id.order
+      :_  state
+      ~&  "scrying {<ship>} {<loc>}"
+      =/  =wire  /remote/[req-id]
+      [%pass wire %arvo note-arvo]~
     --
   --
 ::
@@ -156,13 +181,44 @@
 ++  on-agent  on-agent:default
 ::
 ++  on-arvo
-  |=  [=wire =sign-arvo]
+  |=  [wire=(pole knot) =sign-arvo]
   ^-  (quip card _this)
   ?+  sign-arvo  (on-arvo:default wire sign-arvo)
+  ::
       [%eyre %bound *]
     ~?  !accepted.sign-arvo
       [dap.bowl 'eyre bind rejected!' binding.sign-arvo]
     [~ this]
+  ::
+      [%ames %tune *]
+    ?.  ?=([%remote eyre-id=@ta ~] wire)  [~ this]
+    |^  ?~  roar.sign-arvo  [error-404 this] :: todo: maybe wrap all this in mole -> error response?
+        =/  [=path data=(unit (cask))]  dat.u.roar.sign-arvo
+        ?~  data            [error-404 this]
+        ?>  ?=(%wiki-booklet-0 p.u.data) :: todo: error response about incompatible data format
+        =/  =booklet  ;;(booklet q.u.data)
+        =/  req=inbound-request:eyre  (eyre-request:main eyre-id.wire)
+        =/  =order:rudder  [eyre-id.wire req]
+        =/  out=(quip card _state)  (serve [bowl order state])
+        [-.out this(state +.out)]
+    ::
+    ++  error-404
+      %+  give-simple-payload:app:server  eyre-id.wire
+      ^-  simple-payload:http
+      =/  html=@t  '<html><body>Remote page not found!</body></html>'
+      [[404 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
+    ::
+    ++  serve :: consolidate in main core
+      %-  (steer:rudder _state action)
+      :^    web:serv            :: pages
+          http-route:serv       :: route
+        (fours:rudder state)    :: adlib
+      |=  act=action            :: solve
+      ^-  $@(brief:rudder [brief:rudder (list card) _state])
+      =^  cards  this
+        (on-poke %wiki-action !>(act))
+      ['Successfully processed' cards state]
+    --
   ==
 ::
 ++  on-fail   on-fail:default
@@ -211,7 +267,9 @@
   =.  edit.rules.book         ?.  public-read  [%.n %.n] :: disable public edit
                               edit.rules.book
   =.  books  (~(put by books) id book)
-  [~ state]
+  :_  state
+  ?:  public-read  ~
+  (book:cull id)
 ::
 ++  mod-rule-edit
   |=  [%mod-rule-edit id=@ta =rule-edit]
@@ -240,7 +298,9 @@
   =.  tales.book  (~(put by tales.book) path tale)
   =.  books  (~(put by books) book-id book)
   ~&  >  "Wiki page created: {(trip book-id)}{<path>}"
-  [~ state]
+  :_  state
+  ?.  public-read.rules.book  ~
+  ~[(booklet-0:grow book-id book path tale)]
 ::
 ++  del-page
   |=  [%del-page book-id=@ta =path]
@@ -250,7 +310,8 @@
   =.  tales.book  (~(del by tales.book) path)
   =.  books       (~(put by books) book-id book)
   ~&  >>>  "Wiki page deleted: {(trip book-id)}{<path>}"
-  [~ state]
+  :_  state
+  (booklet:cull book-id path)
 ::
 ++  mod-page
   |=  [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
@@ -271,7 +332,9 @@
   =.  tales.book  (~(put by tales.book) path tale)
   =.  books       (~(put by books) book-id book)
   ~&  >>  "Wiki page edited: {(trip book-id)}{<path>}"
-  [~ state]
+  :_  state
+  ?.  public-read.rules.book  ~
+  ~[(booklet-0:grow book-id book path tale)]
 ::
 ++  imp-file
   |=  [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
@@ -366,5 +429,64 @@
   |=  =action
   ^-  card
   [%pass [-.action ~] %agent [our.bowl %wiki] %poke %wiki-action !>(action)]
+::
+++  grow
+  |%
+  ++  booklet-0
+    |=  [book-id=@ta =book tale-path=path =tale]
+    ^-  card
+    =/  =wire  /wiki/booklet
+    =/  loc=path  (weld /booklet-0/[book-id] tale-path)
+    =/  =booklet  [[book-id title.book rules.book] tale-path tale]
+    [%pass wire %grow loc %wiki-booklet-0 booklet]
+  --
+::
+++  cull :: todo: tomb instead?
+  |%
+  ++  cull
+    |=  targ=path
+    =/  base=path  ~+  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$
+    =/  ver=case  .^(case %gw (weld base targ))
+    [%pass (weld /wiki/cull targ) %cull ver targ]
+  ::
+  ++  book
+    |=  book-id=@ta
+    ^-  (list card)
+    =/  base=path  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$
+    =/  gt=path  (weld base /booklet-0/[book-id])
+    =/  paths=(list path)  .^((list path) %gt gt)
+    (turn paths cull)
+  ::
+  ++  booklet
+    |=  [book-id=@ta page-path=path]
+    ^-  (list card)
+    =/  base=path  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$
+    =/  targ=path  (weld /booklet-0/[book-id] page-path)
+    =/  full=path  (weld base targ)
+    =/  paths=(list path)
+      %+  skim  .^((list path) %gt (snip full))
+      |=(=path =(path targ))
+    (turn paths cull)
+  --
+::
+++  eyre-request  :: todo: move to lib
+  |=  eyre-id=@ta
+  ^-  inbound-request:eyre
+  |^  inbound-request:(~(got by connections) eyre-id)
+  ::
+  ++  connections
+    ^-  (map @ta outstanding-connection:eyre)
+    =/  scry-path=path  /(scot %p our.bowl)/connections/(scot %da now.bowl)
+    =/  raw  .^((map duct outstanding-connection:eyre) %e scry-path)
+    %-  my
+    %+  murn  ~(tap by raw)
+    |=  [=duct con=outstanding-connection:eyre]
+    ^-  (unit (pair @ta outstanding-connection:eyre))
+    `[(duct-to-eyre-id duct) con]
+  ::
+  ++  duct-to-eyre-id
+    |=  =duct
+    (scot %ta (cat 3 'eyre_' (scot %uv (sham duct))))
+  --
 ::
 --

@@ -36,6 +36,7 @@
   ^-  reply:rudder
   ::
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
+  ~&  "host: {<host.site>}"
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk
