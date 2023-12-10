@@ -180,6 +180,8 @@
     ~|("Invalid wiki ID" !!)
   ?:  (~(has by books) id)  ~|("Wiki '{(trip id)}' already exists!" !!)
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
+  ?:  &(!public-read.rules public.edit.rules)
+    ~|("Cannot enable public edits on private wiki." !!)
   =.  books  (~(put by books) [id [title ~ rules]])
   [~ state]
 ::
