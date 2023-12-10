@@ -5,13 +5,13 @@
 /*  format-time-js  %js  /web/wiki/format-time/js
 /*  mermaid-zero-js  %js  /web/wiki/mermaid-zero/js
 ::
-^-  (page:rudder state-1 action)
+^-  (page:rudder rudyard action)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder state-1]
+|_  [=bowl:gall =order:rudder rudyard]
 ::
-+*  help  ~(. +> [bowl order books])
++*  help  ~(. +> [bowl order [[%1 books] booklet]])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -37,14 +37,16 @@
   ::
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
   ~&  "host: {<host.site>}"
-  ?~  buuk=(~(get by books) book-id.site)
-    [%code 404 (crip "Wiki {<book-id.site>} not found")]
-  =/  =book  u.buuk
+  ~&  "booklet: {<booklet>}"
+  =/  cuver  get-cover:help
+  ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
+  =/  =cover  u.cuver
   =/  page-path=path  where:space-time:help
-  ?~  tale=(~(get by tales.book) page-path)
-    =/  loc=tape
-      (weld (spud /wiki/[book-id.site]/~/not-found) "?target={(spud page-path)}")
-    [%next (crip loc) ~]
+  =/  tale  get-tale:help
+  ?~  tale  =/  loc=tape
+              %+  weld  (spud /wiki/[book-id.site]/~/not-found)
+              "?target={(spud page-path)}"
+            [%next (crip loc) ~]
   =/  peach=(each [time=@da =page] @t)  (get-page:help u.tale)
   ?:  ?=(%| -.peach)  [%code 404 p.peach]
   =/  =page      page.p.peach
@@ -92,13 +94,13 @@
       ;+  (doc-head:web bowl (trip title.page))
       ;body#with-sidebar.loading(onload on-load)
         :: todo: make some sort of flex container that keeps title + search level, but puts search on top if there isn't room on one line
-        ;+  (global-nav:web bowl order [book-id:help book])
+        ;+  (global-nav-2:web bowl order [book-id:help cover])
         ;main
           ;+  (search-bar:web `book-id:help ~)
           ;header
             ;h1#page-title: {(trip title.page)}
             ;nav.page
-              ;+  ?.  (may-edit bowl book)  stub:web
+              ;+  ?.  (may-edit-2 bowl cover)  stub:web
                   ;a/"{wik-dir}{pag-dir}/~/edit": Edit
               ;a/"{wik-dir}{pag-dir}/~/history": History
               ;a/"{wik-dir}{pag-dir}/~/download?t={<as-of>}"
@@ -134,7 +136,7 @@
             ==
             ;script: {mermaid-script}
           ==
-          ;+  (footer:web book)
+          ;+  (footer-2:web cover)
         ==
       ==
     ==
@@ -143,7 +145,7 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder books=(map @ta book)]
+|_  [=bowl:gall =order:rudder rudyard]
 ::
 ++  book-id  ~+
   ^-  @ta
@@ -158,6 +160,20 @@
   =/  ver=(unit @ud)  (biff (~(get by query) 'v') (cury slaw %ud))
   ?^  ver  `[%| u.ver]
   ~
+::
+++  get-cover
+  ^-  (unit cover)
+  ?^  booklet  `cover.u.booklet
+  =/  buuk  (~(get by books) book-id)
+  %+  bind  buuk
+  |=(=book [book-id title.book rules.book])
+::
+++  get-tale
+  ^-  (unit tale)
+  ?^  booklet  `tale.u.booklet
+  %+  biff  (~(get by books) book-id)
+  |=  =book
+  (~(get by tales.book) where:space-time)
 ::
 ++  get-page
   |=  =tale

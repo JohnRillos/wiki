@@ -266,6 +266,37 @@
     ==
   ==
 ::
+++  global-nav-2
+  |=  [=bowl:gall =order:rudder wik=[id=@ta =cover]]
+  ^-  manx
+  =/  site=@t  url.request.order
+  ;nav.sidebar
+    ;a#wiki-title/"/wiki/{(trip id.wik)}": {(trip title.cover.wik)}
+    ;div#global-menu
+      ;a/"/wiki/{(trip id.wik)}": Home
+      ;*
+      ?:  =(%pawn (clan:title src.bowl))
+        :_  ~
+        ;a/"/~/login?redirect={(trip site)}": Log in with Urbit
+      ?.  =(src.bowl our.bowl)
+        :~  ;p: User: {<src.bowl>}
+            ;button
+              =type  "button"
+              =onclick  (log-out bowl)
+              ; Log out
+            ==
+        ==
+      :~  ;a/"/wiki/{(trip id.wik)}/~/settings": Settings
+          ;a/"/wiki": All Wikis
+          ;button
+            =type  "button"
+            =onclick  (log-out bowl)
+            ; Log out
+          ==
+      ==
+    ==
+  ==
+::
 ++  doc-head
   |=  [=bowl:gall title=tape]
   ^-  manx
@@ -324,6 +355,25 @@
   ^-  manx
   =/  viz=manx
     ?:  public-read.rules.book
+      ;div.note
+        ;+  globe:icon
+        ;span: This wiki is public
+      ==
+    ;div.note
+      ;+  lock:icon
+      ;span: This wiki is private
+    ==
+  ;footer
+    ;+  viz
+    ;a/"https://urbit.org": Powered by Urbit
+    ;a/"https://github.com/JohnRillos/wiki": Made with %wiki
+  ==
+::
+++  footer-2
+  |=  =cover
+  ^-  manx
+  =/  viz=manx
+    ?:  public-read.rules.cover
       ;div.note
         ;+  globe:icon
         ;span: This wiki is public

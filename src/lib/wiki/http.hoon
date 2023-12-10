@@ -3,9 +3,9 @@
 ::
 /-  *wiki
 /+  rudder
-/~  web  (page:rudder state-1 action)  /web/wiki/pages
+/~  web  (page:rudder rudyard action)  /web/wiki/pages
 ::
-|_  state-1
+|_  rudyard
 ::
 +$  sig  %~.~
 ::

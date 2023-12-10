@@ -31,7 +31,7 @@
 |_  =bowl:gall
 +*  this       .
     default  ~(. (default-agent this %|) bowl)
-    serv     ~(. wiki-http state)
+    serv     ~(. wiki-http [state ~])
     main     ~(. +> bowl)
 ::
 ++  on-init
@@ -128,41 +128,46 @@
   ++  handle-http
     |=  =order:rudder
     ^-  (quip card _this)
-    |^  =/  out=(quip card _state)
-          ?:  is-remote  handle-http-remote
-          (serve [bowl order state])
-        [-.out this(state +.out)]
+    |^  ?:  is-remote  handle-http-remote
+        (paddle [bowl order [state ~]])
     ::
     ++  is-remote
       =/  [site=(pole knot) *]  (sane-url:web url.request.order)
       ?.  ?=([%wiki %~.~ %p who=@ta *] site)  |
-      ?!(=(who.site our.bowl))  :: not sure what this'll do
+      ?~  who=(slaw %p who.site)  |
+      ?!(=(u.who our.bowl))
     ::
-    ++  serve
-      %-  (steer:rudder _state action)
-      :^    web:serv            :: pages
-          http-route:serv       :: route
-        (fours:rudder state)    :: adlib
-      |=  act=action            :: solve
-      ^-  $@(brief:rudder [brief:rudder (list card) _state])
+    ++  paddle
+      |=  input=[bowl:gall order:rudder rudyard]
+      ^-  (quip card _this)
+      =/  out=(quip card rudyard)  (serve input)
+      out(+ this(state -.+.out))
+    ::
+    ++  serve :: consolidate in main core
+      %-  (steer:rudder rudyard action)
+      :^    web:serv             :: pages
+          http-route:serv        :: route
+        (fours:rudder [state ~]) :: adlib
+      |=  act=action             :: solve
+      ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
       =^  cards  this
         (on-poke %wiki-action !>(act))
-      ['Successfully processed' cards state]
+      ['Successfully processed' cards [state ~]]
     ::
     ++  handle-http-remote
-      ^-  (quip card _state)
+      ^-  (quip card _this)
       =/  [site=(pole knot) *]  (sane-url:web url.request.order)
-      ?>  ?=([%wiki %~.~ %p who=@ta *] site)
-      =/  =ship  (slav %p who.site)    :: hardcode for now
+      ?>  ?=([%wiki %~.~ %p who=@ta book-id=@ta page-path=*] site)
+      =/  =ship  (slav %p who.site)
       =/  time=@da  now.bowl           :: todo: get from index if possible
       =/  base=path  /g/x/[(crip <time>)]/wiki/$
-      =/  book-id=@ta     ~.public     :: hardcode for now
-      =/  page-path=path  /test/page   :: hardcode for now
+      =/  book-id=@ta     book-id.site
+      =/  page-path=path  page-path.site
       =/  loc=path  :(weld base /booklet-0/[book-id] page-path)
       =/  =task:ames  [%keen ship loc]
       =/  =note-arvo  [%a task]
       =/  req-id=@ta  id.order
-      :_  state
+      :_  this
       ~&  "scrying {<ship>} {<loc>}"
       =/  =wire  /remote/[req-id]
       [%pass wire %arvo note-arvo]~
@@ -199,8 +204,8 @@
         =/  =booklet  ;;(booklet q.u.data)
         =/  req=inbound-request:eyre  (eyre-request:main eyre-id.wire)
         =/  =order:rudder  [eyre-id.wire req]
-        =/  out=(quip card _state)  (serve [bowl order state])
-        [-.out this(state +.out)]
+        =/  out=(quip card rudyard)  (serve [bowl order [state `booklet]])
+        [-.out this(state -.+.out)]
     ::
     ++  error-404
       %+  give-simple-payload:app:server  eyre-id.wire
@@ -209,15 +214,15 @@
       [[404 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
     ::
     ++  serve :: consolidate in main core
-      %-  (steer:rudder _state action)
-      :^    web:serv            :: pages
-          http-route:serv       :: route
-        (fours:rudder state)    :: adlib
-      |=  act=action            :: solve
-      ^-  $@(brief:rudder [brief:rudder (list card) _state])
+      %-  (steer:rudder rudyard action)
+      :^    web:serv             :: pages
+          http-route:serv        :: route
+        (fours:rudder [state ~]) :: adlib
+      |=  act=action             :: solve
+      ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
       =^  cards  this
         (on-poke %wiki-action !>(act))
-      ['Successfully processed' cards state]
+      ['Successfully processed' cards [state ~]]
     --
   ==
 ::

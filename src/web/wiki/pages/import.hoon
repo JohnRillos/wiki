@@ -4,9 +4,9 @@
 /+  multipart, rudder, web=wiki-web, *wiki
 /*  helper-js  %js  /web/wiki/file-import-helper/js
 ::
-^-  (page:rudder state-1 action)
+^-  (page:rudder rudyard action)
 ::
-|_  [=bowl:gall =order:rudder state-1]
+|_  [=bowl:gall =order:rudder rudyard]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]

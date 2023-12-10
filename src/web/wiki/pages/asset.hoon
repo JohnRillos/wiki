@@ -7,9 +7,9 @@
 /*  favicon-48  %mime  /web/wiki/assets/favicon-48/png
 /*  tile        %mime  /web/wiki/assets/tile/svg
 ::
-^-  (page:rudder state-1 action)
+^-  (page:rudder rudyard action)
 ::
-|_  [=bowl:gall =order:rudder state-1]
+|_  [=bowl:gall =order:rudder rudyard]
 ::
 ++  argue
   |=  [header-list:http (unit octs)]

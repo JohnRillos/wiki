@@ -3,9 +3,9 @@
 /-  *wiki
 /+  rudder, web=wiki-web
 ::
-^-  (page:rudder state-1 action)
+^-  (page:rudder rudyard action)
 ::
-|_  [=bowl:gall =order:rudder state-1]
+|_  [=bowl:gall =order:rudder rudyard]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]

@@ -15,6 +15,13 @@
     books=(map @ta book)
   ==
 ::
++$  state-2
+  $:  %2
+    =shelf
+    loans=(set [host=@p id=@ta]) :: favorites, direct subscriptions
+    books=(map @ta book)
+  ==
+::
 +$  book
   $:  title=@t
       tales=(map path tale)
@@ -72,7 +79,15 @@
       rules=access
   ==
 ::
++$  shelf    (map [host=@p id=@ta] spine)
+::
++$  spine    [=cover toc=(map path ref) as-of=@da]
+::
++$  ref      [edited=@da title=@t]
+::
 +$  booklet  [=cover =path =tale]
+::
++$  rudyard  [state-1 booklet=(unit booklet)]
 ::
 ::
 ::

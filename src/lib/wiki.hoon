@@ -12,6 +12,13 @@
   ?:  =(%pawn (clan:title src.bowl))  comet.edit.rules.book
   public.edit.rules.book
 ::
+++  may-edit-2
+  |=  [=bowl:gall =cover]
+  ^-  ?
+  ?:  =(src.bowl our.bowl)  &
+  ?:  =(%pawn (clan:title src.bowl))  comet.edit.rules.cover
+  public.edit.rules.cover
+::
 ++  part
   |=  =cord
   ^-  path

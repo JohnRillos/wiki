@@ -4,11 +4,11 @@
 /+  rudder, web=wiki-web
 /*  format-time-js  %js  /web/wiki/format-time/js
 ::
-^-  (page:rudder state-1 action)
+^-  (page:rudder rudyard action)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder state-1]
+|_  [=bowl:gall =order:rudder rudyard]
 ::
 +*  help  ~(. +> [bowl order books])
 ::
