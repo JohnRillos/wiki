@@ -237,6 +237,7 @@
   =/  =tale  (gas:ton *tale [now.bowl page]~)
   =.  tales.book  (~(put by tales.book) path tale)
   =.  books  (~(put by books) book-id book)
+  ~&  "Wiki page created: {(trip book-id)}{<path>}"
   [~ state]
 ::
 ++  del-page
@@ -246,6 +247,7 @@
   =/  =book       (~(got by books) book-id)
   =.  tales.book  (~(del by tales.book) path)
   =.  books       (~(put by books) book-id book)
+  ~&  "Wiki page deleted: {(trip book-id)}{<path>}"
   [~ state]
 ::
 ++  mod-page
@@ -266,6 +268,7 @@
   =.  tale          (put:ton tale now.bowl page)
   =.  tales.book  (~(put by tales.book) path tale)
   =.  books       (~(put by books) book-id book)
+  ~&  "Wiki page edited: {(trip book-id)}{<path>}"
   [~ state]
 ::
 ++  imp-file
@@ -285,7 +288,10 @@
         %front-matter  (title-from-front-matter data)
       ==
     [(title-from-filename filename) data]
-  (poke-self [%new-page book-id path title content])
+  %-  poke-self
+  ?:  (~(has by tales.book) path)
+    [%mod-page book-id path `title `content]
+  [%new-page book-id path title content]
 ::
 ++  title-from-header
   |=  md=wain
