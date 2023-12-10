@@ -17,7 +17,8 @@
   =/  =title-source  (title-source body:(head u.title-option))
   ?~  parts=(~(get by data) 'file')  ~
   =/  files  (get-md-files:web u.parts)
-  [%imp-file book-id.site files title-source]
+  =/  del-missing  (~(has by data) 'del-missing')
+  [%imp-file book-id.site files title-source del-missing]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]
@@ -66,6 +67,12 @@
                 ;option(value "header"): first header
                 ;option(value "front-matter"): front matter
               ==
+              ;br;
+              ;label
+                =for  "del-missing"
+                ; Delete all pages that are not in these files?
+              ==
+              ;input#del-missing(type "checkbox", name "del-missing");
             ==
             ;button.submit.box-item(type "submit"): Upload
           ==
