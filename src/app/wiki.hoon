@@ -180,6 +180,8 @@
     ~|("Invalid wiki ID" !!)
   ?:  (~(has by books) id)  ~|("Wiki '{(trip id)}' already exists!" !!)
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
+  ?:  &(!public-read.rules public.edit.rules)
+    ~|("Cannot enable public edits on private wiki." !!)
   =.  books  (~(put by books) [id [title ~ rules]])
   [~ state]
 ::
@@ -237,6 +239,7 @@
   =/  =tale  (gas:ton *tale [now.bowl page]~)
   =.  tales.book  (~(put by tales.book) path tale)
   =.  books  (~(put by books) book-id book)
+  ~&  >  "Wiki page created: {(trip book-id)}{<path>}"
   [~ state]
 ::
 ++  del-page
@@ -246,6 +249,7 @@
   =/  =book       (~(got by books) book-id)
   =.  tales.book  (~(del by tales.book) path)
   =.  books       (~(put by books) book-id book)
+  ~&  >>>  "Wiki page deleted: {(trip book-id)}{<path>}"
   [~ state]
 ::
 ++  mod-page
@@ -266,17 +270,22 @@
   =.  tale          (put:ton tale now.bowl page)
   =.  tales.book  (~(put by tales.book) path tale)
   =.  books       (~(put by books) book-id book)
+  ~&  >>  "Wiki page edited: {(trip book-id)}{<path>}"
   [~ state]
 ::
 ++  imp-file
-  |=  [%imp-file book-id=@ta files=(map @t wain) =title-source]
+  |=  [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
   =/  =book  (~(got by books) book-id)
   ?.  (may-edit bowl book)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %imp-file"  !!
   :_  state
-  %+  turn  ~(tap by files)
-  |=  [filepath=@t data=wain]
-  =/  [=path filename=tape]  (parse-filepath:web filepath)
+  =/  parsed=(list [data=wain =path filename=tape])
+    %+  turn  ~(tap by files)
+    |=  [filepath=@t data=wain]
+    [data (parse-filepath:web filepath)]
+  %+  weld  ?:(del-missing (delete-missing book-id parsed) ~)
+  %+  turn  parsed
+  |=  [data=wain =path filename=tape]
   =/  [title=@t content=wain]
     %+  fall
       ?-  title-source
@@ -285,7 +294,10 @@
         %front-matter  (title-from-front-matter data)
       ==
     [(title-from-filename filename) data]
-  (poke-self [%new-page book-id path title content])
+  %-  poke-self
+  ?:  (~(has by tales.book) path)
+    [%mod-page book-id path `title `content]
+  [%new-page book-id path title content]
 ::
 ++  title-from-header
   |=  md=wain
@@ -323,6 +335,16 @@
   =/  title=@t  (crip (gsub:regex "(^\")|(\"$)" "" (slag 8 (trip line))))
   =/  content=wain  (slag (add 2 (snag 1 toml-loc)) md)
   `[title content]
+::
+++  delete-missing
+  |=  [book-id=@ta imported=(list [* path *])]
+  ^-  (list card)
+  =/  =book  (~(got by books) book-id)
+  =/  new-paths=(set path)  (silt (turn imported |=([* =path *] path)))
+  %+  murn  ~(tap in ~(key by tales.book))
+  |=  old-path=path
+  ?:  (~(has in new-paths) old-path)  ~
+  `(poke-self [%del-page book-id old-path])
 ::
 ++  poke-self
   |=  =action

@@ -1,5 +1,14 @@
 ;>
 
+## 0.1.2
+
+Date: ~2023.12.11
+- file imports will now update pages if the page already exists
+- added an option to delete all pages that are not present in a file import
+- prevent new wikis from being public-edit and private-read at the same time
+- JSON over HTTP can now be used for the %imp-file action poke
+
+
 ## 0.1.1
 
 Date: ~2023.11.16

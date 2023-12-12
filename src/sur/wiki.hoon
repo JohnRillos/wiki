@@ -57,7 +57,7 @@
       [%new-page book-id=@ta =path title=@t content=wain]
       [%del-page book-id=@ta =path]
       [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
-      [%imp-file book-id=@ta files=(map @t wain) =title-source]
+      [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
       :: [%knight book-id=@ta =ship]
       :: [%demote book-id=@ta =ship]
       :: [%banish book-id=@ta =ship]

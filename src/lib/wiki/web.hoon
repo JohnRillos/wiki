@@ -113,7 +113,8 @@
 ::
 ++  remove-extension
   |=  =tape
-  (flop r:(partition:string "." (flop tape)))
+  ?~  found=(fand "." tape)  tape
+  (scag (rear found) tape)
 ::
 ++  style
   |=  =bowl:gall
