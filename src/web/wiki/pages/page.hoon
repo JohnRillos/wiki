@@ -11,7 +11,7 @@
 ::
 |_  [=bowl:gall =order:rudder rudyard]
 ::
-+*  help  ~(. +> [bowl order [[%1 books] booklet]])
++*  help  ~(. +> [bowl order [[%2 shelf books] booklet]]) :: todo: look into =, to expose rudyard namespace
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -36,8 +36,8 @@
   ^-  reply:rudder
   ::
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
-  ~&  "host: {<host.site>}"
-  ~&  "booklet: {<booklet>}"
+  :: ~&  "host: {<host.site>}"
+  :: ~&  "booklet: {<booklet>}"
   =/  cuver  get-cover:help
   ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =cover  u.cuver
@@ -94,7 +94,7 @@
       ;+  (doc-head:web bowl (trip title.page))
       ;body#with-sidebar.loading(onload on-load)
         :: todo: make some sort of flex container that keeps title + search level, but puts search on top if there isn't room on one line
-        ;+  (global-nav-2:web bowl order [book-id:help cover])
+        ;+  (global-nav:web bowl order [book-id:help [%& cover]])
         ;main
           ;+  (search-bar:web `book-id:help ~)
           ;header
@@ -136,7 +136,7 @@
             ==
             ;script: {mermaid-script}
           ==
-          ;+  (footer-2:web cover)
+          ;+  (footer:web [%& cover])
         ==
       ==
     ==

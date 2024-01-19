@@ -46,7 +46,7 @@
       ;+  (doc-head:web bowl "Import - {(trip title.book)}")
       ;script: {(disable-on-submit:web "upload" `"Uploading...")}
       ;body#with-sidebar(onload (trip helper-js))
-        ;+  (global-nav:web bowl order [book-id.site book])
+        ;+  (global-nav:web bowl order [book-id.site [%| book]])
         ;main
           ;+  (search-bar:web `book-id.site ~)
           ;h1: Import Pages
@@ -83,7 +83,7 @@
             ==
             ;button#upload.submit.box-item(type "submit"): Upload
           ==
-          ;+  (footer:web book)
+          ;+  (footer:web [%| book])
         ==
       ==
     ==

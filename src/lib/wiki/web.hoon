@@ -42,8 +42,15 @@
   ~+
   ^-  [=path query=(map @t @t)]
   =/  [pre=tape suf=tape]  (split-on (trip cord) '?')
-  :-  (stab (crip pre))
+  :-  (stab (crip (sans-fas pre)))
   (parse-query suf)
+::
+++  sans-fas
+  |=  =tape
+  |-
+  ?:  (lte (lent tape) 1)  tape
+  ?.  =('/' (rear tape))   tape
+  $(tape (flop (tail (flop tape))))
 ::
 ++  parse-query
   |=  query=tape
@@ -236,42 +243,16 @@
   """
 ::
 ++  global-nav
-  |=  [=bowl:gall =order:rudder wik=[id=@ta =book]]
+  |=  [=bowl:gall =order:rudder wik=[id=@ta data=(each cover book)]]
   ^-  manx
   =/  site=@t  url.request.order
-  ;nav.sidebar
-    ;a#wiki-title/"/wiki/{(trip id.wik)}": {(trip title.book.wik)}
-    ;div#global-menu
-      ;a/"/wiki/{(trip id.wik)}": Home
-      ;*
-      ?:  =(%pawn (clan:title src.bowl))
-        :_  ~
-        ;a/"/~/login?redirect={(trip site)}": Log in with Urbit
-      ?.  =(src.bowl our.bowl)
-        :~  ;p: User: {<src.bowl>}
-            ;button
-              =type  "button"
-              =onclick  (log-out bowl)
-              ; Log out
-            ==
-        ==
-      :~  ;a/"/wiki/{(trip id.wik)}/~/settings": Settings
-          ;a/"/wiki": All Wikis
-          ;button
-            =type  "button"
-            =onclick  (log-out bowl)
-            ; Log out
-          ==
-      ==
+  =/  book-title=@t
+    ?-  -.data.wik
+      %&  title.p.data.wik
+      %|  title.p.data.wik
     ==
-  ==
-::
-++  global-nav-2
-  |=  [=bowl:gall =order:rudder wik=[id=@ta =cover]]
-  ^-  manx
-  =/  site=@t  url.request.order
   ;nav.sidebar
-    ;a#wiki-title/"/wiki/{(trip id.wik)}": {(trip title.cover.wik)}
+    ;a#wiki-title/"/wiki/{(trip id.wik)}": {(trip book-title)}
     ;div#global-menu
       ;a/"/wiki/{(trip id.wik)}": Home
       ;*
@@ -351,29 +332,11 @@
   ==
 ::
 ++  footer
-  |=  =book
+  |=  =(each cover book)
   ^-  manx
+  =/  public-read=?  public-read.rules.p.each
   =/  viz=manx
-    ?:  public-read.rules.book
-      ;div.note
-        ;+  globe:icon
-        ;span: This wiki is public
-      ==
-    ;div.note
-      ;+  lock:icon
-      ;span: This wiki is private
-    ==
-  ;footer
-    ;+  viz
-    ;a/"https://urbit.org": Powered by Urbit
-    ;a/"https://github.com/JohnRillos/wiki": Made with %wiki
-  ==
-::
-++  footer-2
-  |=  =cover
-  ^-  manx
-  =/  viz=manx
-    ?:  public-read.rules.cover
+    ?:  public-read
       ;div.note
         ;+  globe:icon
         ;span: This wiki is public

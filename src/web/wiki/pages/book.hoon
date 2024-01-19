@@ -45,7 +45,7 @@
     ;html
       ;+  (doc-head:web bowl (trip title.book))
       ;body#with-sidebar(onload on-page-load)
-        ;+  (global-nav:web bowl order [book-id.site book])
+        ;+  (global-nav:web bowl order [book-id.site [%| book]])
         ;main
           ;+  (search-bar:web `book-id.site ~)
           ;h1#page-title: Main Page
@@ -74,7 +74,7 @@
                   ==
                 ==
           ==
-          ;+  (footer:web book)
+          ;+  (footer:web [%| book])
         ==
       ==
     ==

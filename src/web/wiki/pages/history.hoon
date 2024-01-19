@@ -43,7 +43,7 @@
     ;html
       ;+  (doc-head:web bowl "History - {(trip title.last)}")
       ;body#with-sidebar.loading(onload on-load)
-        ;+  (global-nav:web bowl order [book-id.site book])
+        ;+  (global-nav:web bowl order [book-id.site [%| book]])
         ;main
           ;+  (search-bar:web `book-id.site ~)
           ;article
@@ -67,7 +67,7 @@
                   ==
             ==
           ==
-          ;+  (footer:web book)
+          ;+  (footer:web [%| book])
         ==
       ==
     ==

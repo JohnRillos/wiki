@@ -3,6 +3,7 @@
 +$  versioned-state
   $%  state-0
       state-1
+      state-2
   ==
 ::
 +$  state-0
@@ -18,7 +19,7 @@
 +$  state-2
   $:  %2
     =shelf
-    loans=(set [host=@p id=@ta]) :: favorites, direct subscriptions
+    :: loans=(set [host=@p id=@ta]) :: favorites, direct subscriptions
     books=(map @ta book)
   ==
 ::
@@ -83,11 +84,15 @@
 ::
 +$  spine    [=cover toc=(map path ref) as-of=@da]
 ::
-+$  ref      [edited=@da title=@t]
++$  ref      [ver=@ edited=@da title=@t]
 ::
 +$  booklet  [=cover =path =tale]
 ::
-+$  rudyard  [state-1 booklet=(unit booklet)]
++$  rudyard  [state-2 booklet=(unit booklet)]
+::
+::
+::
++$  lore  shelf
 ::
 ::
 ::

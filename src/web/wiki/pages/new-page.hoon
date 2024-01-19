@@ -74,7 +74,7 @@
       ;style: {(trip codemirror-css)}
       ;script: {(trip markdown-js)}
       ;body#with-sidebar
-        ;+  (global-nav:web bowl order [book-id.site book])
+        ;+  (global-nav:web bowl order [book-id.site [%| book]])
         ;main
           ;*  ?~  msg  ~
               ~[;/((trip text.u.msg))]

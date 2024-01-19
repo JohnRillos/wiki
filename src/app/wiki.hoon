@@ -1,9 +1,10 @@
 /-  *wiki
-/+  dbug, default-agent, regex, rudder, server, string, verb
+/+  dbug, default-agent, gossip, regex, rudder, server, string, verb
 /+  *wiki, web=wiki-web, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
 /$  html-to-mime  %html  %mime
+/$  noun-to-lore  %noun  %wiki-lore
 ::
 ::  types core
 ::
@@ -15,12 +16,16 @@
 ::
 ::  state
 ::
-=|  state-1
+=|  state-2
 =*  state  -
 ::
 ::  debugging tools
 ::
 %+  verb  |
+%-  %+  agent:gossip  [3 %anybody %anybody &]
+    %+  ~(put by *(map mark $-(* vase)))
+      %wiki-lore
+    |=(=noun !>((noun-to-lore noun)))
 %-  agent:dbug
 ::
 =<  :: compose helper core into agent core
@@ -37,8 +42,7 @@
 ++  on-init
   ^-  (quip card _this)
   =^  cards  state
-    =|  state=state-1
-    =.  books.state  ~
+    =|  state=state-2
     :_  state
     [%pass /eyre/connect %arvo %e %connect [~ /[dap.bowl]] dap.bowl]~
   [cards this]
@@ -54,11 +58,12 @@
   ::
   ++  build-state
     |=  old=versioned-state
-    ^-  (quip card state-1)
+    ^-  (quip card state-2)
     =|  cards=(list card)
     |-
     |^  ?-  -.old
-          %1  [cards old]
+          %2  [cards old]
+          %1  $(old (state-1-to-2 old), cards (cards-1-to-2 old))
           %0  $(old (state-0-to-1 old))
         ==
     ::
@@ -92,6 +97,16 @@
         ^-  access
         [public-read.access-0 [%.n %.n]]
       --
+    ::
+    ++  state-1-to-2
+      |=  =state-1
+      ^-  state-2
+      [%2 ~ +.state-1]
+    ::
+    ++  cards-1-to-2
+      |=  =state-1
+      ^-  (list card)
+      ~ :: todo: grow all pages in public wikis
     ::
     --
   --
@@ -159,11 +174,16 @@
       =/  [site=(pole knot) *]  (sane-url:web url.request.order)
       ?>  ?=([%wiki %~.~ %p who=@ta book-id=@ta page-path=*] site)
       =/  =ship  (slav %p who.site)
-      =/  time=@da  now.bowl           :: todo: get from index if possible
-      =/  base=path  /g/x/[(crip <time>)]/wiki/$
       =/  book-id=@ta     book-id.site
-      =/  page-path=path  page-path.site
-      =/  loc=path  :(weld base /booklet-0/[book-id] page-path)
+      =/  page-path=path
+        ?:  =('~' -.page-path.site)  ~
+        page-path.site
+      =/  mark=path
+        ?~  page-path  /spine-0
+        /booklet-0
+      =/  ver=@t          (get-case ship book-id page-path)
+      =/  base=path  /g/x/[ver]/wiki/$
+      =/  loc=path  :(weld base mark /[book-id] page-path)
       =/  =task:ames  [%keen ship loc]
       =/  =note-arvo  [%a task]
       =/  req-id=@ta  id.order
@@ -171,6 +191,16 @@
       ~&  "scrying {<ship>} {<loc>}"
       =/  =wire  /remote/[req-id]
       [%pass wire %arvo note-arvo]~
+    ::
+    ++  get-case
+      |=  [=ship book-id=@ta =path]
+      ^-  @t
+      =/  ruf=(unit ref)
+        %+  biff  (~(get by shelf) [ship book-id])
+        |=  =spine
+        (~(get by toc.spine) path)
+      ?~  ruf  (crip <now.bowl>)  :: todo: better way of serializing @da
+      (crip <ver.u.ruf>)
     --
   --
 ::
@@ -178,12 +208,29 @@
   |=  =path
   ^-  (quip card _this)
   ?+  path  (on-watch:default path)
-    [%http-response *]  [~ this]
+    [%http-response *]        [~ this]
+    [%~.~ %gossip %source ~]  [rant:goss:main this]
   ==
 ::
 ++  on-leave  on-leave:default
 ++  on-peek   on-peek:default
-++  on-agent  on-agent:default
+::
+++  on-agent
+  |=  [=wire =sign:agent:gall]
+  ^-  (quip card _this)
+  |^  ?+  -.sign  (on-agent:default wire sign)
+        %fact   =^  cards  state
+                  (handle-fact cage.sign)
+                [cards this]
+      ==
+  ::
+  ++  handle-fact
+    |=  =cage
+    ^-  (quip card _state)
+    ?+  wire  ~|  "Unknown wire {<wire>}"  !!
+      [%~.~ %gossip %gossip ~]  (read:goss:main !<(lore q.cage))
+    ==
+  --
 ::
 ++  on-arvo
   |=  [wire=(pole knot) =sign-arvo]
@@ -339,7 +386,9 @@
   ~&  >>  "Wiki page edited: {(trip book-id)}{<path>}"
   :_  state
   ?.  public-read.rules.book  ~
-  ~[(booklet-0:grow book-id book path tale)]
+  :~  (booklet-0:grow book-id book path tale)
+      (tell:goss book-id book)
+  ==
 ::
 ++  imp-file
   |=  [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
@@ -493,5 +542,49 @@
     |=  =duct
     (scot %ta (cat 3 'eyre_' (scot %uv (sham duct))))
   --
+::
+++  goss
+  |%
+  ::
+  ++  tell
+    |=  [id=@ta =book]
+    ^-  card
+    =/  =lore  (malt [[our.bowl id] (to-spine id book)]~)
+    [(invent:gossip %wiki-lore !>(lore))]
+  ::
+  ++  rant
+    ^-  (list card)
+    =;  =lore  [(invent:gossip %wiki-lore !>(lore))]~
+    %-  my
+    %+  murn  ~(tap by books)
+    |=  [id=@ta =book]
+    ^-  (unit (pair [@p @ta] spine))
+    ?.  public-read.rules.book  ~
+    (some [[our.bowl id] (to-spine id book)])
+  ::
+  ++  read
+    |=  =lore
+    ^-  (quip card _state)
+    :: ~&  >>  lore
+    =.  shelf
+      %-  (~(uno by shelf) lore)
+      |=  [k=[@p @ta] v=spine w=spine]
+      ?:  (gte as-of.v as-of.w)  v
+      ~&  '%wiki: received rumor, updating index...'
+      w
+    [~ state]
+  --
+::
+++  to-spine
+  |=  [id=@ta =book]
+  ^-  spine
+  =/  =cover  [id title.book rules.book]
+  =/  toc=(map path ref)
+    %-  ~(run by tales.book)
+    |=  =tale
+    =/  [time=@da =page]  (latest tale)
+    =/  ver=@  (dec (wyt:ton tale))
+    [ver time title.page]
+  [cover toc now.bowl]
 ::
 --
