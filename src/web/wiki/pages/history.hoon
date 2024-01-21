@@ -26,11 +26,6 @@
   =/  cuver  get-cover:help
   ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =cover  u.cuver
-  :: ?.  ?=([%wiki book-id=@ta *] site)
-  ::   [%code 404 'Invalid path']
-  :: ?~  buuk=(~(get by books) book-id.site)
-  ::   [%code 404 (crip "Wiki {<book-id.site>} not found")]
-  :: =/  =book  u.buuk
   =/  tale=(unit tale)  get-tale:help
   ?~  tale
     [%code 404 (crip "Article {<page-path:help>} not found in {<title.book>}")]

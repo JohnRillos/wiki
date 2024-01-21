@@ -11,7 +11,7 @@
 ::
 |_  [=bowl:gall =order:rudder rudyard]
 ::
-+*  help  ~(. +> [bowl order books])
++*  help  ~(. +> [bowl order [[%2 shelf books] booklet]]) :: todo: look into =, to expose rudyard namespace
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -24,11 +24,12 @@
   ^-  reply:rudder
   ::
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
-  ?~  buuk=(~(get by books) book-id.site)
-    [%code 404 (crip "Wiki {<book-id.site>} not found")]
-  =/  =book  u.buuk
-  =/  page-path=path  where:space-time:help
-  ?~  tale=(~(get by tales.book) page-path)  [%code 404 'Page not found']
+  =/  cuver  get-cover:help
+  ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
+  =/  =cover  u.cuver
+  =/  tale=(unit tale)  get-tale:help
+  ?~  tale
+    [%code 404 (crip "Article {<where:space-time:help>} not found in {<title.book>}")]
   =/  peach=(each [time=@da =page] @t)  (get-page:help u.tale)
   ?:  ?=(%| -.peach)  [%code 404 p.peach]
   =/  =page      page.p.peach
@@ -45,7 +46,11 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder books=(map @ta book)]
+|_  [=bowl:gall =order:rudder rudyard]
+::
+++  book-id  ~+
+  ^-  @ta
+  book-id:wiki-path:(wiki-url:web url.request.order)
 ::
 ++  space-time  ~+
   ^-  [where=path when=(unit (each @da @ud))]
@@ -56,6 +61,20 @@
   =/  ver=(unit @ud)  (biff (~(get by query) 'v') (cury slaw %ud))
   ?^  ver  `[%| u.ver]
   ~
+::
+++  get-cover
+  ^-  (unit cover)
+  ?^  booklet  `cover.u.booklet
+  =/  buuk  (~(get by books) book-id)
+  %+  bind  buuk
+  |=(=book [book-id title.book rules.book])
+::
+++  get-tale
+  ^-  (unit tale)
+  ?^  booklet  `tale.u.booklet
+  %+  biff  (~(get by books) book-id)
+  |=  =book
+  (~(get by tales.book) where:space-time)
 ::
 ++  get-page
   |=  =tale
