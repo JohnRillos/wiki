@@ -177,9 +177,9 @@
       =/  book-id=@ta     book-id.site
       =/  page-path=path
         ?:  =('~' -.page-path.site)  ~
-        page-path.site
+        (path-before-sig page-path.site)
       =/  mark=path
-        ?~  page-path  /spine-0
+        ?~  page-path  /spine-0 :: todo: figure out this spine scry stuff
         /booklet-0
       =/  ver=@t          (get-case ship book-id page-path)
       =/  base=path  /g/x/[ver]/wiki/$
@@ -191,6 +191,13 @@
       ~&  "scrying {<ship>} {<loc>}"
       =/  =wire  /remote/[req-id]
       [%pass wire %arvo note-arvo]~
+    ::
+    ++  path-before-sig
+      |=  full=path
+      ^-  path
+      =/  i=(unit @)  (find ~[%~.~] full)
+      ?~  i  full
+      (scag u.i full)
     ::
     ++  get-case
       |=  [=ship book-id=@ta =path]

@@ -10,7 +10,7 @@
 ::
 |_  [=bowl:gall =order:rudder rudyard]
 ::
-+*  help  ~(. +> [bowl order books])
++*  help  ~(. +> [bowl order [[%2 shelf books] booklet]]) :: todo: look into =, to expose rudyard namespace
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -22,13 +22,17 @@
   |=  [arg=(list [k=@t v=@t]) msg=(unit [? @t])]
   ^-  reply:rudder
   ::
-  =/  site=(pole knot)  (stab url.request.order)
-  ?.  ?=([%wiki book-id=@ta *] site)
-    [%code 404 'Invalid path']
-  ?~  buuk=(~(get by books) book-id.site)
-    [%code 404 (crip "Wiki {<book-id.site>} not found")]
-  =/  =book  u.buuk
-  ?~  tale=(~(get by tales.book) page-path:help)
+  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
+  =/  cuver  get-cover:help
+  ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
+  =/  =cover  u.cuver
+  :: ?.  ?=([%wiki book-id=@ta *] site)
+  ::   [%code 404 'Invalid path']
+  :: ?~  buuk=(~(get by books) book-id.site)
+  ::   [%code 404 (crip "Wiki {<book-id.site>} not found")]
+  :: =/  =book  u.buuk
+  =/  tale=(unit tale)  get-tale:help
+  ?~  tale
     [%code 404 (crip "Article {<page-path:help>} not found in {<title.book>}")]
   ::
   |^  [%page render]
@@ -43,7 +47,7 @@
     ;html
       ;+  (doc-head:web bowl "History - {(trip title.last)}")
       ;body#with-sidebar.loading(onload on-load)
-        ;+  (global-nav:web bowl order [book-id.site [%| book]])
+        ;+  (global-nav:web bowl order [book-id.site [%& cover]])
         ;main
           ;+  (search-bar:web `book-id.site ~)
           ;article
@@ -67,7 +71,7 @@
                   ==
             ==
           ==
-          ;+  (footer:web [%| book])
+          ;+  (footer:web [%& cover])
         ==
       ==
     ==
@@ -76,7 +80,7 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder books=(map @ta book)]
+|_  [=bowl:gall =order:rudder rudyard]
 ::
 ++  book-id  ~+
   ^-  @ta
@@ -89,5 +93,20 @@
   =/  site=(pole knot)  (stab url.request.order)
   ?>  ?=([%wiki book-id=@ta pat=*] site)
   (snip (snip `path`pat.site))
+::
+++  get-cover
+  ^-  (unit cover)
+  ?^  booklet  `cover.u.booklet
+  =/  buuk  (~(get by books) book-id)
+  %+  bind  buuk
+  |=(=book [book-id title.book rules.book])
+::
+++  get-tale
+  ^-  (unit tale)
+  ?^  booklet  `tale.u.booklet
+  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
+  %+  biff  (~(get by books) book-id)
+  |=  =book
+  (~(get by tales.book) page-path)
 ::
 --

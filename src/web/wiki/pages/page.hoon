@@ -36,8 +36,6 @@
   ^-  reply:rudder
   ::
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
-  :: ~&  "host: {<host.site>}"
-  :: ~&  "booklet: {<booklet>}"
   =/  cuver  get-cover:help
   ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =cover  u.cuver
@@ -88,7 +86,10 @@
   ::
   ++  render
     ^-  manx
-    =/  wik-dir=tape  (spud /wiki/[book-id:help])
+    =/  host=(unit @p)  host.site
+    =/  wik-dir=tape
+      ?~  host  (spud /wiki/[book-id:help])
+      (spud /wiki/~/p/[(scot %p u.host)]/[book-id:help])
     =/  pag-dir=tape  (spud page-path)
     ;html
       ;+  (doc-head:web bowl (trip title.page))
