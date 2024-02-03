@@ -13,8 +13,8 @@
 ::
 |_  [=bowl:gall =order:rudder rudyard]
 ::
-+*  help  ~(. +> [bowl order books])
-::
++*  help  ~(. +> [bowl order [[%2 shelf books] booklet]]) :: todo: look into =, to expose rudyard namespace
+:: todo: load updated page after submitting remote edit
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
   ^-  $@(brief:rudder action)
@@ -22,38 +22,45 @@
   ?>  ?=(%mod-page (~(got by args) 'action'))
   =/  page-title=@t  (~(got by args) 'page-title')
   =/  content=wain  (to-wain:format (sane-newline (~(got by args) 'content')))
-  [%mod-page book-id:help page-path:help `page-title `content]
+  =/  host  host:wiki-path:(wiki-url:web url.request.order)
+  [%mod-page host book-id:help page-path:help `page-title `content]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]
   ^-  reply:rudder
   =/  next=@t
     ?.  success  url.request.order
-    =/  bid=@t  book-id:help
-    =/  =path  page-path:help
-    (crip "/wiki/{(trip bid)}{(spud path)}")
+    =/  [site=wiki-path *]  (wiki-url:web url.request.order)
+    =/  wik-dir=tape
+      ?~  host.site
+        (spud /wiki/[book-id:help])
+      (spud /wiki/~/p/[(scot %p u.host.site)]/[book-id:help])
+    =/  pag-dir=tape  (spud page-path:help)
+    (crip (weld wik-dir pag-dir))
   ((alert:rudder next build))
 ::
 ++  build
   |=  [arg=(list [k=@t v=@t]) msg=(unit [success=? text=@t])]
   ^-  reply:rudder
   ::
-  =/  site=(pole knot)  (stab url.request.order)
-  ?.  ?=([%wiki book-id=@ta *] site)
-    [%code 404 'Invalid path']
-  ?~  buuk=(~(get by books) book-id:help)
-    [%code 404 (crip "Wiki {<book-id:help>} not found")]
-  =/  =book  u.buuk
-  ?>  (may-edit bowl book)
-  ?~  tale=(~(get by tales.book) page-path:help)
-    [%code 404 (crip "Article {<page-path:help>} not found in {<title.book>}")]
+  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
+  =/  cuver  get-cover:help
+  ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
+  =/  =cover  u.cuver
+  ?>  (may-edit-2 bowl cover)
+  =/  tale=(unit tale)  get-tale:help
+  ?~  tale
+    [%code 404 (crip "Article {<page-path:help>} not found in {<title.cover>}")]
   =/  =page  page:(latest u.tale)
   ::
   |^  [%page render]
   ::
   ++  render
     ^-  manx
-    =/  wik-dir=tape  (spud /wiki/[book-id:help])
+    =/  wik-dir=tape
+      ?~  host.site
+        (spud /wiki/[book-id:help])
+      (spud /wiki/~/p/[(scot %p u.host.site)]/[book-id:help])
     =/  pag-dir=tape  (spud page-path:help)
     ;html
       ;+  (doc-head:web bowl "Edit - {(trip title.page)}")
@@ -61,11 +68,11 @@
       ;style: {(trip codemirror-css)}
       ;script: {(trip markdown-js)}
       ;body#with-sidebar
-        ;+  (global-nav:web bowl order [book-id.site [%| book]])
+        ;+  (global-nav:web bowl order [book-id.site [%& cover]])
         ;main
           ;*  ?~  msg  ~
               ~[;/((trip text.u.msg))]
-          ;+  (search-bar:web `book-id.site ~)
+          ;+  (search-bar:web `book-id.site host.site)
           ;h1: Edit Page - {(trip title.page)}
           ::
           ;form(method "post")
@@ -120,18 +127,30 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder books=(map @ta book)]
+|_  [=bowl:gall =order:rudder rudyard]
 ::
 ++  book-id  ~+
   ^-  @ta
-  =/  site=(pole knot)  (stab url.request.order)
-  ?>  ?=([%wiki book-id=@ta *] site)
-  book-id.site
+  book-id:wiki-path:(wiki-url:web url.request.order)
 ::
 ++  page-path  ~+
   ^-  path
-  =/  site=(pole knot)  (stab url.request.order)
-  ?>  ?=([%wiki book-id=@ta pat=*] site)
-  (snip (snip `path`pat.site))
+  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
+  (snip (snip loc.site))
+::
+++  get-cover
+  ^-  (unit cover)
+  ?^  booklet  `cover.u.booklet
+  =/  buuk  (~(get by books) book-id)
+  %+  bind  buuk
+  |=(=book [book-id title.book rules.book])
+::
+++  get-tale
+  ^-  (unit tale)
+  ?^  booklet  `tale.u.booklet
+  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
+  %+  biff  (~(get by books) book-id)
+  |=  =book
+  (~(get by tales.book) page-path)
 ::
 --

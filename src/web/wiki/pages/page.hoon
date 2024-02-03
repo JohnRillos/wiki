@@ -97,7 +97,7 @@
         :: todo: make some sort of flex container that keeps title + search level, but puts search on top if there isn't room on one line
         ;+  (global-nav:web bowl order [book-id:help [%& cover]])
         ;main
-          ;+  (search-bar:web `book-id:help ~)
+          ;+  (search-bar:web `book-id:help host)
           ;header
             ;h1#page-title: {(trip title.page)}
             ;nav.page

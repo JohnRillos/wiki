@@ -19,6 +19,7 @@
 ::
 ++  wiki-url
   |=  =cord
+  ~+
   ^-  [=wiki-path query=(map @t @t)]
   =/  [=path que=(map @t @t)]  (sane-url cord)
   [(to-wiki-path path) que]
@@ -311,7 +312,7 @@
   =/  search-url=tape
     ?~  book-id    !!  :: todo: global search: /wiki/~/search
     ?~  host       "/wiki/{(trip u.book-id)}/~/search"
-    "/wiki/~/p/{<u.host>}/{(trip u.book-id)}/~/search"
+    "/wiki/~/p/{<u.host>}/{(trip u.book-id)}/~/search" :: todo: get remote search working
   ;div#search
     ;script: {search-keybind-script}
     ;div#search-bar

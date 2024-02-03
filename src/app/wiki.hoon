@@ -373,7 +373,9 @@
   (booklet:cull book-id path)
 ::
 ++  mod-page
-  |=  [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
+  |=  [%mod-page host=(unit @p) book-id=@ta =path title=(unit @t) content=(unit wain)]
+  ?^  host
+    [[(poke-them u.host [%mod-page ~ book-id path title content])]~ state]
   =/  =book  (~(got by books) book-id)
   ?.  (may-edit bowl book)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-page"  !!
@@ -422,7 +424,7 @@
     [(title-from-filename filename) data]
   %-  poke-self
   ?:  (~(has by tales.book) path)
-    [%mod-page book-id path `title `content]
+    [%mod-page ~ book-id path `title `content]
   [%new-page book-id path title content]
 ::
 ++  title-from-header
@@ -490,6 +492,11 @@
   |=  =action
   ^-  card
   [%pass [-.action ~] %agent [our.bowl %wiki] %poke %wiki-action !>(action)]
+::
+++  poke-them
+  |=  [=ship =action]
+  ^-  card
+  [%pass [-.action ~] %agent [ship %wiki] %poke %wiki-action !>(action)]
 ::
 ++  grow
   |%

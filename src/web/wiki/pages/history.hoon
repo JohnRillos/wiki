@@ -44,7 +44,7 @@
       ;body#with-sidebar.loading(onload on-load)
         ;+  (global-nav:web bowl order [book-id.site [%& cover]])
         ;main
-          ;+  (search-bar:web `book-id.site ~)
+          ;+  (search-bar:web `book-id.site host.site)
           ;article
             ;header
               ;h1: {(trip title.last)}: Revision History
@@ -79,11 +79,9 @@
 ::
 ++  book-id  ~+
   ^-  @ta
-  =/  site=(pole knot)  (stab url.request.order)
-  ?>  ?=([%wiki book-id=@ta *] site)
-  book-id.site
+  book-id:wiki-path:(wiki-url:web url.request.order)
 ::
-++  page-path  ~+
+++  page-path  ~+ :: todo: review
   ^-  path
   =/  site=(pole knot)  (stab url.request.order)
   ?>  ?=([%wiki book-id=@ta pat=*] site)
