@@ -184,7 +184,8 @@
       =/  ver=@t          (get-case ship book-id page-path)
       =/  base=path  /g/x/[ver]/wiki/$
       =/  loc=path  :(weld base mark /[book-id] page-path)
-      =/  =task:ames  [%keen ship loc]
+      =/  sec=(unit [idx=@ key=@])  ~
+      =/  =task:ames  [%keen sec ship loc]
       =/  =note-arvo  [%a task]
       =/  req-id=@ta  id.order
       :_  this
