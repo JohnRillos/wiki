@@ -305,4 +305,14 @@
       ;+  (need (de-xml:html search-svg))
     ==
   --
+::
+::  creates a <span> that can be replaced by a localized timestamp on page load
+::
+++  timestamp
+  |=  =time
+  ^-  manx
+  ;span.time
+    =millis  (a-co:co (unm:chrono:userlib time))
+    ;  {<time>}
+  ==
 --

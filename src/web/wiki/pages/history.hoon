@@ -2,6 +2,7 @@
 ::
 /-  *wiki
 /+  rudder, web=wiki-web
+/*  format-time-js  %js  /web/wiki/format-time/js
 ::
 ^-  (page:rudder state-1 action)
 ::
@@ -32,20 +33,7 @@
   ::
   |^  [%page render]
   ::
-  ++  md-style  ""
-  ::
-  ++  prism-style-override
-    """
-    code[class*=language-] \{
-      font-family: monospace;
-    }
-    """
-  ::
-  ++  zero-md-src
-    "https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"
-  ::
-  ++  prism-css-src
-    "https://cdn.jsdelivr.net/gh/PrismJS/prism@1/themes/prism.min.css"
+  ++  on-load  (trip format-time-js)
   ::
   ++  render
     ^-  manx
@@ -54,7 +42,7 @@
     =/  last=page  page:(latest u.tale)
     ;html
       ;+  (doc-head:web bowl "History - {(trip title.last)}")
-      ;body#with-sidebar
+      ;body#with-sidebar(onload on-load)
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main
           ;+  (search-bar:web `book-id.site ~)
@@ -71,7 +59,10 @@
                     ?:  =(%pawn (clan:title edit-by.page))  "a guest user"
                     <edit-by.page>
                   ;li
-                    ;a/"{wik-dir}{pag-dir}?t={<date>}": {<date>}
+                    ;a
+                      =href  "{wik-dir}{pag-dir}?t={<date>}"
+                      ;+  (timestamp:web date)
+                    ==
                     ;span:  by {editor}
                   ==
             ==
