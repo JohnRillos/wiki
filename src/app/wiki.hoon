@@ -182,7 +182,7 @@
         ?~  page-path  /spine-0 :: todo: figure out this spine scry stuff
         /booklet-0
       =/  ver=@t          (get-case ship book-id page-path)
-      =/  base=path  /g/x/[ver]/wiki/$
+      =/  base=path  /g/x/[ver]/wiki/$/1
       =/  loc=path  :(weld base mark /[book-id] page-path)
       =/  sec=(unit [idx=@ key=@])  ~
       =/  =task:ames  [%keen sec ship loc]
@@ -208,7 +208,7 @@
         |=  =spine
         (~(get by toc.spine) path)
       ?~  ruf  (crip <now.bowl>)  :: todo: better way of serializing @da
-      (crip <ver.u.ruf>)
+      (crip <edited.u.ruf>)
     --
   --
 ::
@@ -360,7 +360,9 @@
   ~&  >  "Wiki page created: {(trip book-id)}{<path>}"
   :_  state
   ?.  public-read.rules.book  ~
-  ~[(booklet-0:grow book-id book path tale)]
+  :~  (booklet-0:grow book-id book path tale)
+    (tell:goss book-id book)
+  ==
 ::
 ++  del-page
   |=  [%del-page book-id=@ta =path]
@@ -514,14 +516,14 @@
   |%
   ++  cull
     |=  targ=path
-    =/  base=path  ~+  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$
+    =/  base=path  ~+  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$/1
     =/  ver=case  .^(case %gw (weld base targ))
     [%pass (weld /wiki/cull targ) %cull ver targ]
   ::
   ++  book
     |=  book-id=@ta
     ^-  (list card)
-    =/  base=path  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$
+    =/  base=path  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$/1
     =/  gt=path  (weld base /booklet-0/[book-id])
     =/  paths=(list path)  .^((list path) %gt gt)
     (turn paths cull)
@@ -529,7 +531,7 @@
   ++  booklet
     |=  [book-id=@ta page-path=path]
     ^-  (list card)
-    =/  base=path  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$
+    =/  base=path  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$/1
     =/  targ=path  (weld /booklet-0/[book-id] page-path)
     =/  full=path  (weld base targ)
     =/  paths=(list path)
