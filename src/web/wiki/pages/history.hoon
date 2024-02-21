@@ -36,7 +36,10 @@
   ::
   ++  render
     ^-  manx
-    =/  wik-dir=tape  (spud /wiki/[book-id:help])
+    =/  wik-dir=tape
+      ?~  host.site
+        (spud /wiki/[book-id:help])
+      (spud /wiki/~/p/[(scot %p u.host.site)]/[book-id:help])
     =/  pag-dir=tape  (spud page-path:help)
     =/  last=page  page:(latest u.tale)
     ;html
@@ -81,11 +84,10 @@
   ^-  @ta
   book-id:wiki-path:(wiki-url:web url.request.order)
 ::
-++  page-path  ~+ :: todo: review
+++  page-path  ~+
   ^-  path
-  =/  site=(pole knot)  (stab url.request.order)
-  ?>  ?=([%wiki book-id=@ta pat=*] site)
-  (snip (snip `path`pat.site))
+  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
+  (snip (snip loc.site))
 ::
 ++  get-cover
   ^-  (unit cover)
