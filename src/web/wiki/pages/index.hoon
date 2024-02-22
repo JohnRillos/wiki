@@ -30,6 +30,10 @@
     window.history.pushState(\{}, document.title, window.location.pathname);
     """
   ::
+  ++  sort-shelf
+    |=  [a=[[host=@p id=@ta] =spine] b=[[host=@p id=@ta] =spine]]
+    (gth as-of.spine.a as-of.spine.b)
+  ::
   ++  render
     ^-  manx
     ;html
@@ -40,8 +44,13 @@
           ;a/"/wiki/~/new"
             ;button.submit(type "button"): New Wiki
           ==
-          ;ul.wiki-list
-            ;*  %+  turn  ~(tap by books)
+          ;*
+          ?:  =(~ books)  [stub:web]~
+            ;=
+              ;h2: Your Wikis
+              ;ul.wiki-list
+                ;*
+                %+  turn  ~(tap by books)
                 |=  [id=@ta =book]
                 ^-  manx
                 ;li.wiki-list-item
@@ -50,6 +59,21 @@
                     ; {(trip title.book)}
                   ==
                 ==
+              ==
+            ==
+          ;br;
+          ;h2: Wikis on the Network
+          ;ul.wiki-list
+            ;*
+            %+  turn  (sort ~(tap by shelf) sort-shelf)
+            |=  [[host=@p id=@ta] =spine]
+            ^-  manx
+            ;li.wiki-list-item
+              ;a/"/wiki/~/p/{<host>}/{(trip id)}"
+                ;+  ?:(public-read.rules.cover.spine globe:icon:web lock:icon:web)
+                ; {(trip title.cover.spine)}
+              ==
+            ==
           ==
         ==
       ==

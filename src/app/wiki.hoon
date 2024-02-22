@@ -299,7 +299,9 @@
   ?:  &(!public-read.rules public.edit.rules)
     ~|("Cannot enable public edits on private wiki." !!)
   =.  books  (~(put by books) [id [title ~ rules]])
-  [~ state]
+  :_  state
+  ?.  public-read.rules  ~
+  [(tell:goss id [title ~ rules])]~
 ::
 ++  del-book
   |=  [%del-book id=@ta]
@@ -582,12 +584,11 @@
   ++  read
     |=  =lore
     ^-  (quip card _state)
-    :: ~&  >>  lore
+    ~&  '%wiki: received rumor, updating index...'
     =.  shelf
       %-  (~(uno by shelf) lore)
       |=  [k=[@p @ta] v=spine w=spine]
       ?:  (gte as-of.v as-of.w)  v
-      ~&  '%wiki: received rumor, updating index...'
       w
     [~ state]
   --
