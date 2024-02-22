@@ -2,6 +2,7 @@
 ::
 /-  *wiki
 /+  rudder, web=wiki-web, *wiki
+/*  format-time-js  %js  /web/wiki/format-time/js
 /*  mermaid-zero-js  %js  /web/wiki/mermaid-zero/js
 ::
 ^-  (page:rudder state-1 action)
@@ -55,6 +56,8 @@
   ::
   |^  [%page render]
   ::
+  ++  on-load  (trip format-time-js)
+  ::
   ++  mermaid-src
     "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
   ::
@@ -66,21 +69,27 @@
   ::
   ++  mermaid-script  ^~  (trip mermaid-zero-js)
   ::
-  ++  render  :: to-do: display if this page is public or private
+  ++  version-notice
+    ^-  (unit manx)
+    ?.  permalink  ~
+    :-  ~
+    =/  pre=tape
+      ?:  fresh
+        "This is the current version of this page. Last edited by {author} at "
+      "This is an old version of this page, as edited by {author} at "
+    ;p#version-banner
+      ; {pre}
+      ;+  (timestamp:web as-of)
+      ; .
+    ==
+  ::
+  ++  render
     ^-  manx
     =/  wik-dir=tape  (spud /wiki/[book-id:help])
     =/  pag-dir=tape  (spud page-path)
-    =/  version-notice=(unit tape)
-      ?.  permalink  ~
-      :-  ~
-      ?:  fresh
-        %+  weld
-        "This is the current version of this page. "
-        "Last edited by {author} at {<as-of>}."
-      "This is an old version of this page, as edited by {author} at {<as-of>}."
     ;html
       ;+  (doc-head:web bowl (trip title.page))
-      ;body#with-sidebar
+      ;body#with-sidebar(onload on-load)
         :: todo: make some sort of flex container that keeps title + search level, but puts search on top if there isn't room on one line
         ;+  (global-nav:web bowl order [book-id:help book])
         ;main
@@ -106,8 +115,7 @@
             ==
           ==
           ;article
-            ;+  ?~  version-notice  stub:web
-                ;p#version-banner: {u.version-notice}
+            ;+  (fall version-notice stub:web)
             ;script(defer "", src mermaid-src);
             ;script(type "module", src zero-md-src);
             ;zero-md#zero

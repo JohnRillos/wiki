@@ -311,8 +311,6 @@
 ++  timestamp
   |=  =time
   ^-  manx
-  ;span.time
-    =millis  (a-co:co (unm:chrono:userlib time))
-    ;  {<time>}
-  ==
+  =/  millis=tape  (a-co:co (unm:chrono:userlib time))
+  ;span.time(millis millis): {<time>}
 --
