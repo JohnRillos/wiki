@@ -81,7 +81,9 @@
     |=  =part:multipart
     ^-  (unit [filepath=@t data=wain])
     ?~  type.part  ~
-    ?.  =(~['text/markdown'] u.type.part)  ~
+    ?.  =(~['text/markdown'] u.type.part)
+      ~&  >>  "File ignored, not markdown: {<(fall file.part 'no filename')>}"
+      ~
     ?~  file.part  ~
     =/  data=wain  (to-wain:format (sane-newline body.part))
     `[u.file.part data]
@@ -160,6 +162,25 @@
 ++  stub
   ^-  manx
   ;div(style "display: none");
+::
+++  disable-on-submit
+  |=  [id=tape loading-text=(unit tape)]
+  ^-  tape
+  %^    sub:regex
+      "TEXT_REPLACER"
+    ?~  loading-text  ""
+    "elem.textContent = '{u.loading-text}';"
+  %^    sub:regex
+      "ELEM_ID"
+    id
+  %-  trip
+  '''
+    document.addEventListener('submit', (event) => {
+      var elem = document.getElementById('ELEM_ID');
+      elem.setAttribute('disabled', 'true');
+      TEXT_REPLACER
+    });
+  '''
 ::
 ++  log-out
   |=  =bowl:gall

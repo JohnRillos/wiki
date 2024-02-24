@@ -41,6 +41,7 @@
     ^-  manx
     ;html
       ;+  (doc-head:web bowl "Import - {(trip title.book)}")
+      ;script: {(disable-on-submit:web "upload" `"Uploading...")}
       ;body#with-sidebar
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main
@@ -74,7 +75,7 @@
               ==
               ;input#del-missing(type "checkbox", name "del-missing");
             ==
-            ;button.submit.box-item(type "submit"): Upload
+            ;button#upload.submit.box-item(type "submit"): Upload
           ==
           ;+  (footer:web book)
         ==

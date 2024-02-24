@@ -200,6 +200,10 @@ button.submit:hover {
   border-color: #37e;
 }
 
+button.submit:disabled {
+  background-color: gray;
+}
+
 button.delete:hover {
   color: white;
   background-color: darkred;
