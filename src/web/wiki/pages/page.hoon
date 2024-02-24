@@ -89,7 +89,7 @@
     =/  pag-dir=tape  (spud page-path)
     ;html
       ;+  (doc-head:web bowl (trip title.page))
-      ;body#with-sidebar(onload on-load)
+      ;body#with-sidebar.loading(onload on-load)
         :: todo: make some sort of flex container that keeps title + search level, but puts search on top if there isn't room on one line
         ;+  (global-nav:web bowl order [book-id:help book])
         ;main

@@ -3,10 +3,11 @@
 ::
 /-  *wiki
 /+  multipart, regex, rudder, string, *wiki
-/*  htmx-js     %js    /web/htmx/js
-/*  globe-svg   %svg   /web/wiki/icons/globe/svg
-/*  lock-svg    %svg   /web/wiki/icons/lock/svg
-/*  search-svg  %svg   /web/wiki/icons/search/svg
+/*  htmx-js          %js   /web/htmx/js
+/*  show-on-load-js  %js   /web/wiki/show-on-load/js
+/*  globe-svg        %svg  /web/wiki/icons/globe/svg
+/*  lock-svg         %svg  /web/wiki/icons/lock/svg
+/*  search-svg       %svg  /web/wiki/icons/search/svg
 ::
 |%
 ::
@@ -246,6 +247,7 @@
     ;link/"/wiki/~/assets/favicon-48.png"(rel "icon", type "image/png");
     ;style: {(style bowl)}
     ;script: {^~((trip htmx-js))}
+    ;script: {^~((trip show-on-load-js))}
   ==
 ::
 ++  search-keybind-script

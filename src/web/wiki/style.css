@@ -4,6 +4,10 @@ body {
   margin: 0px;
 }
 
+.loading {
+  visibility: hidden;
+}
+
 body#with-sidebar {
   display: flex;
   flex-direction: row;

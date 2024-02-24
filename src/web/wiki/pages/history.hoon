@@ -42,7 +42,7 @@
     =/  last=page  page:(latest u.tale)
     ;html
       ;+  (doc-head:web bowl "History - {(trip title.last)}")
-      ;body#with-sidebar(onload on-load)
+      ;body#with-sidebar.loading(onload on-load)
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main
           ;+  (search-bar:web `book-id.site ~)
