@@ -278,6 +278,7 @@
   =/  =book  (~(got by books) book-id)
   ?.  (may-edit bowl book)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %imp-file"  !!
+  ~&  "importing {<~(wyt by files)>} files..."
   :_  state
   =/  parsed=(list [data=wain =path filename=tape])
     %+  turn  ~(tap by files)

@@ -74,6 +74,7 @@
 ++  get-md-files
   |=  multi=(list part:multipart)
   ^-  (map @t wain)
+  ~&  "processing multipart/form-data - # of items: {<(lent multi)>}"
   %-  my
   ^-  (list (pair @t wain))
   |^  (murn multi parse-md-file)
@@ -83,7 +84,7 @@
     ^-  (unit [filepath=@t data=wain])
     ?~  type.part  ~
     ?.  =(~['text/markdown'] u.type.part)
-      ~&  >>  "File ignored, not markdown: {<(fall file.part 'no filename')>}"
+      ~&  "file ignored, not markdown: {<u.type.part>} {<(fall file.part 'no filename')>}"
       ~
     ?~  file.part  ~
     =/  data=wain  (to-wain:format (sane-newline body.part))

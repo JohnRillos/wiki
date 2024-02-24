@@ -1,10 +1,11 @@
 ;>
 
 ## 0.2.1
-Date: TBD
+Date: ~2024.2.24
 - timestamps are formatted for user's locale
 - disable upload button on import page when submitting
 - don't show content until page is done loading
+- add logging during file import
 
 
 ## 0.2.0

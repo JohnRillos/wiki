@@ -13,9 +13,9 @@
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
   =/  data=(map @t (list part:multipart))  (multipart-map:web order)
   =/  title-option  (~(get by data) 'title-source')
-  ?~  title-option  ~
+  ?~  title-option  ~|('No title option in request' !!)
   =/  =title-source  (title-source body:(head u.title-option))
-  ?~  parts=(~(get by data) 'file')  ~
+  ?~  parts=(~(get by data) 'file')  ~|('No file in request' !!)
   =/  files  (get-md-files:web u.parts)
   =/  del-missing  (~(has by data) 'del-missing')
   [%imp-file book-id.site files title-source del-missing]
