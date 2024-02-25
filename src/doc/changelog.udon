@@ -2,8 +2,11 @@
 
 ## 0.2.2
 
-Date: TBD
-- parse imported page title from YAML front matter
+Date: ~2024.2.25
+- file import improvements
+  - parse page title from YAML front matter
+  - more detailed logging
+  - handle redundant slashes in filepaths
 
 
 ## 0.2.1

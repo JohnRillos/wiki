@@ -287,6 +287,7 @@
   %+  weld  ?:(del-missing (delete-missing book-id parsed) ~)
   %+  turn  parsed
   |=  [data=wain =path filename=tape]
+  ?<  =(~ path)
   =/  [title=@t content=wain]
     %+  fall
       ?-  title-source

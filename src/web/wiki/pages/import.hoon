@@ -17,6 +17,7 @@
   =/  =title-source  (title-source body:(head u.title-option))
   ?~  parts=(~(get by data) 'file')  ~|('No file in request' !!)
   =/  files  (get-md-files:web u.parts)
+  ?~  files  ~|('No .md files in request' !!)
   =/  del-missing  (~(has by data) 'del-missing')
   [%imp-file book-id.site files title-source del-missing]
 ::

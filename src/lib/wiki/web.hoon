@@ -74,7 +74,7 @@
 ++  get-md-files
   |=  multi=(list part:multipart)
   ^-  (map @t wain)
-  ~&  "processing multipart/form-data - # of items: {<(lent multi)>}"
+  ~&  "parsing multipart/form-data - # of items: {<(lent multi)>}"
   %-  my
   ^-  (list (pair @t wain))
   |^  (murn multi parse-md-file)
@@ -82,19 +82,25 @@
   ++  parse-md-file
     |=  =part:multipart
     ^-  (unit [filepath=@t data=wain])
-    ?~  type.part  ~
+    ?~  file.part
+      ~&  "file ignored, no filename - type: {<type.part>}"  ~
+    ?:  =(~ u.file.part)
+      ~&  "file ignored, empty filename - type: {<type.part>}"  ~
+    ?~  type.part
+      ~&  "file ignored, no MIME type: {<u.file.part>}"  ~
     ?.  =(~['text/markdown'] u.type.part)
-      ~&  "file ignored, not markdown: {<u.type.part>} {<(fall file.part 'no filename')>}"
-      ~
-    ?~  file.part  ~
+      ~&  "file ignored, not markdown: {<u.type.part>} {<u.file.part>}"  ~
     =/  data=wain  (to-wain:format (sane-newline body.part))
+    ~&  "parsed: {(trip u.file.part)}"
     `[u.file.part data]
   --
 ::
 ++  parse-filepath
   |=  filepath=@t
   ^-  [=path filename=tape]
-  =/  split=(list tape)  (split:string "/" (trip filepath))
+  =/  split=(list tape)
+    %+  skip  (split:string "/" (trip filepath))
+    (curr test ~)
   ?<  =(~ split)
   :_  (rear split)
   =.  split  +.split :: remove redundant first path segment
