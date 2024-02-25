@@ -1,6 +1,7 @@
 ;>
 
 ## 0.2.1
+
 Date: ~2024.2.24
 - timestamps are formatted for user's locale
 - disable upload button on import page when submitting
