@@ -22,7 +22,7 @@
         [sig %new ~]            `[%page & %new-book]
         [@ta ~]                 `[%page r-auth %book]
         [@ta sig %new ~]        `[%page w-auth %new-page]
-        [@ta sig %import ~]     `[%page & %import]
+        [@ta sig %import ~]     `[%page w-auth %import]
         [@ta sig %settings ~]   `[%page & %book-settings]
         [@ta sig %not-found ~]  `[%page r-auth %page-not-found]
         [@ta sig %search ~]     `[%page r-auth %hx-search]

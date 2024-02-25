@@ -287,6 +287,7 @@
   %+  weld  ?:(del-missing (delete-missing book-id parsed) ~)
   %+  turn  parsed
   |=  [data=wain =path filename=tape]
+  ?<  =(~ path)
   =/  [title=@t content=wain]
     %+  fall
       ?-  title-source
@@ -324,22 +325,36 @@
 ++  title-from-front-matter
   |=  md=wain
   ^-  (unit [title=@t content=wain])
-  =/  toml-loc=(list @)  (fand ~['+++'] md)
-  ?.  &((gte (lent toml-loc) 2) =(0 -.toml-loc))  ~
-  =/  toml=wain  (scag +((snag 1 toml-loc)) md)
-  =/  lines=(list @t)
-    %+  skim  toml
-    |=  t=@t
-    (starts-with:string (trip t) "title = ")
-  ?:  =(~ lines)  ~
-  =/  line=@t  (snag 0 lines)
-  =/  title=@t  (crip (gsub:regex "(^\")|(\"$)" "" (slag 8 (trip line))))
-  =/  content=wain  (slag (add 2 (snag 1 toml-loc)) md)
-  `[title content]
+  |^  (hunt |=(^ &) title-from-yaml title-from-toml)
+  ::
+  ++  title-from-yaml  (parse-frontmatter '---' "title: ")
+  ::
+  ++  title-from-toml  (parse-frontmatter '+++' "title = ")
+  ::
+  ++  parse-frontmatter
+    |=  [delineator=@t title-marker=tape]
+    ^-  (unit [title=@t content=wain])
+    =/  mat-loc=(list @)  (fand ~[delineator] md)
+    ?.  &((gte (lent mat-loc) 2) =(0 -.mat-loc))  ~
+    =/  toml=wain  (scag +((snag 1 mat-loc)) md)
+    =/  lines=(list @t)
+      %+  skim  toml
+      |=  t=@t
+      (starts-with:string (trip t) title-marker)
+    ?:  =(~ lines)  ~
+    =/  line=@t  (snag 0 lines)
+    =/  raw-title=tape  (slag (lent title-marker) (trip line))
+    =/  title=@t  (crip (gsub:regex "(^\")|(\"$)" "" raw-title))
+    =/  content=wain  (slag (add 1 (snag 1 mat-loc)) md)
+    ?:  =('' -.content)  `[title +.content]
+    `[title content]
+  --
 ::
 ++  delete-missing
   |=  [book-id=@ta imported=(list [* path *])]
   ^-  (list card)
+  ?.  =(our.bowl src.bowl)
+    ~&  >>>  "Unauthorized delete request from {<src.bowl>}"  !!
   =/  =book  (~(got by books) book-id)
   =/  new-paths=(set path)  (silt (turn imported |=([* =path *] path)))
   %+  murn  ~(tap in ~(key by tales.book))
