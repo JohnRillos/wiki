@@ -1,5 +1,11 @@
 ;>
 
+## 0.2.2
+
+Date: TBD
+- parse imported page title from YAML front matter
+
+
 ## 0.2.1
 
 Date: ~2024.2.24
