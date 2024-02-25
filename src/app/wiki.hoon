@@ -353,6 +353,8 @@
 ++  delete-missing
   |=  [book-id=@ta imported=(list [* path *])]
   ^-  (list card)
+  ?.  =(our.bowl src.bowl)
+    ~&  >>>  "Unauthorized delete request from {<src.bowl>}"  !!
   =/  =book  (~(got by books) book-id)
   =/  new-paths=(set path)  (silt (turn imported |=([* =path *] path)))
   %+  murn  ~(tap in ~(key by tales.book))

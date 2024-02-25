@@ -7,6 +7,10 @@ Date: ~2024.2.25
   - parse page title from YAML front matter
   - more detailed logging
   - handle redundant slashes in filepaths
+    - potentially fixes blank path bug
+  - allow non-hosts to use Import page
+    - fixes infinite redirect bug
+  - prevent non-hosts from deleting content via import
 
 
 ## 0.2.1

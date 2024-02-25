@@ -69,12 +69,15 @@
                 ;option(value "header"): first header
                 ;option(value "front-matter"): front matter
               ==
-              ;br;
-              ;label
-                =for  "del-missing"
-                ; Delete all pages that are not in these files?
+              ;+  ?.  =(src.bowl our.bowl)  stub:web
+              ;div
+                ;br;
+                ;label
+                  =for  "del-missing"
+                  ; Delete all pages that are not in these files?
+                ==
+                ;input#del-missing(type "checkbox", name "del-missing");
               ==
-              ;input#del-missing(type "checkbox", name "del-missing");
             ==
             ;button#upload.submit.box-item(type "submit"): Upload
           ==
