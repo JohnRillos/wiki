@@ -72,12 +72,35 @@
 :: todo: move file upload parsing to new lib maybe
 ::
 ++  get-md-files
-  |=  multi=(list part:multipart)
+  |=  [multi=(list part:multipart) filepaths=(list part:multipart)]
   ^-  (map @t wain)
   ~&  "parsing multipart/form-data - # of items: {<(lent multi)>}"
   %-  my
   ^-  (list (pair @t wain))
-  |^  (murn multi parse-md-file)
+  |^  (murn files-with-paths parse-md-file)
+  ::
+  ::  replace filename w/ webkitRelativeDirectory (needed for Safari)
+  ::
+  ++  files-with-paths
+    ^-  (list part:multipart)
+    ?.  =((lent multi) (lent filepaths))  multi
+    %+  roll  multi
+    |=  [file=part:multipart acc=(list part:multipart)]
+    ^-  _acc
+    =/  dir=part:multipart  (snag (lent acc) filepaths)
+    =.  file.file :: only replace if path ends with filename
+      ?~  file.file  ~
+      ?:  (ends-with body.dir u.file.file)  `body.dir
+      file.file
+    (snoc acc file)
+  ::
+  ++  ends-with
+    |=  [tex=@t end=@t]
+    =/  text  (trip tex)
+    =/  suff  (trip end)
+    ?:  (lth (lent text) (lent suff))  %.n
+    =/  i=@  (sub (lent text) (lent suff))
+    =((slag i text) suff)
   ::
   ++  parse-md-file
     |=  =part:multipart
@@ -101,7 +124,8 @@
   =/  split=(list tape)
     %+  skip  (split:string "/" (trip filepath))
     (curr test ~)
-  ?<  =(~ split)
+  ?:  =(1 (lent split))  ~|("Filepath does not contain folder hierarchy" !!)
+  ?:  =(0 (lent split))  ~|("Empty filepath" !!)
   :_  (rear split)
   =.  split  +.split :: remove redundant first path segment
   =|  out=path
