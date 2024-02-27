@@ -1,5 +1,13 @@
 ;>
 
+## 0.2.3
+
+Date: ~2024.2.26
+- fix file import for Safari
+  - fixes error caused by Safari not including folders in filename
+  - imported pages retain relative directory hierarchy
+
+
 ## 0.2.2
 
 Date: ~2024.2.25

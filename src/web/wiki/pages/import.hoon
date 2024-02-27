@@ -2,6 +2,7 @@
 ::
 /-  *wiki
 /+  multipart, rudder, web=wiki-web, *wiki
+/*  helper-js  %js  /web/wiki/file-import-helper/js
 ::
 ^-  (page:rudder state-1 action)
 ::
@@ -12,14 +13,15 @@
   ^-  $@(brief:rudder action)
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
   =/  data=(map @t (list part:multipart))  (multipart-map:web order)
+  =/  paths=(list part:multipart)  (fall (~(get by data) 'paths') ~)
   =/  title-option  (~(get by data) 'title-source')
   ?~  title-option  ~|('No title option in request' !!)
   =/  =title-source  (title-source body:(head u.title-option))
-  ?~  parts=(~(get by data) 'file')  ~|('No file in request' !!)
-  =/  files  (get-md-files:web u.parts)
-  ?~  files  ~|('No .md files in request' !!)
+  ?~  files=(~(get by data) 'file')  ~|('No file in request' !!)
+  =/  md-files  (get-md-files:web u.files paths)
+  ?~  md-files  ~|('No .md files in request' !!)
   =/  del-missing  (~(has by data) 'del-missing')
-  [%imp-file book-id.site files title-source del-missing]
+  [%imp-file book-id.site md-files title-source del-missing]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]
@@ -43,15 +45,15 @@
     ;html
       ;+  (doc-head:web bowl "Import - {(trip title.book)}")
       ;script: {(disable-on-submit:web "upload" `"Uploading...")}
-      ;body#with-sidebar
+      ;body#with-sidebar(onload (trip helper-js))
         ;+  (global-nav:web bowl order [book-id.site book])
         ;main
           ;+  (search-bar:web `book-id.site ~)
           ;h1: Import Pages
-          ;form.column-box(method "post", enctype "multipart/form-data")
+          ;form#file-form.column-box(method "post", enctype "multipart/form-data")
             ;div.file-upload.box-item
               ;p.box-item: Select a folder of markdown (.md) files
-              ;input
+              ;input#file-input
                 =type  "file"
                 =name  "file"
                 =directory  ""
