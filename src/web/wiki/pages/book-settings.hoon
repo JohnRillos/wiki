@@ -71,7 +71,7 @@
     ;html
       ;+  (doc-head:web bowl "Settings - {(trip title.book)}")
       ;body#with-sidebar(onload on-page-load)
-        ;+  (global-nav:web bowl order [book-id.site [%| book]])
+        ;+  (global-nav:web bowl order [%| book])
         ;main
           ;+  (search-bar:web `book-id.site ~)
           ;h1: Wiki Settings

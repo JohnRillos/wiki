@@ -65,7 +65,7 @@
   ::
   ++  render
     ^-  manx
-    =/  wik-dir=tape  (spud /wiki/[book-id.site])
+    =/  wik-dir=tape  (base-path:web site)
     =/  target=(unit path)  (target-path:help query)
     =/  default-path=tape  ?~(target "" (tail (spud u.target)))
     ;html
@@ -74,7 +74,7 @@
       ;style: {(trip codemirror-css)}
       ;script: {(trip markdown-js)}
       ;body#with-sidebar
-        ;+  (global-nav:web bowl order [book-id.site [%| book]])
+        ;+  (global-nav:web bowl order [%| book])
         ;main
           ;*  ?~  msg  ~
               ~[;/((trip text.u.msg))]

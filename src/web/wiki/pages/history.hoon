@@ -36,16 +36,13 @@
   ::
   ++  render
     ^-  manx
-    =/  wik-dir=tape
-      ?~  host.site
-        (spud /wiki/[book-id:help])
-      (spud /wiki/~/p/[(scot %p u.host.site)]/[book-id:help])
+    =/  wik-dir=tape  (base-path:web site)
     =/  pag-dir=tape  (spud page-path:help)
     =/  last=page  page:(latest u.tale)
     ;html
       ;+  (doc-head:web bowl "History - {(trip title.last)}")
       ;body#with-sidebar.loading(onload on-load)
-        ;+  (global-nav:web bowl order [book-id.site [%& cover]])
+        ;+  (global-nav:web bowl order [%& cover])
         ;main
           ;+  (search-bar:web `book-id.site host.site)
           ;article

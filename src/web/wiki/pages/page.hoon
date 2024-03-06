@@ -87,15 +87,13 @@
   ++  render
     ^-  manx
     =/  host=(unit @p)  host.site
-    =/  wik-dir=tape
-      ?~  host  (spud /wiki/[book-id:help])
-      (spud /wiki/~/p/[(scot %p u.host)]/[book-id:help])
+    =/  wik-dir=tape  (base-path:web site)
     =/  pag-dir=tape  (spud page-path)
     ;html
       ;+  (doc-head:web bowl (trip title.page))
       ;body#with-sidebar.loading(onload on-load)
         :: todo: make some sort of flex container that keeps title + search level, but puts search on top if there isn't room on one line
-        ;+  (global-nav:web bowl order [book-id:help [%& cover]])
+        ;+  (global-nav:web bowl order [%& cover])
         ;main
           ;+  (search-bar:web `book-id:help host)
           ;header

@@ -31,10 +31,7 @@
   =/  next=@t
     ?.  success  url.request.order
     =/  [site=wiki-path *]  (wiki-url:web url.request.order)
-    =/  wik-dir=tape
-      ?~  host.site
-        (spud /wiki/[book-id:help])
-      (spud /wiki/~/p/[(scot %p u.host.site)]/[book-id:help])
+    =/  wik-dir=tape  (base-path:web site)
     =/  pag-dir=tape  (spud page-path:help)
     (crip (weld wik-dir pag-dir))
   ((alert:rudder next build))
@@ -57,10 +54,7 @@
   ::
   ++  render
     ^-  manx
-    =/  wik-dir=tape
-      ?~  host.site
-        (spud /wiki/[book-id:help])
-      (spud /wiki/~/p/[(scot %p u.host.site)]/[book-id:help])
+    =/  wik-dir=tape  (base-path:web site)
     =/  pag-dir=tape  (spud page-path:help)
     ;html
       ;+  (doc-head:web bowl "Edit - {(trip title.page)}")
@@ -68,7 +62,7 @@
       ;style: {(trip codemirror-css)}
       ;script: {(trip markdown-js)}
       ;body#with-sidebar
-        ;+  (global-nav:web bowl order [book-id.site [%& cover]])
+        ;+  (global-nav:web bowl order [%& cover])
         ;main
           ;*  ?~  msg  ~
               ~[;/((trip text.u.msg))]

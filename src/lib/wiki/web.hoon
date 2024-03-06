@@ -158,6 +158,12 @@
   ?~  found=(fand "." tape)  tape
   (scag (rear found) tape)
 ::
+++  base-path
+  |=  site=wiki-path
+  ^-  tape
+  ?~  host.site  (spud /wiki/[book-id.site])
+  (spud /wiki/~/p/[(scot %p u.host.site)]/[book-id.site])
+::
 ++  style
   |=  =bowl:gall
   (read-file bowl /web/wiki/style/css)
@@ -244,22 +250,22 @@
   """
 ::
 ++  global-nav
-  |=  [=bowl:gall =order:rudder wik=[id=@ta data=(each cover book)]]
+  |=  [=bowl:gall =order:rudder data=(each cover book)]
   ^-  manx
-  =/  site=@t  url.request.order
+  =/  wik-dir=tape  (base-path wiki-path:(wiki-url url.request.order))
   =/  book-title=@t
-    ?-  -.data.wik
-      %&  title.p.data.wik
-      %|  title.p.data.wik
+    ?-  -.data
+      %&  title.p.data
+      %|  title.p.data
     ==
   ;nav.sidebar
-    ;a#wiki-title/"/wiki/{(trip id.wik)}": {(trip book-title)}
+    ;a#wiki-title/"{wik-dir}": {(trip book-title)}
     ;div#global-menu
-      ;a/"/wiki/{(trip id.wik)}": Home
+      ;a/"{wik-dir}": Home
       ;*
       ?:  =(%pawn (clan:title src.bowl))
         :_  ~
-        ;a/"/~/login?redirect={(trip site)}": Log in with Urbit
+        ;a/"/~/login?redirect={(trip url.request.order)}": Log in with Urbit
       ?.  =(src.bowl our.bowl)
         :~  ;p: User: {<src.bowl>}
             ;button
@@ -268,7 +274,7 @@
               ; Log out
             ==
         ==
-      :~  ;a/"/wiki/{(trip id.wik)}/~/settings": Settings
+      :~  ;a/"{wik-dir}/~/settings": Settings
           ;a/"/wiki": All Wikis
           ;button
             =type  "button"

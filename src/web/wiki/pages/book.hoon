@@ -46,13 +46,11 @@
   ::
   ++  render
     ^-  manx
-    =/  wik-dir=tape
-      ?~  host.site  (spud /wiki/[book-id.site])
-      (spud /wiki/~/p/[(scot %p u.host.site)]/[book-id.site])
+    =/  wik-dir=tape  (base-path:web site)
     ;html
       ;+  (doc-head:web bowl (trip title.cover))
       ;body#with-sidebar(onload on-page-load)
-        ;+  (global-nav:web bowl order [book-id.site [%& cover]])
+        ;+  (global-nav:web bowl order [%& cover])
         ;main
           ;+  (search-bar:web `book-id.site ~)
           ;h1#page-title: Main Page
