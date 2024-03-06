@@ -11,9 +11,9 @@
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
 ::
-+*  help  ~(. +> [bowl order [[%2 shelf books] spine booklet]]) :: todo: look into =, to expose rudyard namespace
++*  help  ~(. +> [bowl order rudyard])
 :: todo: load updated page after submitting remote edit
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
