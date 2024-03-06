@@ -88,7 +88,7 @@
 ::
 +$  booklet  [=cover =path =tale]
 ::
-+$  rudyard  [state-2 booklet=(unit booklet)]
++$  rudyard  [state-2 spine=(unit spine) booklet=(unit booklet)]
 ::
 ::
 ::

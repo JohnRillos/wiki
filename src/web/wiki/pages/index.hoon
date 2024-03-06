@@ -31,7 +31,7 @@
     """
   ::
   ++  sort-shelf
-    |=  [a=[[host=@p id=@ta] =spine] b=[[host=@p id=@ta] =spine]]
+    |=  [a=[[host=@p id=@ta] =^spine] b=[[host=@p id=@ta] =^spine]]
     (gth as-of.spine.a as-of.spine.b)
   ::
   ++  render
@@ -66,7 +66,7 @@
           ;ul.wiki-list
             ;*
             %+  turn  (sort ~(tap by shelf) sort-shelf)
-            |=  [[host=@p id=@ta] =spine]
+            |=  [[host=@p id=@ta] =^spine]
             ^-  manx
             ;li.wiki-list-item
               ;a/"/wiki/~/p/{<host>}/{(trip id)}"

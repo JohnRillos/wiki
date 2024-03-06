@@ -20,7 +20,7 @@
         ~                       `[%page & %index]
         [sig %assets *]         `[%page | %asset]
         [sig %new ~]            `[%page & %new-book]
-        [@ta ~]                 `[%page r-auth %book]
+        (far [@ta ~])           `[%page r-auth %book]
         [@ta sig %new ~]        `[%page w-auth %new-page]
         [@ta sig %import ~]     `[%page w-auth %import]
         [@ta sig %settings ~]   `[%page & %book-settings]

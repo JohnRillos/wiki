@@ -5,7 +5,11 @@
 ::
 ^-  (page:rudder rudyard action)
 ::
+=<
+::
 |_  [=bowl:gall =order:rudder rudyard]
+::
++*  help  ~(. +> [bowl order [[%2 shelf books] spine booklet]])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -26,9 +30,9 @@
   ^-  reply:rudder
   ::
   =/  [site=wiki-path query=(map @t @t)]  (wiki-url:web url.request.order)
-  ?~  buuk=(~(get by books) book-id.site)
-    [%code 404 (crip "Wiki {<book-id.site>} not found")]
-  =/  =book  u.buuk
+  =/  cuver  get-cover:help
+  ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
+  =/  =cover  u.cuver
   ::
   |^  [%page render]
   ::
@@ -42,19 +46,22 @@
   ::
   ++  render
     ^-  manx
+    =/  wik-dir=tape
+      ?~  host.site  (spud /wiki/[book-id.site])
+      (spud /wiki/~/p/[(scot %p u.host.site)]/[book-id.site])
     ;html
-      ;+  (doc-head:web bowl (trip title.book))
+      ;+  (doc-head:web bowl (trip title.cover))
       ;body#with-sidebar(onload on-page-load)
-        ;+  (global-nav:web bowl order [book-id.site [%| book]])
+        ;+  (global-nav:web bowl order [book-id.site [%& cover]])
         ;main
           ;+  (search-bar:web `book-id.site ~)
           ;h1#page-title: Main Page
           ;nav#wiki-controls
-            ;*  ?.  (may-edit bowl book)  ~
-            ;=  ;a/"/wiki/{(trip book-id.site)}/~/new"
+            ;*  ?.  (may-edit-2 bowl cover)  ~
+            ;=  ;a/"{wik-dir}/~/new"
                   ;button(type "button"): New Page
                 ==
-                ;a/"/wiki/{(trip book-id.site)}/~/import"
+                ;a/"{wik-dir}/~/import"
                   ;button(type "button"): Import
                 ==
             ==
@@ -62,21 +69,50 @@
           :: todo: special UI for "no pages" 
           ;h2: Pages
           ;ul
-            ;*  %+  turn  ~(tap by tales.book) :: todo: sort by path
-                |=  [=path =tale]
+            ;*  %+  turn  ~(tap by get-toc:help) :: todo: sort by path
+                |=  [=path =ref]
                 ^-  manx
-                =/  =page  page:(latest tale)
                 ;li
                   ;form(method "post")
-                    ;a/"/wiki/{(trip book-id.site)}{(spud path)}"
-                      ; {(trip title.page)}
+                    ;a/"{wik-dir}{(spud path)}"
+                      ; {(trip title.ref)}
                     ==
                   ==
                 ==
           ==
-          ;+  (footer:web [%| book])
+          ;+  (footer:web [%& cover])
         ==
       ==
     ==
   --
+--
+::
+::  helper core (help)
+::
+|_  [=bowl:gall =order:rudder rudyard]
+::
+++  get-book
+  ^-  (unit book)
+  =/  =wiki-path  wiki-path:(wiki-url:web url.request.order)
+  (~(get by books) book-id.wiki-path)
+::
+++  get-cover
+  ^-  (unit cover)
+  ?^  spine  `cover.u.spine
+  =/  =wiki-path  wiki-path:(wiki-url:web url.request.order)
+  =/  book-id=@t  book-id.wiki-path
+  =/  buuk  (~(get by books) book-id)
+  %+  bind  buuk
+  |=(=book [book-id title.book rules.book])
+::
+++  get-toc
+  ^-  (map path ref)
+  ?^  spine  toc.u.spine
+  =/  =book  (need get-book)
+  %-  ~(run by tales.book)
+  |=  =tale
+  =/  [=time =page]  (latest tale)
+  =/  ver=@  (dec (wyt:ton tale))
+  [ver time title.page]
+::
 --

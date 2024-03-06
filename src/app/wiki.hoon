@@ -36,7 +36,7 @@
 |_  =bowl:gall
 +*  this       .
     default  ~(. (default-agent this %|) bowl)
-    serv     ~(. wiki-http [state ~])
+    serv     ~(. wiki-http [state ~ ~])
     main     ~(. +> bowl)
 ::
 ++  on-init
@@ -107,6 +107,7 @@
       |=  =state-1
       ^-  (list card)
       ~ :: todo: grow all pages in public wikis
+        :: todo: gossip everything
     ::
     --
   --
@@ -144,7 +145,7 @@
     |=  =order:rudder
     ^-  (quip card _this)
     |^  ?:  is-remote  handle-http-remote
-        (paddle [bowl order [state ~]])
+        (paddle [bowl order [state ~ ~]])
     ::
     ++  is-remote
       =/  [site=(pole knot) *]  (sane-url:web url.request.order)
@@ -160,14 +161,14 @@
     ::
     ++  serve :: consolidate in main core
       %-  (steer:rudder rudyard action)
-      :^    web:serv             :: pages
-          http-route:serv        :: route
-        (fours:rudder [state ~]) :: adlib
-      |=  act=action             :: solve
+      :^    web:serv               :: pages
+          http-route:serv          :: route
+        (fours:rudder [state ~ ~]) :: adlib
+      |=  act=action               :: solve
       ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
       =^  cards  this
         (on-poke %wiki-action !>(act))
-      ['Successfully processed' cards [state ~]]
+      ['Successfully processed' cards [state ~ ~]]
     ::
     ++  handle-http-remote
       ^-  (quip card _this)
@@ -176,10 +177,11 @@
       =/  =ship  (slav %p who.site)
       =/  book-id=@ta     book-id.site
       =/  page-path=path
+        ?:  =(~ page-path.site)      ~
         ?:  =('~' -.page-path.site)  ~
         (path-before-sig page-path.site)
       =/  mark=path
-        ?~  page-path  /spine-0 :: todo: figure out this spine scry stuff
+        ?~  page-path  /spine-0
         /booklet-0
       =/  ver=@t          (get-case ship book-id page-path)
       =/  base=path  /g/x/[ver]/wiki/$/1
@@ -203,12 +205,13 @@
     ++  get-case
       |=  [=ship book-id=@ta =path]
       ^-  @t
-      =/  ruf=(unit ref)
+      =/  time=(unit @da)
         %+  biff  (~(get by shelf) [ship book-id])
         |=  =spine
-        (~(get by toc.spine) path)
-      ?~  ruf  (crip <now.bowl>)  :: todo: better way of serializing @da
-      (crip <edited.u.ruf>)
+        ?:  =(~ path)  `as-of.spine
+        %+  bind  (~(get by toc.spine) path)
+        |=(=ref edited.ref)
+      (crip <(fall time now.bowl)>)
     --
   --
 ::
@@ -255,11 +258,20 @@
     |^  ?~  roar.sign-arvo  [error-404 this] :: todo: maybe wrap all this in mole -> error response?
         =/  [=path data=(unit (cask))]  dat.u.roar.sign-arvo
         ?~  data            [error-404 this]
-        ?>  ?=(%wiki-booklet-0 p.u.data) :: todo: error response about incompatible data format
-        =/  =booklet  ;;(booklet q.u.data)
+        =/  rud=rudyard
+          ?+  p.u.data  ~|("Unknown mark {<p.u.data>}" !!)
+          ::
+              %wiki-booklet-0
+            =/  =booklet  ;;(booklet q.u.data)
+            [state ~ `booklet]
+          ::
+              %wiki-spine-0
+            =/  =spine    ;;(spine q.u.data)
+            [state `spine ~]
+          ==
         =/  req=inbound-request:eyre  (eyre-request:main eyre-id.wire)
         =/  =order:rudder  [eyre-id.wire req]
-        =/  out=(quip card rudyard)  (serve [bowl order [state `booklet]])
+        =/  out=(quip card rudyard)  (serve [bowl order rud])
         [-.out this(state -.+.out)]
     ::
     ++  error-404
@@ -270,14 +282,14 @@
     ::
     ++  serve :: consolidate in main core
       %-  (steer:rudder rudyard action)
-      :^    web:serv             :: pages
-          http-route:serv        :: route
-        (fours:rudder [state ~]) :: adlib
-      |=  act=action             :: solve
+      :^    web:serv               :: pages
+          http-route:serv          :: route
+        (fours:rudder [state ~ ~]) :: adlib
+      |=  act=action               :: solve
       ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
       =^  cards  this
         (on-poke %wiki-action !>(act))
-      ['Successfully processed' cards [state ~]]
+      ['Successfully processed' cards [state ~ ~]]
     --
   ==
 ::
@@ -298,10 +310,13 @@
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   ?:  &(!public-read.rules public.edit.rules)
     ~|("Cannot enable public edits on private wiki." !!)
-  =.  books  (~(put by books) [id [title ~ rules]])
+  =/  =book  [title ~ rules]
+  =.  books  (~(put by books) id book)
   :_  state
   ?.  public-read.rules  ~
-  [(tell:goss id [title ~ rules])]~
+  :~  (spine-0:grow id book)
+      (tell:goss id [title ~ rules])
+  ==
 ::
 ++  del-book
   |=  [%del-book id=@ta]
@@ -330,7 +345,8 @@
                               edit.rules.book
   =.  books  (~(put by books) id book)
   :_  state
-  ?:  public-read  ~
+  ?:  public-read
+    ~[(spine-0:grow id book)]
   (book:cull id)
 ::
 ++  mod-rule-edit
@@ -343,7 +359,8 @@
     !!
   =.  edit.rules.book  rule-edit
   =.  books  (~(put by books) id book)
-  [~ state]
+  :_  state
+  ~[(spine-0:grow id book)]
 ::
 ++  new-page
   |=  [%new-page book-id=@ta =path title=@t content=wain]
@@ -363,7 +380,8 @@
   :_  state
   ?.  public-read.rules.book  ~
   :~  (booklet-0:grow book-id book path tale)
-    (tell:goss book-id book)
+      (spine-0:grow book-id book)
+      (tell:goss book-id book)
   ==
 ::
 ++  del-page
@@ -375,7 +393,8 @@
   =.  books       (~(put by books) book-id book)
   ~&  >>>  "Wiki page deleted: {(trip book-id)}{<path>}"
   :_  state
-  (booklet:cull book-id path)
+  %+  snoc  (booklet:cull book-id path)
+  (spine-0:grow book-id book)
 ::
 ++  mod-page
   |=  [%mod-page host=(unit @p) book-id=@ta =path title=(unit @t) content=(unit wain)]
@@ -401,6 +420,7 @@
   :_  state
   ?.  public-read.rules.book  ~
   :~  (booklet-0:grow book-id book path tale)
+      (spine-0:grow book-id book)
       (tell:goss book-id book)
   ==
 ::
@@ -512,6 +532,11 @@
     =/  loc=path  (weld /booklet-0/[book-id] tale-path)
     =/  =booklet  [[book-id title.book rules.book] tale-path tale]
     [%pass wire %grow loc %wiki-booklet-0 booklet]
+  ::
+  ++  spine-0
+    |=  [id=@ta =book]
+    ^-  card
+    [%pass /wiki/spine %grow /spine-0/[id] %wiki-spine-0 (to-spine id book)]
   --
 ::
 ++  cull :: todo: tomb instead?
