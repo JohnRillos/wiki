@@ -255,30 +255,47 @@
   ::
       [%ames %tune *]
     ?.  ?=([%remote eyre-id=@ta ~] wire)  [~ this]
-    |^  ?~  roar.sign-arvo  [error-404 this] :: todo: maybe wrap all this in mole -> error response?
-        =/  [=path data=(unit (cask))]  dat.u.roar.sign-arvo
-        ?~  data            [error-404 this]
-        =/  rud=rudyard
-          ?+  p.u.data  ~|("Unknown mark {<p.u.data>}" !!)
-          ::
-              %wiki-booklet-0
-            =/  =booklet  ;;(booklet q.u.data)
-            [state ~ `booklet]
-          ::
-              %wiki-spine-0
-            =/  =spine    ;;(spine q.u.data)
-            [state `spine ~]
-          ==
-        =/  req=inbound-request:eyre  (eyre-request:main eyre-id.wire)
-        =/  =order:rudder  [eyre-id.wire req]
-        =/  out=(quip card rudyard)  (serve [bowl order rud])
-        [-.out this(state -.+.out)]
+    |^  (handle-errors |.(on-remote-scry-response))
+    ::
+    ++  handle-errors
+      |*  =(trap (quip card _this))
+      =/  res=(each (quip card _this) (list tank))  (mule trap)
+      ?-  -.res
+        %&  p.res
+        %|  ((slog p.res) [error-unknown this])
+      ==
+    ::
+    ++  on-remote-scry-response
+      ?~  roar.sign-arvo  [error-404 this]
+      =/  [=path data=(unit (cask))]  dat.u.roar.sign-arvo
+      ?~  data            [error-404 this]
+      =/  rud=rudyard
+        ?+  p.u.data  ~|("Unknown mark {<p.u.data>}" !!)
+        ::
+            %wiki-booklet-0
+          =/  =booklet  ;;(booklet q.u.data)
+          [state ~ `booklet]
+        ::
+            %wiki-spine-0
+          =/  =spine    ;;(spine q.u.data)
+          [state `spine ~]
+        ==
+      =/  req=inbound-request:eyre  (eyre-request:main eyre-id.wire)
+      =/  =order:rudder  [eyre-id.wire req]
+      =/  out=(quip card rudyard)  (serve [bowl order rud])
+      [-.out this(state -.+.out)]
     ::
     ++  error-404
       %+  give-simple-payload:app:server  eyre-id.wire
       ^-  simple-payload:http
       =/  html=@t  '<html><body>Remote page not found!</body></html>'
       [[404 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
+    ::
+    ++  error-unknown
+      %+  give-simple-payload:app:server  eyre-id.wire
+      ^-  simple-payload:http
+      =/  html=@t  '<html><body>Error handling remote data!</body></html>'
+      [[500 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
     ::
     ++  serve :: consolidate in main core
       %-  (steer:rudder rudyard action)
