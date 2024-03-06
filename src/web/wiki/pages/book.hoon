@@ -69,7 +69,7 @@
           :: todo: special UI for "no pages" 
           ;h2: Pages
           ;ul
-            ;*  %+  turn  ~(tap by get-toc:help) :: todo: sort by path
+            ;*  %+  turn  sorted-toc:help
                 |=  [=path =ref]
                 ^-  manx
                 ;li
@@ -114,5 +114,11 @@
   =/  [=time =page]  (latest tale)
   =/  ver=@  (dec (wyt:ton tale))
   [ver time title.page]
+::
+++  sorted-toc
+  ^-  (list [=path =ref])
+  %+  sort  ~(tap by get-toc)
+  |=  [a=[=path =ref] b=[=path =ref]]
+  (alpha-less (spud path.a) (spud path.b))
 ::
 --
