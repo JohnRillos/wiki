@@ -51,6 +51,9 @@
   ^-  reply:rudder
   ::
   =/  [site=wiki-path query=(map @t @t)]  (wiki-url:web url.request.order)
+  ?.  ?~  host.site  &
+      =(u.host.site our.bowl)
+    [%code 403 (crip "You are not the admin for this wiki")]
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk

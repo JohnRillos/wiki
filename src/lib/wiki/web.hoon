@@ -252,7 +252,9 @@
 ++  global-nav
   |=  [=bowl:gall =order:rudder data=(each cover book)]
   ^-  manx
-  =/  wik-dir=tape  (base-path wiki-path:(wiki-url url.request.order))
+  =/  =wiki-path  wiki-path:(wiki-url url.request.order)
+  =/  wik-dir=tape  (base-path wiki-path)
+  =/  host=(unit @p)  host.wiki-path
   =/  book-title=@t
     ?-  -.data
       %&  title.p.data
@@ -266,7 +268,9 @@
       ?:  =(%pawn (clan:title src.bowl))
         :_  ~
         ;a/"/~/login?redirect={(trip url.request.order)}": Log in with Urbit
-      ?.  =(src.bowl our.bowl)
+      =*  my-req  =(src.bowl our.bowl)
+      =*  my-wik  ?~(host & =(u.host our.bowl))
+      ?.  my-req
         :~  ;p: User: {<src.bowl>}
             ;button
               =type  "button"
@@ -274,7 +278,8 @@
               ; Log out
             ==
         ==
-      :~  ;a/"{wik-dir}/~/settings": Settings
+      :~  ?.  my-wik  stub
+          ;a/"{wik-dir}/~/settings": Settings
           ;a/"/wiki": All Wikis
           ;button
             =type  "button"
