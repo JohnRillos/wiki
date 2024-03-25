@@ -230,9 +230,13 @@
   |=  [=wire =sign:agent:gall]
   ^-  (quip card _this)
   |^  ?+  -.sign  (on-agent:default wire sign)
-        %fact   =^  cards  state
-                  (handle-fact cage.sign)
-                [cards this]
+        %fact       =^  cards  state
+                      (handle-fact cage.sign)
+                    [cards this]
+      ::
+        %poke-ack   =^  cards  state
+                      (handle-poke-ack p.sign)
+                    [cards this]
       ==
   ::
   ++  handle-fact
@@ -241,6 +245,14 @@
     ?+  wire  ~|  "Unknown wire {<wire>}"  !!
       [%~.~ %gossip %gossip ~]  (read:goss:main !<(lore q.cage))
     ==
+  ::
+  ++  handle-poke-ack
+    |=  error=(unit tang)
+    ^-  (quip card _state)
+    ?~  error  `state
+    ~&  >>>  "Poke failed!"
+    %-  (slog leaf+"poke failed from {<dap.bowl>} on wire {<wire>}" u.error)
+    `state
   --
 ::
 ++  on-arvo
@@ -380,7 +392,9 @@
   ~[(spine-0:grow id book)]
 ::
 ++  new-page
-  |=  [%new-page book-id=@ta =path title=@t content=wain]
+  |=  [%new-page host=(unit @p) book-id=@ta =path title=@t content=wain]
+  ?^  host
+    [[(poke-them u.host [%new-page ~ book-id path title content])]~ state]
   ?:  =(~ path)  ~|('Path cannot be blank!' !!)
   ?^  (find "~" path)  ~|('Path cannot contain "/~/"' !!)
   ?.  (levy path (sane %ta))  ~|('Invalid path!' !!)
@@ -467,7 +481,7 @@
   %-  poke-self
   ?:  (~(has by tales.book) path)
     [%mod-page ~ book-id path `title `content]
-  [%new-page book-id path title content]
+  [%new-page ~ book-id path title content]
 ::
 ++  title-from-header
   |=  md=wain

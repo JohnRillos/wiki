@@ -60,7 +60,7 @@
       [%mod-book-name id=@ta title=@t]
       [%mod-rule-read id=@ta public-read=?]
       [%mod-rule-edit id=@ta =rule-edit]
-      [%new-page book-id=@ta =path title=@t content=wain]
+      [%new-page host=(unit @p) book-id=@ta =path title=@t content=wain]
       [%del-page book-id=@ta =path]
       [%mod-page host=(unit @p) book-id=@ta =path title=(unit @t) content=(unit wain)]
       [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]

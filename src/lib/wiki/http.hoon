@@ -21,7 +21,7 @@
         [sig %assets *]               `[%page | %asset]
         [sig %new ~]                  `[%page & %new-book]
         (far [@ta ~])                 `[%page r-auth %book]
-        [@ta sig %new ~]              `[%page w-auth %new-page]
+        (far [@ta sig %new ~])        `[%page w-auth %new-page]
         [@ta sig %import ~]           `[%page w-auth %import]
         (far [@ta sig %settings ~])   `[%page & %book-settings]
         [@ta sig %not-found ~]        `[%page r-auth %page-not-found]
