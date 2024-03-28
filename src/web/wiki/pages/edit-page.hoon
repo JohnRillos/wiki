@@ -7,7 +7,7 @@
 /*  markdown-js     %js   /web/codemirror/mode/markdown/markdown/js
 /*  editor-js       %js   /web/wiki/editor/js
 ::
-^-  (page:rudder rudyard action)
+^-  (page:rudder rudyard relay)
 ::
 =<
 ::
@@ -17,13 +17,14 @@
 :: todo: load updated page after submitting remote edit
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  ^-  $@(brief:rudder action)
+  ^-  $@(brief:rudder relay)
   =/  args=(map @t @t)  (form-data:web order)
   ?>  ?=(%mod-page (~(got by args) 'action'))
   =/  page-title=@t  (~(got by args) 'page-title')
   =/  content=wain  (to-wain:format (sane-newline (~(got by args) 'content')))
   =/  host  host:wiki-path:(wiki-url:web url.request.order)
-  [%mod-page host book-id:help page-path:help `page-title `content]
+  =/  =action  [%mod-page book-id:help page-path:help `page-title `content]
+  [%relay (fall host our.bowl) id.order action]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]

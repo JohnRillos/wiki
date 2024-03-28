@@ -3,7 +3,7 @@
 /-  *wiki
 /+  rudder, web=wiki-web, *wiki
 ::
-^-  (page:rudder rudyard action)
+^-  (page:rudder rudyard relay)
 ::
 =<
 ::

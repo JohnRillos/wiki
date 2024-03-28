@@ -5,7 +5,7 @@
 /$  page-to-md  %wiki-page-1  %md
 /$  md-to-mime  %md  %mime
 ::
-^-  (page:rudder rudyard action)
+^-  (page:rudder rudyard relay)
 ::
 =<
 ::

@@ -7,7 +7,7 @@
 /*  favicon-48  %mime  /web/wiki/assets/favicon-48/png
 /*  tile        %mime  /web/wiki/assets/tile/svg
 ::
-^-  (page:rudder rudyard action)
+^-  (page:rudder rudyard relay)
 ::
 |_  [=bowl:gall =order:rudder rudyard]
 ::

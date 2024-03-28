@@ -4,7 +4,7 @@
 /+  rudder, web=wiki-web
 /*  format-time-js  %js  /web/wiki/format-time/js
 ::
-^-  (page:rudder rudyard action)
+^-  (page:rudder rudyard relay)
 ::
 =<
 ::

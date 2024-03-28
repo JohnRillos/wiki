@@ -3,10 +3,10 @@
 /-  *wiki
 /+  multipart, rudder, web=wiki-web, *wiki
 ::
-^-  (page:rudder rudyard action)
+^-  (page:rudder rudyard relay)
 ::
 =<
-::
+:::
 |_  [=bowl:gall =order:rudder =rudyard]
 ::
 +*  help  ~(. +> [bowl order rudyard])

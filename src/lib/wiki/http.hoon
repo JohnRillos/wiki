@@ -3,7 +3,7 @@
 ::
 /-  *wiki
 /+  rudder
-/~  web  (page:rudder rudyard action)  /web/wiki/pages
+/~  web  (page:rudder rudyard relay)  /web/wiki/pages
 ::
 |_  rudyard
 ::
@@ -58,6 +58,27 @@
       [sig %history ~]   [r-auth %history]
       [sig %download ~]  [r-auth %download]
     ==
+  --
+::
+++  eyre-request
+  |=  [=bowl:gall eyre-id=@ta]
+  ^-  (unit inbound-request:eyre)
+  |^  %+  bind  (~(get by connections) eyre-id)
+      |=(con=outstanding-connection:eyre inbound-request:con)
+  ::
+  ++  connections
+    ^-  (map @ta outstanding-connection:eyre)
+    =/  scry-path=path  /(scot %p our.bowl)/connections/(scot %da now.bowl)
+    =/  raw  .^((map duct outstanding-connection:eyre) %e scry-path)
+    %-  my
+    %+  murn  ~(tap by raw)
+    |=  [=duct con=outstanding-connection:eyre]
+    ^-  (unit (pair @ta outstanding-connection:eyre))
+    `[(duct-to-eyre-id duct) con]
+  ::
+  ++  duct-to-eyre-id
+    |=  =duct
+    (scot %ta (cat 3 'eyre_' (scot %uv (sham duct))))
   --
 ::
 --

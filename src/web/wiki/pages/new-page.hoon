@@ -7,7 +7,7 @@
 /*  markdown-js     %js   /web/codemirror/mode/markdown/markdown/js
 /*  editor-js       %js   /web/wiki/editor/js
 ::
-^-  (page:rudder rudyard action)
+^-  (page:rudder rudyard relay)
 ::
 =<
 ::
@@ -15,9 +15,39 @@
 ::
 +*  help  ~(. +> [bowl order rudyard])
 ::
+:: argue
+:: - poke self
+::   - store current eyre-id (eyre-id-a) + URL to redirect to on success
+::   - poke other (wire = eyre-id-a/...)
+::
+:: final
+:: - redirect -> /wiki/~/wait/{eyre-id-a}?then=/next/path
+::
+:: /wiki/~/wait/{eyre-id-a}?then=/next/path
+:: - not a real page (?)
+:: - check eyre-id-a
+::   - if already complete
+::     - respond immediately
+::     - success: redirect to success URL
+::     - error: error response
+::     - delete stored eyre-id(s)
+::   - if not complete
+::     - does not respond right away
+::     - stores new eyre-id (eyre-id-b) along with eyre-id-a
+::
+:: on-agent
+:: - poke-ack
+::   - get eyre-id-a from wire
+::     - if no eyre-id-b stored yet
+::       - store success / error
+::     - if eyre-id-b stored
+::       - success: respond to eyre-id-b w/ redirect to success URL (retrieve from eyre-request B query params)
+::       - error: respond to eyre-id-b w/ error response
+::     - delete stored eyre-id(s)
+::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  ^-  $@(brief:rudder action)
+  ^-  $@(brief:rudder relay)
   =/  args=(map @t @t)  args:help
   ?~  what=(~(get by args) 'action')  ~
   |^  ?+  u.what  'say what now'
@@ -29,7 +59,8 @@
         =/  page-title=@t  (~(got by args) 'page-title')
         =/  content=wain
           (to-wain:format (sane-newline (~(got by args) 'content')))
-        [%new-page host book-id:help path page-title content]
+        =/  =action  [%new-page book-id:help path page-title content]
+        [%relay (fall host our.bowl) id.order action]
       ==
   ::
   ++  tie
@@ -46,7 +77,8 @@
     =/  bid=@t  book-id:help
     =/  =path  (part (~(got by args:help) 'page-path'))
     =/  wik-dir=tape  (base-path:web wiki-path:(wiki-url:web url.request.order))
-    (crip "{wik-dir}{(spud path)}") :: this doesn't work since we scry the remote page before it has been created
+    :: (crip "/wiki/~/wait/{(trip id.order)}?then={wik-dir}{(spud path)}")
+    (crip "{wik-dir}{(spud path)}?after={(trip id.order)}") :: this doesn't work since we scry the remote page before it has been created
   ((alert:rudder next build))
 ::
 ++  build

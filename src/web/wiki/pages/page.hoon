@@ -5,7 +5,7 @@
 /*  format-time-js  %js  /web/wiki/format-time/js
 /*  mermaid-zero-js  %js  /web/wiki/mermaid-zero/js
 ::
-^-  (page:rudder rudyard action)
+^-  (page:rudder rudyard relay)
 ::
 =<
 ::
@@ -15,11 +15,11 @@
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  ^-  $@(brief:rudder action)
+  ^-  $@(brief:rudder relay)
   =/  args=(map @t @t)  (form-data:web order)
   ?.  (~(has by args) 'del-page')  ~
   =/  [=wiki-path *]  (wiki-url:web url.request.order)
-  [%del-page book-id.wiki-path where:space-time:help]
+  [%relay our.bowl id.order [%del-page book-id.wiki-path where:space-time:help]]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]

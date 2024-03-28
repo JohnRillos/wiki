@@ -4,13 +4,13 @@
 /+  multipart, rudder, web=wiki-web, *wiki
 /*  helper-js  %js  /web/wiki/file-import-helper/js
 ::
-^-  (page:rudder rudyard action)
+^-  (page:rudder rudyard relay)
 ::
 |_  [=bowl:gall =order:rudder rudyard]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  ^-  $@(brief:rudder action)
+  ^-  $@(brief:rudder relay)
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
   =/  data=(map @t (list part:multipart))  (multipart-map:web order)
   =/  paths=(list part:multipart)  (fall (~(get by data) 'paths') ~)
@@ -21,7 +21,7 @@
   =/  md-files  (get-md-files:web u.files paths)
   ?~  md-files  ~|('No .md files in request' !!)
   =/  del-missing  (~(has by data) 'del-missing')
-  [%imp-file book-id.site md-files title-source del-missing]
+  [%relay our.bowl id.order [%imp-file book-id.site md-files title-source del-missing]]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]

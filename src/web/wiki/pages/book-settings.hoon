@@ -6,34 +6,36 @@
 /-  *wiki
 /+  multipart, rudder, web=wiki-web, *wiki
 ::
-^-  (page:rudder rudyard action)
+^-  (page:rudder rudyard relay)
 ::
 |_  [=bowl:gall =order:rudder rudyard]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  ^-  $@(brief:rudder action)
+  ^-  $@(brief:rudder relay)
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
   =/  args=(map @t @t)  (form-data:web order)
-  ?+  (~(got by args) 'action')  !!
-      %mod-book-name
-    [%mod-book-name book-id.site (~(got by args) 'book-name')]
-  ::
-      %mod-rule-read
-    [%mod-rule-read book-id.site =('public' (~(got by args) 'rule-read'))]
-  ::
-      %mod-rule-edit
-    =/  =rule-edit
-      ?+  (~(got by args) 'rule-edit')  !!
-        %host  [%.n %.n]
-        %user  [%.y %.n]
-        %anon  [%.y %.y]
-      ==
-    [%mod-rule-edit book-id.site rule-edit]
-  ::
-      %del-book
-    [%del-book book-id.site]
-  ==
+  =/  =action
+    ?+  (~(got by args) 'action')  !!
+        %mod-book-name
+      [%mod-book-name book-id.site (~(got by args) 'book-name')]
+    ::
+        %mod-rule-read
+      [%mod-rule-read book-id.site =('public' (~(got by args) 'rule-read'))]
+    ::
+        %mod-rule-edit
+      =/  =rule-edit
+        ?+  (~(got by args) 'rule-edit')  !!
+          %host  [%.n %.n]
+          %user  [%.y %.n]
+          %anon  [%.y %.y]
+        ==
+      [%mod-rule-edit book-id.site rule-edit]
+    ::
+        %del-book
+      [%del-book book-id.site]
+    ==
+   [%relay our.bowl id.order action]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]

@@ -3,13 +3,13 @@
 /-  *wiki
 /+  rudder, web=wiki-web
 ::
-^-  (page:rudder rudyard action)
+^-  (page:rudder rudyard relay)
 ::
 |_  [=bowl:gall =order:rudder rudyard]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  ^-  $@(brief:rudder action)
+  ^-  $@(brief:rudder relay)
   =/  args=(map @t @t)  (form-data:web order)
   ?~  what=(~(get by args) 'action')  ~
   |^  ?+  u.what  'Invalid post body'
@@ -25,7 +25,7 @@
             %user  [%.y %.n]
             %anon  [%.y %.y]
           ==
-        [%new-book book-id book-title [pub-read rule-edit]]
+        [%relay our.bowl id.order [%new-book book-id book-title [pub-read rule-edit]]]
       ==
     ::
     ++  tie

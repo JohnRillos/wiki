@@ -3,7 +3,7 @@
 /-  *wiki
 /+  multipart, regex, rudder, string, web=wiki-web, *wiki
 ::
-^-  (page:rudder rudyard action)
+^-  (page:rudder rudyard relay)
 ::
 |_  [=bowl:gall =order:rudder rudyard]
 ::

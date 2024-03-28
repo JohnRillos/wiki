@@ -2,7 +2,8 @@
 :: page-rendering utility
 ::
 /-  *wiki
-/+  multipart, regex, rudder, string, *wiki
+/+  multipart, regex, rudder, server, string, *wiki
+/$  html-to-mime     %html  %mime
 /*  htmx-js          %js   /web/htmx/js
 /*  show-on-load-js  %js   /web/wiki/show-on-load/js
 /*  globe-svg        %svg  /web/wiki/icons/globe/svg
@@ -392,4 +393,29 @@
   ^-  manx
   =/  millis=tape  (a-co:co (unm:chrono:userlib time))
   ;span.time(millis millis): {<time>}
+::
+++  relay-response
+  |=  [inbound=inbound-request:eyre pending-eyre-id=@ta error=(unit tang)]
+  ^-  (list card:agent:gall)
+  %+  give-simple-payload:app:server  pending-eyre-id
+  ^-  simple-payload:http
+  ?~  error
+    =/  raw-url=@t  url.request.inbound
+    =/  next=@t    (spat path:(sane-url raw-url))
+    =/  html=@t  '<html><body>Submission successful, redirecting...</body></html>'
+    =/  head=(list [@t @t])
+      ~[['content-type' 'text/html'] ['Location' next]]
+    [[303 head] `(tail (html-to-mime html))]  
+  =/  html=@t  (error-to-html u.error)
+  [[400 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
+::
+++  error-to-html :: todo: maybe use manx for this
+  |=  =tang
+  ^-  @t
+  =/  trace=tape
+    %-  zing
+    %+  join  "<br/>"
+    %+  turn  tang
+    |=(=tank ~(ram re tank))      
+  (crip "<html><body><p>{trace}</p></body></html>")
 --

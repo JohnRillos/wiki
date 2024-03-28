@@ -4,6 +4,8 @@
   $%  state-0
       state-1
       state-2
+      state-3
+      state-4
   ==
 ::
 +$  state-0
@@ -15,9 +17,23 @@
   $:  %1
     books=(map @ta book)
   ==
-::
+:: todo: consolidate state-3 and state-4 back into state-2 before publishing
 +$  state-2
   $:  %2
+    =shelf
+    books=(map @ta book)
+  ==
+::
++$  state-3
+  $:  %3
+    later=(map @ta *)
+    =shelf
+    :: loans=(set [host=@p id=@ta]) :: favorites, direct subscriptions
+    books=(map @ta book)
+  ==
++$  state-4
+  $:  %4
+    =later
     =shelf
     :: loans=(set [host=@p id=@ta]) :: favorites, direct subscriptions
     books=(map @ta book)
@@ -54,15 +70,18 @@
 ++  rule-edit
   ?([public=%.n comet=%.n] [public=%.y comet=?])
 ::
-+$  action  :: todo: look into defining an action that contains other actions, routing to other @p
++$  relay  :: todo: look into defining an action that contains other actions, routing to other @p
+  [%relay to=@p eyre-id=@ta =action]
+::
++$  action
   $%  [%new-book id=@ta title=@t rules=access]
       [%del-book id=@ta]
       [%mod-book-name id=@ta title=@t]
       [%mod-rule-read id=@ta public-read=?]
       [%mod-rule-edit id=@ta =rule-edit]
-      [%new-page host=(unit @p) book-id=@ta =path title=@t content=wain]
+      [%new-page book-id=@ta =path title=@t content=wain]
       [%del-page book-id=@ta =path]
-      [%mod-page host=(unit @p) book-id=@ta =path title=(unit @t) content=(unit wain)]
+      [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
       [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
       :: [%knight book-id=@ta =ship]
       :: [%demote book-id=@ta =ship]
@@ -88,11 +107,23 @@
 ::
 +$  booklet  [=cover =path =tale]
 ::
-+$  rudyard  [state-2 spine=(unit spine) booklet=(unit booklet)]
++$  rudyard  [state-4 spine=(unit spine) booklet=(unit booklet)]
 ::
 ::
 ::
 +$  lore  shelf
+::
+::
+::  eyre requests awaiting poke-ack before responding
+::
++$  later  (map @ta wait) :: @ta = previous eyre-id (form submit)
+::
++$  wait
+  $:  =time
+      pending-eyre-id=(unit @ta)
+      done=?
+      error=(unit tang)
+  ==
 ::
 ::
 ::
