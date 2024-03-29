@@ -401,7 +401,7 @@
   ^-  simple-payload:http
   ?~  error
     =/  raw-url=@t  url.request.inbound
-    =/  next=@t    (spat path:(sane-url raw-url))
+    =/  next=@t   (crip (weld (spud path:(sane-url raw-url)) "?fresh=true"))
     =/  html=@t  '<html><body>Submission successful, redirecting...</body></html>'
     =/  head=(list [@t @t])
       ~[['content-type' 'text/html'] ['Location' next]]

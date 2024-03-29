@@ -74,7 +74,6 @@
   ^-  reply:rudder
   =/  next=@t
     ?.  success  url.request.order
-    =/  bid=@t  book-id:help
     =/  =path  (part (~(got by args:help) 'page-path'))
     =/  wik-dir=tape  (base-path:web wiki-path:(wiki-url:web url.request.order))
     (crip "{wik-dir}{(spud path)}?after={(trip id.order)}")

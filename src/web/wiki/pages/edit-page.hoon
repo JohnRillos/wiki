@@ -14,7 +14,7 @@
 |_  [=bowl:gall =order:rudder =rudyard]
 ::
 +*  help  ~(. +> [bowl order rudyard])
-:: todo: load updated page after submitting remote edit
+::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
   ^-  $@(brief:rudder relay)
@@ -31,10 +31,9 @@
   ^-  reply:rudder
   =/  next=@t
     ?.  success  url.request.order
-    =/  [site=wiki-path *]  (wiki-url:web url.request.order)
-    =/  wik-dir=tape  (base-path:web site)
+    =/  wik-dir=tape  (base-path:web wiki-path:(wiki-url:web url.request.order))
     =/  pag-dir=tape  (spud page-path:help)
-    (crip (weld wik-dir pag-dir))
+    (crip "{wik-dir}{pag-dir}?after={(trip id.order)}")
   ((alert:rudder next build))
 ::
 ++  build

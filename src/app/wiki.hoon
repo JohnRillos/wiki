@@ -224,7 +224,7 @@
     ::
     ++  handle-http-remote
       ^-  (quip card _this)
-      =/  [site=(pole knot) *]  (sane-url:web url.request.order)
+      =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
       ?>  ?=([%wiki %~.~ %p who=@ta book-id=@ta page-path=*] site)
       =/  =ship  (slav %p who.site)
       =/  book-id=@ta     book-id.site
@@ -235,7 +235,7 @@
       =/  mark=path
         ?~  page-path  /spine-0
         /booklet-0
-      =/  ver=@t          (get-case ship book-id page-path)
+      =/  ver=@t  (get-case ship book-id page-path query)
       =/  base=path  /g/x/[ver]/wiki/$/1
       =/  loc=path  :(weld base mark /[book-id] page-path)
       =/  sec=(unit [idx=@ key=@])  ~
@@ -255,9 +255,10 @@
       (scag u.i full)
     ::
     ++  get-case
-      |=  [=ship book-id=@ta =path]
+      |=  [=ship book-id=@ta =path query=(map @t @t)]
       ^-  @t
       =/  time=(unit @da)
+        ?:  (~(has by query) 'fresh')  ~
         %+  biff  (~(get by shelf) [ship book-id])
         |=  =spine
         ?:  =(~ path)  `as-of.spine
