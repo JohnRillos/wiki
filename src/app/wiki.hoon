@@ -177,10 +177,13 @@
         ?:  is-remote  handle-http-remote
         (paddle [bowl order [state ~ ~]])
     ::
+    :: if ?after= and pending request in `later`, use `handle-later` to await poke-ack
+    :: if ?after= but not pending, process normally (URL is probably being reused)
+    ::
     ++  is-later
-      =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
-      (~(has by query) 'after')
-      :: ?=([%wiki %~.~ %wait *] site)
+      =/  query=(map @t @t)  query:(sane-url:web url.request.order)
+      ?~  after-eyre-id=(~(get by query) 'after')  |
+      (~(has by later) u.after-eyre-id)
     ::
     ++  is-remote
       =/  [site=(pole knot) *]  (sane-url:web url.request.order)
@@ -217,10 +220,10 @@
       ?.  done.u.await
         :: poke-ack not received yet, wait and respond in on-agent > handle-poke-ack
         =.  later  (~(put by later) last-eyre-id u.await(pending-eyre-id `id.order))
-        [~ this(state state(later later))]
+        [~ this]
       :: poke-ack already received, respond immediately
       =.  later  (~(del by later) last-eyre-id)
-      [(relay-response:web +.order id.order error.u.await) this(state state)]
+      [(relay-response:web order error.u.await this) this]
     ::
     ++  handle-http-remote
       ^-  (quip card _this)
@@ -318,7 +321,7 @@
       ~&  "poke-ack received but no pending request found with ID: {<pending-eyre-id.u.await>}"
       `state
     =.  later  (~(del by later) post-eyre-id)
-    [(relay-response:web u.inbound u.pending-eyre-id.u.await error) state]
+    [(relay-response:web [u.pending-eyre-id.u.await u.inbound] error this) state]
   --
 ::
 ++  on-arvo

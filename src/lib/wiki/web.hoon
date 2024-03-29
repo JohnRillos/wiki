@@ -395,17 +395,15 @@
   ;span.time(millis millis): {<time>}
 ::
 ++  relay-response
-  |=  [inbound=inbound-request:eyre pending-eyre-id=@ta error=(unit tang)]
+  |=  [=order:rudder error=(unit tang) =agent:gall]
   ^-  (list card:agent:gall)
+  =/  pending-eyre-id=@ta  id.order
+  ?~  error
+    =.  url.request.order  (crip (weld (spud path:(sane-url url.request.order)) "?fresh=true"))
+    =/  result=(quip card:agent:gall _agent)  (on-poke:agent %handle-http-request !>(order))
+    -.result
   %+  give-simple-payload:app:server  pending-eyre-id
   ^-  simple-payload:http
-  ?~  error
-    =/  raw-url=@t  url.request.inbound
-    =/  next=@t   (crip (weld (spud path:(sane-url raw-url)) "?fresh=true"))
-    =/  html=@t  '<html><body>Submission successful, redirecting...</body></html>'
-    =/  head=(list [@t @t])
-      ~[['content-type' 'text/html'] ['Location' next]]
-    [[303 head] `(tail (html-to-mime html))]  
   =/  html=@t  (error-to-html u.error)
   [[400 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
 ::
