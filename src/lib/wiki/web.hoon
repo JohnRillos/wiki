@@ -394,19 +394,6 @@
   =/  millis=tape  (a-co:co (unm:chrono:userlib time))
   ;span.time(millis millis): {<time>}
 ::
-++  relay-response
-  |=  [=order:rudder error=(unit tang) =agent:gall]
-  ^-  (list card:agent:gall)
-  =/  pending-eyre-id=@ta  id.order
-  ?~  error
-    =.  url.request.order  (crip (weld (spud path:(sane-url url.request.order)) "?fresh=true"))
-    =/  result=(quip card:agent:gall _agent)  (on-poke:agent %handle-http-request !>(order))
-    -.result
-  %+  give-simple-payload:app:server  pending-eyre-id
-  ^-  simple-payload:http
-  =/  html=@t  (error-to-html u.error)
-  [[400 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
-::
 ++  error-to-html :: todo: maybe use manx for this
   |=  =tang
   ^-  @t

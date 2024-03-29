@@ -223,7 +223,7 @@
         [~ this]
       :: poke-ack already received, respond immediately
       =.  later  (~(del by later) last-eyre-id)
-      [(relay-response:web order error.u.await this) this]
+      [(relay-response:main order error.u.await this) this]
     ::
     ++  handle-http-remote
       ^-  (quip card _this)
@@ -321,7 +321,8 @@
       ~&  "poke-ack received but no pending request found with ID: {<pending-eyre-id.u.await>}"
       `state
     =.  later  (~(del by later) post-eyre-id)
-    [(relay-response:web [u.pending-eyre-id.u.await u.inbound] error this) state]
+    =/  =order:rudder  [u.pending-eyre-id.u.await u.inbound]
+    [(relay-response:main order error this) state]
   --
 ::
 ++  on-arvo
@@ -707,5 +708,18 @@
     =/  ver=@  (dec (wyt:ton tale))
     [ver time title.page]
   [cover toc now.bowl]
+::
+++  relay-response
+  |=  [=order:rudder error=(unit tang) =agent:gall]
+  ^-  (list card)
+  =/  pending-eyre-id=@ta  id.order
+  ?~  error
+    =/  base-path=tape  (spud path:(sane-url:web url.request.order))
+    =.  url.request.order  (crip (weld base-path "?fresh=true"))
+    -:(on-poke:agent %handle-http-request !>(order))
+  %+  give-simple-payload:app:server  pending-eyre-id
+  ^-  simple-payload:http
+  =/  html=@t  (error-to-html:web u.error)
+  [[400 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
 ::
 --
