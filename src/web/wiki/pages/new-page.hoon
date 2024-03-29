@@ -73,12 +73,11 @@
   |=  [success=? msg=brief:rudder]
   ^-  reply:rudder
   =/  next=@t
-    ?.  success  url.request.order :: problem: it's a "success" even if the remote poke failed
+    ?.  success  url.request.order
     =/  bid=@t  book-id:help
     =/  =path  (part (~(got by args:help) 'page-path'))
     =/  wik-dir=tape  (base-path:web wiki-path:(wiki-url:web url.request.order))
-    :: (crip "/wiki/~/wait/{(trip id.order)}?then={wik-dir}{(spud path)}")
-    (crip "{wik-dir}{(spud path)}?after={(trip id.order)}") :: this doesn't work since we scry the remote page before it has been created
+    (crip "{wik-dir}{(spud path)}?after={(trip id.order)}")
   ((alert:rudder next build))
 ::
 ++  build
