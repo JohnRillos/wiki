@@ -25,7 +25,7 @@
         [@ta sig %import ~]           `[%page w-auth %import]
         (far [@ta sig %settings ~])   `[%page & %book-settings]
         [@ta sig %not-found ~]        `[%page r-auth %page-not-found]
-        [@ta sig %search ~]           `[%page r-auth %hx-search]
+        (far [@ta sig %search ~])     `[%page r-auth %hx-search]
       ==
   ::
   ++  far :: to-do: wrap remote-compatible paths ^

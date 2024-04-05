@@ -187,9 +187,13 @@
     ::
     ++  is-remote
       =/  [site=(pole knot) *]  (sane-url:web url.request.order)
-      ?.  ?=([%wiki %~.~ %p who=@ta *] site)  |
+      ?.  ?=([%wiki %~.~ %p who=@ta loc=*] site)  |
       ?~  who=(slaw %p who.site)  |
-      ?!(=(u.who our.bowl))
+      ?:  =(u.who our.bowl)  |
+      ?+  loc.site  &
+      ::  searching in shelved book does not need remote scry
+        [book-id=@ta %~.~ %search ~]  ?!((~(has by shelf) [u.who book-id.loc.site]))
+      ==
     ::
     ++  paddle
       |=  input=[bowl:gall order:rudder rudyard]
