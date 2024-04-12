@@ -4,8 +4,6 @@
   $%  state-0
       state-1
       state-2
-      state-3
-      state-4
   ==
 ::
 +$  state-0
@@ -15,29 +13,19 @@
 ::
 +$  state-1
   $:  %1
-    books=(map @ta book)
+    books=(map @ta book-1)
   ==
-:: todo: consolidate state-3 and state-4 back into state-2 before publishing
+::
 +$  state-2
   $:  %2
+    =later
     =shelf
     books=(map @ta book)
   ==
 ::
-+$  state-3
-  $:  %3
-    later=(map @ta *)
-    =shelf
-    :: loans=(set [host=@p id=@ta]) :: favorites, direct subscriptions
-    books=(map @ta book)
-  ==
-+$  state-4
-  $:  %4
-    =later
-    =shelf
-    :: loans=(set [host=@p id=@ta]) :: favorites, direct subscriptions
-    books=(map @ta book)
-  ==
+:: todo: track favorite wikis manually, using plain subscription instead of gossip
+::   tbd: mirror full contents or only index
+::   tbd: include in `shelf` or separate
 ::
 +$  book
   $:  title=@t
@@ -61,23 +49,26 @@
   ==
 ::
 +$  access
-  $:  public-read=?
+  $:  read=rule-read
       edit=rule-edit
-      :: mods=(set @p)
-      :: bans=(set @p)
+  ==
+::
+++  rule-read
+  $?  [public=%.n scry=%.n goss=%.n]
+      [public=%.y scry=%.n goss=%.n]
+      [public=%.y scry=%.y goss=?]
   ==
 ::
 ++  rule-edit
   ?([public=%.n comet=%.n] [public=%.y comet=?])
 ::
-+$  relay  :: todo: look into defining an action that contains other actions, routing to other @p
-  [%relay to=@p eyre-id=@ta =action]
++$  relay  [%relay to=@p eyre-id=@ta =action]
 ::
 +$  action
   $%  [%new-book id=@ta title=@t rules=access]
       [%del-book id=@ta]
       [%mod-book-name id=@ta title=@t]
-      [%mod-rule-read id=@ta public-read=?]
+      [%mod-rule-read id=@ta =rule-read]
       [%mod-rule-edit id=@ta =rule-edit]
       [%new-page book-id=@ta =path title=@t content=wain]
       [%del-page book-id=@ta =path]
@@ -107,7 +98,7 @@
 ::
 +$  booklet  [=cover =path =tale]
 ::
-+$  rudyard  [state-4 spine=(unit spine) booklet=(unit booklet)]
++$  rudyard  [state-2 spine=(unit spine) booklet=(unit booklet)]
 ::
 ::
 ::
@@ -141,6 +132,14 @@
 ::
 ::
 ::
++$  book-1
+  $:  title=@t
+      tales=(map path tale)
+      rules=access-1
+  ==
+::
 +$  page-1  [title=@t content=wain edit-by=@p]
+::
++$  access-1  [public-read=? edit=rule-edit]
 ::
 --

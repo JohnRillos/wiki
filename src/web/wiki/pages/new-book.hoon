@@ -19,13 +19,20 @@
           ~|  'Invalid wiki ID'  (tie (~(got by args) 'book-id'))
         =/  book-title=@t  (~(got by args) 'book-title')
         =/  pub-read=?  =('public' (~(got by args) 'rule-read'))
+        =/  =rule-read
+          ?+  (~(got by args) 'rule-read')  !!
+            %priv  [%| %| %|]
+            %urth  [%& %| %|]
+            %scry  [%& %& %|]
+            %goss  [%& %& %&]
+          ==
         =/  =rule-edit
           ?+  (~(got by args) 'rule-edit')  !!
-            %host  [%.n %.n]
-            %user  [%.y %.n]
-            %anon  [%.y %.y]
+            %host  [%| %|]
+            %user  [%& %|]
+            %anon  [%& %&]
           ==
-        [%relay our.bowl id.order [%new-book book-id book-title [pub-read rule-edit]]]
+        [%relay our.bowl id.order [%new-book book-id book-title [rule-read rule-edit]]]
       ==
     ::
     ++  tie
@@ -117,16 +124,24 @@
       ==
     ==
     ::
-    ++  setting-rule-read
+    ++  setting-rule-read :: todo: improve this layout
       ^-  manx
       ;div
         ;div.box-item
-          ;input#public-read(type "radio", name "rule-read", value "public");
-          ;label(for "public-read"): Anyone with the URL can view this wiki.
+          ;input#priv-read(type "radio", name "rule-read", value "priv");
+          ;label(for "priv-read"): Only you can view this wiki.
         ==
         ;div.box-item
-          ;input#private-read(type "radio", name "rule-read", value "private");
-          ;label(for "private-read"): Only you can view this wiki.
+          ;input#urth-read(type "radio", name "rule-read", value "urth");
+          ;label(for "urth-read"): Anyone with the URL can view this wiki.
+        ==
+        ;div.box-item
+          ;input#scry-read(type "radio", name "rule-read", value "scry");
+          ;label(for "scry-read"): Can be viewed on the web and on Urbit, but is not listed in the global index.
+        ==
+        ;div.box-item
+          ;input#goss-read(type "radio", name "rule-read", value "goss");
+          ;label(for "goss-read"): Can be viewed on the web and on Urbit, and is publicly listed in the global index.
         ==
       ==
     ::

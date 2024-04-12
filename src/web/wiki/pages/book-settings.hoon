@@ -21,7 +21,14 @@
       [%mod-book-name book-id.site (~(got by args) 'book-name')]
     ::
         %mod-rule-read
-      [%mod-rule-read book-id.site =('public' (~(got by args) 'rule-read'))]
+      =/  =rule-read
+        ?+  (~(got by args) 'rule-read')  !!
+          %priv  [%| %| %|]
+          %urth  [%& %| %|]
+          %scry  [%& %& %|]
+          %goss  [%& %& %&]
+        ==
+      [%mod-rule-read book-id.site rule-read]
     ::
         %mod-rule-edit
       =/  =rule-edit
@@ -128,23 +135,30 @@
         ==
       ==
     ::
-    ++  setting-rule-read
+    ++  setting-rule-read :: todo: improve this layout
       ^-  manx
-      =/  get-value-js=tape
-        "document.getElementById('public-read').checked ? 'public' : 'private'"
-      =/  confirm=tape
-        "Are you sure you want to make this wiki $\{{get-value-js}}?"
-      %+  in-form:web  confirm  :: todo: fix this
+      =/  confirm=tape  "Are you sure?"
+      %+  in-form:web  confirm
       ;div
         ;div.box-item
-          ;+  %+  check-if:web  public-read.rules.book
-          ;input#public-read(type "radio", name "rule-read", value "public");
-          ;label(for "public-read"): Anyone with the URL can view this wiki.
+          ;+  %+  check-if:web  =(read.rules.book [| | |])
+          ;input#priv-read(type "radio", name "rule-read", value "priv");
+          ;label(for "priv-read"): Only you can view this wiki.
         ==
         ;div.box-item
-          ;+  %+  check-if:web  !public-read.rules.book
-          ;input#private-read(type "radio", name "rule-read", value "private");
-          ;label(for "private-read"): Only you can view this wiki.
+          ;+  %+  check-if:web  =(read.rules.book [& | |])
+          ;input#urth-read(type "radio", name "rule-read", value "urth");
+          ;label(for "urth-read"): Anyone with the URL can view this wiki.
+        ==
+        ;div.box-item
+          ;+  %+  check-if:web  =(read.rules.book [& & |])
+          ;input#scry-read(type "radio", name "rule-read", value "scry");
+          ;label(for "scry-read"): Can be viewed on the web and on Urbit, but is not listed in the global index.
+        ==
+        ;div.box-item
+          ;+  %+  check-if:web  =(read.rules.book [& & &])
+          ;input#goss-read(type "radio", name "rule-read", value "goss");
+          ;label(for "goss-read"): Can be viewed on the web and on Urbit, and is publicly listed in the global index.
         ==
         ;button(type "submit", name "action", value "mod-rule-read")
           ; Update
@@ -160,25 +174,25 @@
         ;div.box-item
           ;+
           %+  check-if:web  !public.rule-edit
-          %+  disable-if:web  !public-read.rules.book
+          %+  disable-if:web  !public.read.rules.book
           ;input#host-edit(type "radio", name "rule-edit", value "host");
           ;label(for "host-edit"): Only you can edit this wiki.
         ==
         ;div.box-item
           ;+
           %+  check-if:web  &(public.rule-edit !comet.rule-edit)
-          %+  disable-if:web  !public-read.rules.book
+          %+  disable-if:web  !public.read.rules.book
           ;input#user-edit(type "radio", name "rule-edit", value "user");
           ;label(for "user-edit"): Any Urbit user can create or edit pages, except guests (comets).
         ==
         ;div.box-item
           ;+
           %+  check-if:web  &(public.rule-edit comet.rule-edit)
-          %+  disable-if:web  !public-read.rules.book
+          %+  disable-if:web  !public.read.rules.book
           ;input#anon-edit(type "radio", name "rule-edit", value "anon");
           ;label(for "anon-edit"): Anybody can create or edit pages, even anonymous guests.
         ==
-        ;+  %+  disable-if:web  !public-read.rules.book
+        ;+  %+  disable-if:web  !public.read.rules.book
         ;button(type "submit", name "action", value "mod-rule-edit")
           ; Update
         ==

@@ -55,7 +55,7 @@
           ;+  (search-bar:web `book-id.site ~)
           ;h1#page-title: Main Page
           ;nav#wiki-controls
-            ;*  ?.  (may-edit-2 bowl cover)  ~
+            ;*  ?.  (may-edit bowl host.site rules.cover)  ~
             ;=  ;a/"{wik-dir}/~/new"
                   ;button(type "button"): New Page
                 ==

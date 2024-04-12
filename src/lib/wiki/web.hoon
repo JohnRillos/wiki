@@ -347,7 +347,7 @@
 ++  footer
   |=  =(each cover book)
   ^-  manx
-  =/  public-read=?  public-read.rules.p.each
+  =/  public-read=?  public.read.rules.p.each
   =/  viz=manx
     ?:  public-read
       ;div.note

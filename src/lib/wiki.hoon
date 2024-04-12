@@ -6,18 +6,12 @@
 |%
 ::
 ++  may-edit
-  |=  [=bowl:gall =book]
+  |=  [=bowl:gall host=(unit @p) =access]
   ^-  ?
-  ?:  =(src.bowl our.bowl)  &
-  ?:  =(%pawn (clan:title src.bowl))  comet.edit.rules.book
-  public.edit.rules.book
-::
-++  may-edit-2
-  |=  [=bowl:gall =cover]
-  ^-  ?
-  ?:  =(src.bowl our.bowl)  &
-  ?:  =(%pawn (clan:title src.bowl))  comet.edit.rules.cover
-  public.edit.rules.cover
+  ?:  =(src.bowl (fall host our.bowl))  &
+  ?:  =(%pawn (clan:title src.bowl))
+    comet.edit.access
+  public.edit.access
 ::
 ++  part
   |=  =cord
@@ -103,4 +97,16 @@
 ::   :: %-  ~(put burp acc)
 ::   :: [path.arg page.arg]
 ::   :: *_acc
+::
+++  filt
+  |*  [cond=? val=*]
+  ^-  (unit _val)
+  ?:(cond `val ~)
+::
+++  wilt
+  |*  val-type=mold
+  |=  input=(list [? (list val-type)])
+  ^-  (list val-type)
+  (zing (murn input filt))
+::
 --

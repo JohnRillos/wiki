@@ -55,7 +55,7 @@
                 ^-  manx
                 ;li.wiki-list-item
                   ;a/"/wiki/{(trip id)}"
-                    ;+  ?:(public-read.rules.book globe:icon:web lock:icon:web)
+                    ;+  ?:(public.read.rules.book globe:icon:web lock:icon:web)
                     ; {(trip title.book)}
                   ==
                 ==
@@ -70,7 +70,7 @@
             ^-  manx
             ;li.wiki-list-item
               ;a/"/wiki/~/p/{<host>}/{(trip id)}"
-                ;+  ?:(public-read.rules.cover.spine globe:icon:web lock:icon:web)
+                ;+  ?:(public.read.rules.cover.spine globe:icon:web lock:icon:web)
                 ; {(trip title.cover.spine)}
               ==
             ==

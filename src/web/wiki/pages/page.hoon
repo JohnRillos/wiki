@@ -99,7 +99,7 @@
           ;header
             ;h1#page-title: {(trip title.page)}
             ;nav.page
-              ;+  ?.  (may-edit-2 bowl cover)  stub:web
+              ;+  ?.  (may-edit bowl host rules.cover)  stub:web
                   ;a/"{wik-dir}{pag-dir}/~/edit": Edit
               ;a/"{wik-dir}{pag-dir}/~/history": History
               ;a/"{wik-dir}{pag-dir}/~/download?t={<as-of>}"

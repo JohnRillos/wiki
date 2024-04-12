@@ -16,7 +16,7 @@
 ::
 ::  state
 ::
-=|  state-4
+=|  state-2
 =*  state  -
 ::
 ::  debugging tools
@@ -42,7 +42,7 @@
 ++  on-init
   ^-  (quip card _this)
   =^  cards  state
-    =|  state=state-4
+    =|  state=state-2
     :_  state
     [%pass /eyre/connect %arvo %e %connect [~ /[dap.bowl]] dap.bowl]~
   [cards this]
@@ -58,14 +58,12 @@
   ::
   ++  build-state
     |=  old=versioned-state
-    ^-  (quip card state-4)
+    ^-  (quip card state-2)
     =|  cards=(list card)
     |-
     |^  ?-  -.old
-          %4  [cards old]
-          %3  $(old (state-3-to-4 old))
-          %2  $(old (state-2-to-3 old))
-          %1  $(old (state-1-to-2 old), cards (cards-1-to-2 old))
+          %2  [cards old]
+          %1  $(old (state-1-to-2 old))
           %0  $(old (state-0-to-1 old))
         ==
     ::
@@ -76,7 +74,7 @@
       ::
       ++  grad-book
         |=  =book-0
-        ^-  book
+        ^-  book-1
         %=  book-0
           tales  (~(run by tales.book-0) grad-tale)
           rules  (grad-rules rules.book-0)
@@ -96,30 +94,26 @@
       ::
       ++  grad-rules
         |=  =access-0
-        ^-  access
+        ^-  access-1
         [public-read.access-0 [%.n %.n]]
       --
     ::
     ++  state-1-to-2
       |=  =state-1
       ^-  state-2
-      [%2 ~ +.state-1]
-    ::
-    ++  cards-1-to-2
-      |=  =state-1
-      ^-  (list card)
-      ~ :: todo: grow all pages in public wikis
-        :: todo: gossip everything
-    ::
-    ++  state-2-to-3
-      |=  =state-2
-      ^-  state-3
-      [%3 ~ +.state-2]
-    ::
-    ++  state-3-to-4
-      |=  =state-3
-      ^-  state-4
-      [%4 ~ +.+.state-3]
+      |^  [%2 ~ ~ grad-books]
+      ::
+      ++  grad-books
+        ^-  (map @ta book)
+        %-  ~(run by books.state-1)
+        |=  =book-1
+        book-1(rules (grad-rules rules.book-1))
+      ::
+      ++  grad-rules
+        |=  =access-1
+        ^-  access
+        access-1(- ?:(public-read.access-1 [%& %| %|] [%| %| %|]))
+      --
     ::
     --
   --
@@ -412,17 +406,17 @@
     ~|("Invalid wiki ID" !!)
   ?:  (~(has by books) id)  ~|("Wiki '{(trip id)}' already exists!" !!)
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
-  ?:  &(!public-read.rules public.edit.rules)
+  ?:  &(!public.read.rules public.edit.rules)
     ~|("Cannot enable public edits on private wiki." !!)
   =/  =book  [title ~ rules]
   =.  books  (~(put by books) id book)
   :_  state
-  ?.  public-read.rules  ~
-  :~  (spine-0:grow id book)
-      (tell:goss id [title ~ rules])
+  %-  (wilt card)
+  :~  [scry.read.rules (spine-0:grow id book) ~]
+      [goss.read.rules (tell:goss id [title ~ rules]) ~]
   ==
 ::
-++  del-book
+++  del-book :: todo: delete from gossip + remote scry
   |=  [%del-book id=@ta]
   ?.  =(src.bowl our.bowl)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %del-book"  !!
@@ -440,31 +434,37 @@
   [~ state]
 ::
 ++  mod-rule-read
-  |=  [%mod-rule-read id=@ta public-read=?]
+  |=  [%mod-rule-read id=@ta =rule-read]
   ?.  =(src.bowl our.bowl)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-rule-read"  !!
   =/  =book  (~(got by books) id)
-  =.  public-read.rules.book  public-read
-  =.  edit.rules.book         ?.  public-read  [%.n %.n] :: disable public edit
-                              edit.rules.book
+  =.  read.rules.book   rule-read
+  =.  edit.rules.book   ?.  public.rule-read  [%.n %.n] :: disable public edit
+                        edit.rules.book
   =.  books  (~(put by books) id book)
   :_  state
-  ?:  public-read
-    ~[(spine-0:grow id book)]
-  (book:cull id)
+  %-  (wilt card)
+  :~  [scry.rule-read (spine-0:grow id book) ~]
+      [!scry.rule-read (book:cull id)]
+      [goss.rule-read (tell:goss id book) ~]
+  ==
 ::
 ++  mod-rule-edit
   |=  [%mod-rule-edit id=@ta =rule-edit]
   ?.  =(src.bowl our.bowl)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-rule-edit"  !!
   =/  =book  (~(got by books) id)
-  ?:  &(!public-read.rules.book public.rule-edit)
+  ?:  &(!public.read.rules.book public.rule-edit)
     ~|  "Cannot enable public edits on private wiki. Enable public-read first"
     !!
   =.  edit.rules.book  rule-edit
   =.  books  (~(put by books) id book)
   :_  state
-  ~[(spine-0:grow id book)]
+  =/  r  read.rules.book
+  %-  (wilt card)
+  :~  [scry.r (spine-0:grow id book) ~]
+      [goss.r (tell:goss id book) ~]
+  ==
 ::
 ++  new-page
   |=  [%new-page book-id=@ta =path title=@t content=wain]
@@ -472,7 +472,7 @@
   ?^  (find "~" path)  ~|('Path cannot contain "/~/"' !!)
   ?.  (levy path (sane %ta))  ~|('Invalid path!' !!)
   =/  =book  (~(got by books) book-id)
-  ?.  (may-edit bowl book)
+  ?.  (may-edit bowl ~ rules.book)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %new-page"
     ~|("Unauthorized" !!)
   ?:  (~(has by tales.book) path)  ~|("Page {<path>} already exists!" !!)
@@ -483,10 +483,11 @@
   =.  books  (~(put by books) book-id book)
   ~&  >  "Wiki page created: {(trip book-id)}{<path>}"
   :_  state
-  ?.  public-read.rules.book  ~
-  :~  (booklet-0:grow book-id book path tale)
-      (spine-0:grow book-id book)
-      (tell:goss book-id book)
+  =/  r  read.rules.book
+  %-  (wilt card)
+  :~  [scry.r (booklet-0:grow book-id book path tale) ~]
+      [scry.r (spine-0:grow book-id book) ~]
+      [goss.r (tell:goss book-id book) ~]
   ==
 ::
 ++  del-page
@@ -498,13 +499,17 @@
   =.  books       (~(put by books) book-id book)
   ~&  >>>  "Wiki page deleted: {(trip book-id)}{<path>}"
   :_  state
-  %+  snoc  (booklet:cull book-id path)
-  (spine-0:grow book-id book)
+  =/  r  read.rules.book
+  %-  (wilt card)
+  :~  [scry.r (booklet:cull book-id path)] 
+      [scry.r (spine-0:grow book-id book) ~]
+      :: [goss.r ???] todo: delete via gossip
+  ==
 ::
 ++  mod-page
   |=  [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
   =/  =book  (~(got by books) book-id)
-  ?.  (may-edit bowl book)
+  ?.  (may-edit bowl ~ rules.book)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-page"  !!
   =/  =tale  (~(got by tales.book) path)
   =/  =page  page:(latest tale)
@@ -521,16 +526,17 @@
   =.  books       (~(put by books) book-id book)
   ~&  >>  "Wiki page edited: {(trip book-id)}{<path>}"
   :_  state
-  ?.  public-read.rules.book  ~
-  :~  (booklet-0:grow book-id book path tale)
-      (spine-0:grow book-id book)
-      (tell:goss book-id book)
+  =/  r  read.rules.book
+  %-  (wilt card)
+  :~  [scry.r (booklet-0:grow book-id book path tale) ~]
+      [scry.r (spine-0:grow book-id book) ~]
+      [goss.r (tell:goss book-id book) ~]
   ==
 ::
 ++  imp-file
   |=  [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
   =/  =book  (~(got by books) book-id)
-  ?.  (may-edit bowl book)
+  ?.  (may-edit bowl ~ rules.book)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %imp-file"  !!
   ~&  "importing {<~(wyt by files)>} files..."
   :_  state
@@ -686,7 +692,7 @@
     %+  murn  ~(tap by books)
     |=  [id=@ta =book]
     ^-  (unit (pair [@p @ta] spine))
-    ?.  public-read.rules.book  ~
+    ?.  public.read.rules.book  ~
     (some [[our.bowl id] (to-spine id book)])
   ::
   ++  read

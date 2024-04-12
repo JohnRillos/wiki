@@ -15,36 +15,6 @@
 ::
 +*  help  ~(. +> [bowl order rudyard])
 ::
-:: argue
-:: - poke self
-::   - store current eyre-id (eyre-id-a) + URL to redirect to on success
-::   - poke other (wire = eyre-id-a/...)
-::
-:: final
-:: - redirect -> /wiki/~/wait/{eyre-id-a}?then=/next/path
-::
-:: /wiki/~/wait/{eyre-id-a}?then=/next/path
-:: - not a real page (?)
-:: - check eyre-id-a
-::   - if already complete
-::     - respond immediately
-::     - success: redirect to success URL
-::     - error: error response
-::     - delete stored eyre-id(s)
-::   - if not complete
-::     - does not respond right away
-::     - stores new eyre-id (eyre-id-b) along with eyre-id-a
-::
-:: on-agent
-:: - poke-ack
-::   - get eyre-id-a from wire
-::     - if no eyre-id-b stored yet
-::       - store success / error
-::     - if eyre-id-b stored
-::       - success: respond to eyre-id-b w/ redirect to success URL (retrieve from eyre-request B query params)
-::       - error: respond to eyre-id-b w/ error response
-::     - delete stored eyre-id(s)
-::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
   ^-  $@(brief:rudder relay)
@@ -87,7 +57,7 @@
   =/  cuver  get-cover:help
   ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =cover  u.cuver
-  ?>  (may-edit-2 bowl cover)
+  ?>  (may-edit bowl host.site rules.cover)
   ::
   |^  [%page render]
   ::

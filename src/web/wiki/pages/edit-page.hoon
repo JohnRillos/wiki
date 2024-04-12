@@ -44,7 +44,7 @@
   =/  cuver  get-cover:help
   ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =cover  u.cuver
-  ?>  (may-edit-2 bowl cover)
+  ?>  (may-edit bowl host.site rules.cover)
   =/  tale=(unit tale)  get-tale:help
   ?~  tale
     [%code 404 (crip "Article {<page-path:help>} not found in {<title.cover>}")]
