@@ -53,14 +53,9 @@
       edit=rule-edit
   ==
 ::
-++  rule-read
-  $?  [public=%.n scry=%.n goss=%.n]
-      [public=%.y scry=%.n goss=%.n]
-      [public=%.y scry=%.y goss=?]
-  ==
++$  rule-read  [public=? urth=? scry=? goss=?]
 ::
-++  rule-edit
-  ?([public=%.n comet=%.n] [public=%.y comet=?])
++$  rule-edit  ?([public=%.n comet=%.n] [public=%.y comet=?])
 ::
 +$  relay  [%relay to=@p eyre-id=@ta =action]
 ::

@@ -18,14 +18,12 @@
         =/  book-id=@ta
           ~|  'Invalid wiki ID'  (tie (~(got by args) 'book-id'))
         =/  book-title=@t  (~(got by args) 'book-title')
-        =/  pub-read=?  =('public' (~(got by args) 'rule-read'))
         =/  =rule-read
-          ?+  (~(got by args) 'rule-read')  !!
-            %priv  [%| %| %|]
-            %urth  [%& %| %|]
-            %scry  [%& %& %|]
-            %goss  [%& %& %&]
-          ==
+          =/  public=?  =('true' (~(got by args) 'read-public'))
+          =/    urth=?  &(public (~(has by args) 'read-urth'))
+          =/    scry=?  &(public (~(has by args) 'read-scry'))
+          =/    goss=?    &(scry (~(has by args) 'read-goss'))
+          [public urth scry goss]
         =/  =rule-edit
           ?+  (~(got by args) 'rule-edit')  !!
             %host  [%| %|]
@@ -124,24 +122,55 @@
       ==
     ==
     ::
-    ++  setting-rule-read :: todo: improve this layout
+    ++  setting-rule-read
       ^-  manx
       ;div
         ;div.box-item
-          ;input#priv-read(type "radio", name "rule-read", value "priv");
-          ;label(for "priv-read"): Only you can view this wiki.
+          ;+  %+  disables-other:web  ~['read-urth' 'read-scry' 'read-goss']
+          ;input#read-pub-n(type "radio", name "read-public", value "false");
+          ;label(for "read-pub-n"): Private: Only you can view this wiki.
         ==
         ;div.box-item
-          ;input#urth-read(type "radio", name "rule-read", value "urth");
-          ;label(for "urth-read"): Anyone with the URL can view this wiki.
+          ;+  %+  enables-other:web  ~['read-urth' 'read-scry' 'read-goss']
+          ;input#read-pub-y(type "radio", name "read-public", value "true", checked "true");
+          ;label(for "read-pub-y"): Public: Anyone can view this wiki.
         ==
-        ;div.box-item
-          ;input#scry-read(type "radio", name "rule-read", value "scry");
-          ;label(for "scry-read"): Can be viewed on the web and on Urbit, but is not listed in the global index.
-        ==
-        ;div.box-item
-          ;input#goss-read(type "radio", name "rule-read", value "goss");
-          ;label(for "goss-read"): Can be viewed on the web and on Urbit, and is publicly listed in the global index.
+        ;fieldset
+          ;div.box-item
+            ;input#read-urth(type "checkbox", name "read-urth", checked "true");
+            ;label(for "read-urth"): This wiki can be viewed as a website on the clearweb.
+            ;+
+            =/  headers=(map @t @t)  (my `(list (pair @t @t))`header-list.request.order)
+            =/  web-host=(unit @t)  (~(get by headers) 'host')
+            ?~  web-host  stub:web
+            %-  info:icon:web
+            """
+            Wiki will be visible at {(trip u.web-host)}/wiki/<Wiki ID>.
+            Visitors can view the site without logging in or using Urbit, but can also log in with their Urbit ID's using EAuth.
+            """
+          ==
+          ;div.box-item
+            ;+  %+  enables-other:web  ~['read-goss']
+            ;input#read-scry(type "checkbox", name "read-scry", checked "true");
+            ;label(for "read-scry"): This wiki can be viewed on Urbit.
+            ;+
+            %-  info:icon:web
+            """
+            Urbit users can access this wiki at their own ship's URL at /wiki/~/p/{<our.bowl>}/<Wiki ID>.
+            This feature uses remote scry to fetch content from this wiki.
+            """
+          ==
+          ;div.box-item
+            ;input#read-goss(type "checkbox", name "read-goss", checked "true");
+            ;label(for "read-goss"): Share this wiki on the global index so people can discover it.
+            ;+
+            %-  info:icon:web
+            """
+            Shares data about this wiki with the rest of the network so it will be easy to find on Urbit.
+            Uses the gossip protocol to share data with your pals, pals-of-pals, etc.
+            This feature only works if you have %pals installed.
+            """
+          ==
         ==
       ==
     ::
@@ -149,7 +178,7 @@
       ^-  manx
       ;div
         ;div.box-item
-          ;input#host-edit(type "radio", name "rule-edit", value "host");
+          ;input#host-edit(type "radio", name "rule-edit", value "host", checked "true");
           ;label(for "host-edit"): Only you can edit this wiki.
         ==
         ;div.box-item

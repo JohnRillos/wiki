@@ -7,6 +7,7 @@
 /*  htmx-js          %js   /web/htmx/js
 /*  show-on-load-js  %js   /web/wiki/show-on-load/js
 /*  globe-svg        %svg  /web/wiki/icons/globe/svg
+/*  info-svg         %svg  /web/wiki/icons/info/svg
 /*  lock-svg         %svg  /web/wiki/icons/lock/svg
 /*  search-svg       %svg  /web/wiki/icons/search/svg
 ::
@@ -206,6 +207,43 @@
   ?.  if  manx
   manx(a.g [[%disabled ""] a.g.manx])
 ::
+++  elem-id
+  |=  =manx
+  ^-  tape
+  =/  attributes=(list (pair mane tape))  a.g.manx
+  (~(got by (my attributes)) %id)
+::
+++  disables-other
+  |=  [other-ids=(list @t) =manx]
+  ^-  ^manx
+  =/  scripts=(list tape)
+    %+  turn  other-ids
+    |=  other-id=@t
+    """
+    var elem = document.getElementById('{(trip other-id)}')
+    elem.setAttribute('disabled', 'true');
+    elem.checked = false;
+    """
+  =/  on-input=tape  (zing (join "\0a" scripts))
+  manx(a.g [[%oninput on-input] a.g.manx])
+::
+++  enables-other
+  |=  [other-ids=(list @t) =manx]
+  ^-  ^manx
+  =/  this-id=tape  (elem-id manx)
+  =/  scripts=(list tape)
+    %+  turn  other-ids
+    |=  other-id=@t
+    """
+    if (document.getElementById('{this-id}').checked) \{
+      document.getElementById('{(trip other-id)}').removeAttribute('disabled');
+    } else \{
+      document.getElementById('{(trip other-id)}').setAttribute('disabled', 'true');
+    }
+    """
+  =/  on-input=tape  (zing (join "\0a" scripts))
+  manx(a.g [[%oninput on-input] a.g.manx])
+::
 ++  stub
   ^-  manx
   ;div(style "display: none");
@@ -371,6 +409,12 @@
     ^~
     ;div.access-icon(title "public")
       ;+  (need (de-xml:html globe-svg))
+    ==
+  ::
+  ++  info
+    |=  hover=tape
+    ;div.access-icon(title hover)
+      ;+  (need (de-xml:html info-svg))
     ==
   ::
   ++  lock

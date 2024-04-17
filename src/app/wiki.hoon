@@ -112,7 +112,7 @@
       ++  grad-rules
         |=  =access-1
         ^-  access
-        access-1(- ?:(public-read.access-1 [%& %| %|] [%| %| %|]))
+        access-1(- ?:(public-read.access-1 [& & | |] [| | | |]))
       --
     ::
     --
@@ -434,19 +434,25 @@
   [~ state]
 ::
 ++  mod-rule-read
-  |=  [%mod-rule-read id=@ta =rule-read]
+  |=  [%mod-rule-read id=@ta read=rule-read]
   ?.  =(src.bowl our.bowl)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-rule-read"  !!
+  ?:  &(!public.read urth.read)  ~|('Private wikis do not support eauth (clearweb)' !!)
+  ?:  &(!public.read scry.read)  ~|('Private wikis do not support remote scry' !!)
+  ?:  &(!public.read goss.read)  ~|('Private wikis do not support gossip (global index)' !!)
+  ?:  &(!scry.read goss.read)    ~|('Cannot gossip index if wiki not accessible via remote scry' !!)
+  ?:  &(public.read ?!(|(urth.read scry.read)))  ~|('Public wikis must be visible via web and/or Urbit' !!)
   =/  =book  (~(got by books) id)
-  =.  read.rules.book   rule-read
-  =.  edit.rules.book   ?.  public.rule-read  [%.n %.n] :: disable public edit
+  =.  read.rules.book   read
+  =.  edit.rules.book   ?.  public.read  [%.n %.n] :: disable public edit
                         edit.rules.book
   =.  books  (~(put by books) id book)
   :_  state
+  :: todo: handle goss -> !goss
   %-  (wilt card)
-  :~  [scry.rule-read (spine-0:grow id book) ~]
-      [!scry.rule-read (book:cull id)]
-      [goss.rule-read (tell:goss id book) ~]
+  :~  [scry.read (spine-0:grow id book) ~]
+      [!scry.read (book:cull id)]
+      [goss.read (tell:goss id book) ~]
   ==
 ::
 ++  mod-rule-edit
