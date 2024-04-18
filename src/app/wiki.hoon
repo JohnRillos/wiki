@@ -700,24 +700,28 @@
   ++  tell
     |=  [id=@ta =book]
     ^-  card
+    ~&  '%wiki starting a rumor...'
     =/  =lore  [%lurn (malt [[our.bowl id] (to-spine id book)]~)]
     [(invent:gossip %wiki-lore !>(lore))]
   ::
   ++  hush
     |=  [id=@ta]
     ^-  card
+    ~&  '%wiki denying a rumor...'
     =/  =lore  [%burn our.bowl id now.bowl]
     [(invent:gossip %wiki-lore !>(lore))]
   ::
   ++  rant
     ^-  (list card)
+    ~&  '%wiki spreading rumors...'
     =;  =lore  [(invent:gossip %wiki-lore !>(lore))]~
     :-  %lurn
+    %-  ~(uni by shelf)
     %-  my
     %+  murn  ~(tap by books)
     |=  [id=@ta =book]
     ^-  (unit (pair [@p @ta] spine))
-    ?.  public.read.rules.book  ~
+    ?.  goss.read.rules.book  ~
     (some [[our.bowl id] (to-spine id book)])
   ::
   ++  read
@@ -726,8 +730,13 @@
     ~&  '%wiki heard a rumor...'
     ?-  -.lore
       %lurn
+        =/  other=_shelf
+          %-  my
+          %+  skip  ~(tap by shelf.lore)
+          |=  [[host=@p @ta] *]
+          =(host our.bowl)
         =.  shelf
-          %-  (~(uno by shelf) shelf.lore)
+          %-  (~(uno by shelf) other)
           |=  [k=[@p @ta] v=spine w=spine]
           ?:  (gte as-of.v as-of.w)  v
           ~&  "... updating index for {<k>}"
@@ -755,7 +764,7 @@
     =/  [time=@da =page]  (latest tale)
     =/  ver=@  (dec (wyt:ton tale))
     [ver time title.page]
-  [cover toc now.bowl]
+  [cover toc now.bowl] :: todo: should I use the latest edit time instead of now.bowl?
 ::
 ++  relay-response
   |=  [=order:rudder error=(unit tang) =agent:gall]
