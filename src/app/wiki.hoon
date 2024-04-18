@@ -416,12 +416,18 @@
       [goss.read.rules (tell:goss id [title ~ rules]) ~]
   ==
 ::
-++  del-book :: todo: delete from gossip + remote scry
+++  del-book
   |=  [%del-book id=@ta]
   ?.  =(src.bowl our.bowl)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %del-book"  !!
+  =/  =book  (~(got by books) id)
   =.  books  (~(del by books) id)
-  [~ state]
+  :_  state
+  =/  r  read.rules.book
+  %-  (wilt card)
+  :~  [scry.r (book:cull id)]
+      [goss.r (hush:goss id) ~]
+  ==
 ::
 ++  mod-book-name
   |=  [%mod-book-name id=@ta title=@t]
@@ -431,7 +437,12 @@
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   =.  title.book  title
   =.  books  (~(put by books) id book)
-  [~ state]
+  :_  state
+  =/  r  read.rules.book
+  %-  (wilt card)
+  :~  [scry.r (spine-0:grow id book) ~]
+      [goss.r (tell:goss id book) ~]
+  ==
 ::
 ++  mod-rule-read
   |=  [%mod-rule-read id=@ta read=rule-read]
@@ -443,16 +454,17 @@
   ?:  &(!scry.read goss.read)    ~|('Cannot gossip index if wiki not accessible via remote scry' !!)
   ?:  &(public.read ?!(|(urth.read scry.read)))  ~|('Public wikis must be visible via web and/or Urbit' !!)
   =/  =book  (~(got by books) id)
+  =/  un-goss=?  &(goss.read.rules.book !goss.read)
   =.  read.rules.book   read
   =.  edit.rules.book   ?.  public.read  [%.n %.n] :: disable public edit
                         edit.rules.book
   =.  books  (~(put by books) id book)
   :_  state
-  :: todo: handle goss -> !goss
   %-  (wilt card)
   :~  [scry.read (spine-0:grow id book) ~]
       [!scry.read (book:cull id)]
       [goss.read (tell:goss id book) ~]
+      [un-goss (hush:goss id) ~]
   ==
 ::
 ++  mod-rule-edit
@@ -509,7 +521,7 @@
   %-  (wilt card)
   :~  [scry.r (booklet:cull book-id path)] 
       [scry.r (spine-0:grow book-id book) ~]
-      :: [goss.r ???] todo: delete via gossip
+      [goss.r (tell:goss book-id book) ~]
   ==
 ::
 ++  mod-page
@@ -688,12 +700,19 @@
   ++  tell
     |=  [id=@ta =book]
     ^-  card
-    =/  =lore  (malt [[our.bowl id] (to-spine id book)]~)
+    =/  =lore  [%lurn (malt [[our.bowl id] (to-spine id book)]~)]
+    [(invent:gossip %wiki-lore !>(lore))]
+  ::
+  ++  hush
+    |=  [id=@ta]
+    ^-  card
+    =/  =lore  [%burn our.bowl id now.bowl]
     [(invent:gossip %wiki-lore !>(lore))]
   ::
   ++  rant
     ^-  (list card)
     =;  =lore  [(invent:gossip %wiki-lore !>(lore))]~
+    :-  %lurn
     %-  my
     %+  murn  ~(tap by books)
     |=  [id=@ta =book]
@@ -704,13 +723,26 @@
   ++  read
     |=  =lore
     ^-  (quip card _state)
-    ~&  '%wiki: received rumor, updating index...'
-    =.  shelf
-      %-  (~(uno by shelf) lore)
-      |=  [k=[@p @ta] v=spine w=spine]
-      ?:  (gte as-of.v as-of.w)  v
-      w
-    [~ state]
+    ~&  '%wiki heard a rumor...'
+    ?-  -.lore
+      %lurn
+        =.  shelf
+          %-  (~(uno by shelf) shelf.lore)
+          |=  [k=[@p @ta] v=spine w=spine]
+          ?:  (gte as-of.v as-of.w)  v
+          ~&  "... updating index for {<k>}"
+          w
+        [~ state]
+      ::
+      %burn
+        :-  ~
+        =/  old=(unit spine)  (~(get by shelf) [host.lore id.lore])
+        ?~  old                        state
+        ?:  (gth as-of.u.old at.lore)  state
+        ~&  "... un-indexing {<[host.lore id.lore]>}"
+        =.  shelf  (~(del by shelf) [host.lore id.lore])
+        state
+    ==
   --
 ::
 ++  to-spine

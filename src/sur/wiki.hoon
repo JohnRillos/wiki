@@ -97,7 +97,10 @@
 ::
 ::
 ::
-+$  lore  shelf
++$  lore
+  $%  [%lurn =shelf]
+      [%burn host=@p id=@ta at=@da]
+  ==
 ::
 ::
 ::  eyre requests awaiting poke-ack before responding
