@@ -683,30 +683,29 @@
     |=  targ=path
     ^-  (list card)
     =/  base=path  ~+  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$/1
-    =/  ver=case  .^(case %gw (weld base targ))
-    ?>  ?=(%ud -.ver)
-    %+  turn  (gulf 1 p.ver)
-    |=  v=@ud
-    [%pass (weld /wiki/tomb targ) %tomb [%ud v] targ]
+    =/  =fans:gall  (~(got by sky.bowl) targ)
+    %+  murn  ~(tap by fans)
+    |=  [v=@ud =time data=(each page:clay @uvI)]
+    ?.  -.data  ~
+    `[%pass (weld /wiki/tomb targ) %tomb [%ud v] targ]
   ::
   ++  book
     |=  book-id=@ta
     ^-  (list card)
-    =/  base=path  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$/1
-    =/  gt=path  (weld base /booklet-0/[book-id])
-    =/  paths=(list path)  .^((list path) %gt gt)
+    =/  paths=(list path)
+      :-  /spine-0/[book-id]
+      %+  skim  ~(tap in ~(key by sky.bowl))
+      |=  =(pole knot)
+      ?.  ?=([%booklet-0 bid=@ta *] pole)  |
+      =(book-id bid.pole)
     (zing (turn paths tomb))
   ::
   ++  booklet
     |=  [book-id=@ta page-path=path]
     ^-  (list card)
-    =/  base=path  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$/1
     =/  targ=path  (weld /booklet-0/[book-id] page-path)
-    =/  full=path  (weld base targ)
-    =/  paths=(list path)
-      %+  skim  .^((list path) %gt (snip full))
-      |=(=path =(path targ))
-    (zing (turn paths tomb))
+    ?.  (~(has by sky.bowl) targ)  ~
+    (tomb targ)
   --
 ::
 ++  goss
