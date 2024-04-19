@@ -411,9 +411,9 @@
   =/  =book  [title ~ rules]
   =.  books  (~(put by books) id book)
   :_  state
-  %-  (wilt card)
-  :~  [scry.read.rules (spine-0:grow id book) ~]
-      [goss.read.rules (tell:goss id [title ~ rules]) ~]
+  %-  (walt card)
+  :~  [scry.read.rules |.((full:grow id book))]
+      [goss.read.rules |.([(tell:goss id [title ~ rules]) ~])]
   ==
 ::
 ++  del-book
@@ -424,9 +424,9 @@
   =.  books  (~(del by books) id)
   :_  state
   =/  r  read.rules.book
-  %-  (wilt card)
-  :~  [scry.r (book:cull id)]
-      [goss.r (hush:goss id) ~]
+  %-  (walt card)
+  :~  [scry.r |.((book:tomb id))]
+      [goss.r |.([(hush:goss id) ~])]
   ==
 ::
 ++  mod-book-name
@@ -439,9 +439,9 @@
   =.  books  (~(put by books) id book)
   :_  state
   =/  r  read.rules.book
-  %-  (wilt card)
-  :~  [scry.r (spine-0:grow id book) ~]
-      [goss.r (tell:goss id book) ~]
+  %-  (walt card)
+  :~  [scry.r |.([(spine-0:grow id book) ~])]
+      [goss.r |.([(tell:goss id book) ~])]
   ==
 ::
 ++  mod-rule-read
@@ -454,17 +454,20 @@
   ?:  &(!scry.read goss.read)    ~|('Cannot gossip index if wiki not accessible via remote scry' !!)
   ?:  &(public.read ?!(|(urth.read scry.read)))  ~|('Public wikis must be visible via web and/or Urbit' !!)
   =/  =book  (~(got by books) id)
+  =/  en-scry=?  &(!scry.read.rules.book scry.read)
+  =/  un-scry=?  &(scry.read.rules.book !scry.read)
+  =/  en-goss=?  &(!goss.read.rules.book goss.read)
   =/  un-goss=?  &(goss.read.rules.book !goss.read)
   =.  read.rules.book   read
   =.  edit.rules.book   ?.  public.read  [%.n %.n] :: disable public edit
                         edit.rules.book
   =.  books  (~(put by books) id book)
   :_  state
-  %-  (wilt card)
-  :~  [scry.read (spine-0:grow id book) ~]
-      [!scry.read (book:cull id)]
-      [goss.read (tell:goss id book) ~]
-      [un-goss (hush:goss id) ~]
+  %-  (walt card)
+  :~  [en-scry |.((full:grow id book))]
+      [un-scry |.((book:tomb id))]
+      [en-goss |.([(tell:goss id book) ~])]
+      [un-goss |.([(hush:goss id) ~])]
   ==
 ::
 ++  mod-rule-edit
@@ -479,9 +482,9 @@
   =.  books  (~(put by books) id book)
   :_  state
   =/  r  read.rules.book
-  %-  (wilt card)
-  :~  [scry.r (spine-0:grow id book) ~]
-      [goss.r (tell:goss id book) ~]
+  %-  (walt card)
+  :~  [scry.r |.([(spine-0:grow id book) ~])]
+      [goss.r |.([(tell:goss id book) ~])]
   ==
 ::
 ++  new-page
@@ -502,10 +505,10 @@
   ~&  >  "Wiki page created: {(trip book-id)}{<path>}"
   :_  state
   =/  r  read.rules.book
-  %-  (wilt card)
-  :~  [scry.r (booklet-0:grow book-id book path tale) ~]
-      [scry.r (spine-0:grow book-id book) ~]
-      [goss.r (tell:goss book-id book) ~]
+  %-  (walt card)
+  :~  [scry.r |.([(booklet-0:grow book-id book path tale) ~])]
+      [scry.r |.([(spine-0:grow book-id book) ~])]
+      [goss.r |.([(tell:goss book-id book) ~])]
   ==
 ::
 ++  del-page
@@ -518,10 +521,10 @@
   ~&  >>>  "Wiki page deleted: {(trip book-id)}{<path>}"
   :_  state
   =/  r  read.rules.book
-  %-  (wilt card)
-  :~  [scry.r (booklet:cull book-id path)] 
-      [scry.r (spine-0:grow book-id book) ~]
-      [goss.r (tell:goss book-id book) ~]
+  %-  (walt card)
+  :~  [scry.r |.((booklet:tomb book-id path))] 
+      [scry.r |.([(spine-0:grow book-id book) ~])]
+      [goss.r |.([(tell:goss book-id book) ~])]
   ==
 ::
 ++  mod-page
@@ -545,10 +548,10 @@
   ~&  >>  "Wiki page edited: {(trip book-id)}{<path>}"
   :_  state
   =/  r  read.rules.book
-  %-  (wilt card)
-  :~  [scry.r (booklet-0:grow book-id book path tale) ~]
-      [scry.r (spine-0:grow book-id book) ~]
-      [goss.r (tell:goss book-id book) ~]
+  %-  (walt card)
+  :~  [scry.r |.([(booklet-0:grow book-id book path tale) ~])]
+      [scry.r |.([(spine-0:grow book-id book) ~])]
+      [goss.r |.([(tell:goss book-id book) ~])]
   ==
 ::
 ++  imp-file
@@ -664,15 +667,27 @@
     |=  [id=@ta =book]
     ^-  card
     [%pass /wiki/spine %grow /spine-0/[id] %wiki-spine-0 (to-spine id book)]
+  ::
+  ++  full
+    |=  [id=@ta =book]
+    ^-  (list card)
+    :-  (spine-0 id book)
+    %+  turn  ~(tap by tales.book)
+    |=  [=path =tale]
+    (booklet-0 id book path tale)
   --
 ::
-++  cull :: todo: tomb instead?
+++  tomb
   |%
-  ++  cull
+  ++  tomb
     |=  targ=path
+    ^-  (list card)
     =/  base=path  ~+  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$/1
     =/  ver=case  .^(case %gw (weld base targ))
-    [%pass (weld /wiki/cull targ) %cull ver targ]
+    ?>  ?=(%ud -.ver)
+    %+  turn  (gulf 1 p.ver)
+    |=  v=@ud
+    [%pass (weld /wiki/tomb targ) %tomb [%ud v] targ]
   ::
   ++  book
     |=  book-id=@ta
@@ -680,7 +695,7 @@
     =/  base=path  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$/1
     =/  gt=path  (weld base /booklet-0/[book-id])
     =/  paths=(list path)  .^((list path) %gt gt)
-    (turn paths cull)
+    (zing (turn paths tomb))
   ::
   ++  booklet
     |=  [book-id=@ta page-path=path]
@@ -691,7 +706,7 @@
     =/  paths=(list path)
       %+  skim  .^((list path) %gt (snip full))
       |=(=path =(path targ))
-    (turn paths cull)
+    (zing (turn paths tomb))
   --
 ::
 ++  goss
@@ -711,7 +726,7 @@
     =/  =lore  [%burn our.bowl id now.bowl]
     [(invent:gossip %wiki-lore !>(lore))]
   ::
-  ++  rant
+  ++  rant  :: todo: instead of returning 1 card, return 1 card per book to help %gossip dedupe
     ^-  (list card)
     ~&  '%wiki spreading rumors...'
     =;  =lore  [(invent:gossip %wiki-lore !>(lore))]~
@@ -764,7 +779,11 @@
     =/  [time=@da =page]  (latest tale)
     =/  ver=@  (dec (wyt:ton tale))
     [ver time title.page]
-  [cover toc now.bowl] :: todo: should I use the latest edit time instead of now.bowl?
+  =/  as-of=@da
+    %-  (curr roll max)
+    %+  turn  ~(val by toc)
+    |=(=ref edited.ref)
+  [cover toc as-of]
 ::
 ++  relay-response
   |=  [=order:rudder error=(unit tang) =agent:gall]

@@ -1,7 +1,7 @@
 ::  app index
 ::
 /-  *wiki
-/+  rudder, web=wiki-web
+/+  rudder, web=wiki-web, *wiki
 ::
 ^-  (page:rudder rudyard relay)
 ::
@@ -47,14 +47,16 @@
           ;*
           ?:  =(~ books)  [stub:web]~
             ;=
-              ;h2: Your Wikis
+              ;h2.index-header: Your Wikis
               ;ul.wiki-list
                 ;*
                 %+  turn  ~(tap by books)
                 |=  [id=@ta =book]
                 ^-  manx
+                =/  hover=tape  "{<~(wyt by tales.book)>} pages"
                 ;li.wiki-list-item
                   ;a/"/wiki/{(trip id)}"
+                    =title  hover
                     ;+  ?:(public.read.rules.book globe:icon:web lock:icon:web)
                     ; {(trip title.book)}
                   ==
@@ -62,16 +64,42 @@
               ==
             ==
           ;br;
-          ;h2: Wikis on the Network
+          ;h2.index-header
+            ; More Wikis on Urbit
+            ;+  (info:icon:web "Your %pals have been gossiping about these wikis")
+          ==
+          ;div
+            ;*
+            =/  pals-installed=?  .^(? %gu /(scot %p our.bowl)/pals/(scot %da now.bowl)/$)
+            %-  (wilt manx)
+            :~  [!pals-installed ;p:"You don't have ~paldev/pals installed." ~]
+                [&(!pals-installed ?!(=(~ shelf))) ;p:"This list might be out of date." ~]
+                :-  =(~ shelf)
+                :~  ;p:"You haven't heard about any wikis on the network yet."
+                    ;p:"%wiki uses %pals to find out about other wikis on Urbit."
+                    ;p:"If you know someone who uses %wiki, add them as a pal!"
+                ==
+            ==
+          ==
           ;ul.wiki-list
             ;*
             %+  turn  (sort ~(tap by shelf) sort-shelf)
             |=  [[host=@p id=@ta] =^spine]
+            =/  host-text=tape
+              ?:  =(%pawn (clan:title host))  "comet"
+              (cite:title host)
+            =/  hover=tape
+              """
+              Host: {<host>}
+              Edited: {(time-ago now.bowl as-of.spine)}
+              {<~(wyt by toc.spine)>} pages
+              """
             ^-  manx
             ;li.wiki-list-item
-              ;a/"/wiki/~/p/{<host>}/{(trip id)}"
-                ;+  ?:(public.read.rules.cover.spine globe:icon:web lock:icon:web)
-                ; {(trip title.cover.spine)}
+              ;a.remote/"/wiki/~/p/{<host>}/{(trip id)}"
+                =title  hover
+                ;div.wiki-name: {(trip title.cover.spine)}
+                ;div.wiki-host: {host-text}
               ==
             ==
           ==
