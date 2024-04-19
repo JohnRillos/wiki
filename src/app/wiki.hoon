@@ -692,13 +692,12 @@
   ++  book
     |=  book-id=@ta
     ^-  (list card)
-    =/  paths=(list path)
-      :-  /spine-0/[book-id]
-      %+  skim  ~(tap in ~(key by sky.bowl))
-      |=  =(pole knot)
-      ?.  ?=([%booklet-0 bid=@ta *] pole)  |
-      =(book-id bid.pole)
-    (zing (turn paths tomb))
+    =;  paths=(list path)  (zing (turn paths tomb))
+    :-  /spine-0/[book-id]
+    %+  skim  ~(tap in ~(key by sky.bowl))
+    |=  =(pole knot)
+    ?.  ?=([%booklet-0 bid=@ta *] pole)  |
+    =(book-id bid.pole)
   ::
   ++  booklet
     |=  [book-id=@ta page-path=path]
