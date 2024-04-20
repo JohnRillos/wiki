@@ -2,10 +2,12 @@
 :: page-rendering utility
 ::
 /-  *wiki
-/+  multipart, regex, rudder, string, *wiki
+/+  multipart, regex, rudder, server, string, *wiki
+/$  html-to-mime     %html  %mime
 /*  htmx-js          %js   /web/htmx/js
 /*  show-on-load-js  %js   /web/wiki/show-on-load/js
 /*  globe-svg        %svg  /web/wiki/icons/globe/svg
+/*  info-svg         %svg  /web/wiki/icons/info/svg
 /*  lock-svg         %svg  /web/wiki/icons/lock/svg
 /*  search-svg       %svg  /web/wiki/icons/search/svg
 ::
@@ -19,6 +21,7 @@
 ::
 ++  wiki-url
   |=  =cord
+  ~+
   ^-  [=wiki-path query=(map @t @t)]
   =/  [=path que=(map @t @t)]  (sane-url cord)
   [(to-wiki-path path) que]
@@ -42,8 +45,15 @@
   ~+
   ^-  [=path query=(map @t @t)]
   =/  [pre=tape suf=tape]  (split-on (trip cord) '?')
-  :-  (stab (crip pre))
+  :-  (stab (crip (sans-fas pre)))
   (parse-query suf)
+::
+++  sans-fas
+  |=  =tape
+  |-
+  ?:  (lte (lent tape) 1)  tape
+  ?.  =('/' (rear tape))   tape
+  $(tape (flop (tail (flop tape))))
 ::
 ++  parse-query
   |=  query=tape
@@ -150,6 +160,12 @@
   ?~  found=(fand "." tape)  tape
   (scag (rear found) tape)
 ::
+++  base-path
+  |=  site=wiki-path
+  ^-  tape
+  ?~  host.site  (spud /wiki/[book-id.site])
+  (spud /wiki/~/p/[(scot %p u.host.site)]/[book-id.site])
+::
 ++  style
   |=  =bowl:gall
   (read-file bowl /web/wiki/style/css)
@@ -190,6 +206,43 @@
   ^-  ^manx
   ?.  if  manx
   manx(a.g [[%disabled ""] a.g.manx])
+::
+++  elem-id
+  |=  =manx
+  ^-  tape
+  =/  attributes=(list (pair mane tape))  a.g.manx
+  (~(got by (my attributes)) %id)
+::
+++  disables-other
+  |=  [other-ids=(list @t) =manx]
+  ^-  ^manx
+  =/  scripts=(list tape)
+    %+  turn  other-ids
+    |=  other-id=@t
+    """
+    var elem = document.getElementById('{(trip other-id)}')
+    elem.setAttribute('disabled', 'true');
+    elem.checked = false;
+    """
+  =/  on-input=tape  (zing (join "\0a" scripts))
+  manx(a.g [[%oninput on-input] a.g.manx])
+::
+++  enables-other
+  |=  [other-ids=(list @t) =manx]
+  ^-  ^manx
+  =/  this-id=tape  (elem-id manx)
+  =/  scripts=(list tape)
+    %+  turn  other-ids
+    |=  other-id=@t
+    """
+    if (document.getElementById('{this-id}').checked) \{
+      document.getElementById('{(trip other-id)}').removeAttribute('disabled');
+    } else \{
+      document.getElementById('{(trip other-id)}').setAttribute('disabled', 'true');
+    }
+    """
+  =/  on-input=tape  (zing (join "\0a" scripts))
+  manx(a.g [[%oninput on-input] a.g.manx])
 ::
 ++  stub
   ^-  manx
@@ -236,18 +289,27 @@
   """
 ::
 ++  global-nav
-  |=  [=bowl:gall =order:rudder wik=[id=@ta =book]]
+  |=  [=bowl:gall =order:rudder data=(each cover book)]
   ^-  manx
-  =/  site=@t  url.request.order
+  =/  =wiki-path  wiki-path:(wiki-url url.request.order)
+  =/  wik-dir=tape  (base-path wiki-path)
+  =/  host=(unit @p)  host.wiki-path
+  =/  book-title=@t
+    ?-  -.data
+      %&  title.p.data
+      %|  title.p.data
+    ==
   ;nav.sidebar
-    ;a#wiki-title/"/wiki/{(trip id.wik)}": {(trip title.book.wik)}
+    ;a#wiki-title/"{wik-dir}": {(trip book-title)}
     ;div#global-menu
-      ;a/"/wiki/{(trip id.wik)}": Home
+      ;a/"{wik-dir}": Home
       ;*
       ?:  =(%pawn (clan:title src.bowl))
         :_  ~
-        ;a/"/~/login?redirect={(trip site)}": Log in with Urbit
-      ?.  =(src.bowl our.bowl)
+        ;a/"/~/login?redirect={(trip url.request.order)}": Log in with Urbit
+      =*  my-req  =(src.bowl our.bowl)
+      =*  my-wik  ?~(host & =(u.host our.bowl))
+      ?.  my-req
         :~  ;p: User: {<src.bowl>}
             ;button
               =type  "button"
@@ -255,7 +317,8 @@
               ; Log out
             ==
         ==
-      :~  ;a/"/wiki/{(trip id.wik)}/~/settings": Settings
+      :~  ?.  my-wik  stub
+          ;a/"{wik-dir}/~/settings": Settings
           ;a/"/wiki": All Wikis
           ;button
             =type  "button"
@@ -320,10 +383,16 @@
   ==
 ::
 ++  footer
-  |=  =book
+  |=  =(each cover book)
   ^-  manx
+  =/  =access
+    ?-  -.each
+      %&  rules.p.each
+      %|  rules.p.each
+    ==
+  =/  public-read=?  public.read.access
   =/  viz=manx
-    ?:  public-read.rules.book
+    ?:  public-read
       ;div.note
         ;+  globe:icon
         ;span: This wiki is public
@@ -347,6 +416,12 @@
       ;+  (need (de-xml:html globe-svg))
     ==
   ::
+  ++  info
+    |=  hover=tape
+    ;div.access-icon(title hover)
+      ;+  (need (de-xml:html info-svg))
+    ==
+  ::
   ++  lock
     ^~
     ;div.access-icon(title "private")
@@ -367,4 +442,14 @@
   ^-  manx
   =/  millis=tape  (a-co:co (unm:chrono:userlib time))
   ;span.time(millis millis): {<time>}
+::
+++  error-to-html :: todo: maybe use manx for this
+  |=  =tang
+  ^-  @t
+  =/  trace=tape
+    %-  zing
+    %+  join  "<br/>"
+    %+  turn  tang
+    |=(=tank ~(ram re tank))      
+  (crip "<html><body><p>{trace}</p></body></html>")
 --

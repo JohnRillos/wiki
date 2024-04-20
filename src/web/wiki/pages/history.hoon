@@ -4,13 +4,13 @@
 /+  rudder, web=wiki-web
 /*  format-time-js  %js  /web/wiki/format-time/js
 ::
-^-  (page:rudder state-1 action)
+^-  (page:rudder rudyard relay)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder state-1]
+|_  [=bowl:gall =order:rudder =rudyard]
 ::
-+*  help  ~(. +> [bowl order books])
++*  help  ~(. +> [bowl order rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -22,13 +22,12 @@
   |=  [arg=(list [k=@t v=@t]) msg=(unit [? @t])]
   ^-  reply:rudder
   ::
-  =/  site=(pole knot)  (stab url.request.order)
-  ?.  ?=([%wiki book-id=@ta *] site)
-    [%code 404 'Invalid path']
-  ?~  buuk=(~(get by books) book-id.site)
-    [%code 404 (crip "Wiki {<book-id.site>} not found")]
-  =/  =book  u.buuk
-  ?~  tale=(~(get by tales.book) page-path:help)
+  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
+  =/  cuver  get-cover:help
+  ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
+  =/  =cover  u.cuver
+  =/  tale=(unit tale)  get-tale:help
+  ?~  tale
     [%code 404 (crip "Article {<page-path:help>} not found in {<title.book>}")]
   ::
   |^  [%page render]
@@ -37,15 +36,15 @@
   ::
   ++  render
     ^-  manx
-    =/  wik-dir=tape  (spud /wiki/[book-id:help])
+    =/  wik-dir=tape  (base-path:web site)
     =/  pag-dir=tape  (spud page-path:help)
     =/  last=page  page:(latest u.tale)
     ;html
       ;+  (doc-head:web bowl "History - {(trip title.last)}")
       ;body#with-sidebar.loading(onload on-load)
-        ;+  (global-nav:web bowl order [book-id.site book])
+        ;+  (global-nav:web bowl order [%& cover])
         ;main
-          ;+  (search-bar:web `book-id.site ~)
+          ;+  (search-bar:web `book-id.site host.site)
           ;article
             ;header
               ;h1: {(trip title.last)}: Revision History
@@ -67,7 +66,7 @@
                   ==
             ==
           ==
-          ;+  (footer:web book)
+          ;+  (footer:web [%& cover])
         ==
       ==
     ==
@@ -76,18 +75,30 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder books=(map @ta book)]
+|_  [=bowl:gall =order:rudder rudyard]
 ::
 ++  book-id  ~+
   ^-  @ta
-  =/  site=(pole knot)  (stab url.request.order)
-  ?>  ?=([%wiki book-id=@ta *] site)
-  book-id.site
+  book-id:wiki-path:(wiki-url:web url.request.order)
 ::
 ++  page-path  ~+
   ^-  path
-  =/  site=(pole knot)  (stab url.request.order)
-  ?>  ?=([%wiki book-id=@ta pat=*] site)
-  (snip (snip `path`pat.site))
+  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
+  (snip (snip loc.site))
+::
+++  get-cover
+  ^-  (unit cover)
+  ?^  booklet  `cover.u.booklet
+  =/  buuk  (~(get by books) book-id)
+  %+  bind  buuk
+  |=(=book [book-id title.book rules.book stamp.book])
+::
+++  get-tale
+  ^-  (unit tale)
+  ?^  booklet  `tale.u.booklet
+  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
+  %+  biff  (~(get by books) book-id)
+  |=  =book
+  (~(get by tales.book) page-path)
 ::
 --

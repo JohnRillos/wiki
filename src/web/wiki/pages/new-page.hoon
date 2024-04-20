@@ -7,28 +7,30 @@
 /*  markdown-js     %js   /web/codemirror/mode/markdown/markdown/js
 /*  editor-js       %js   /web/wiki/editor/js
 ::
-^-  (page:rudder state-1 action)
+^-  (page:rudder rudyard relay)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder state-1]
+|_  [=bowl:gall =order:rudder =rudyard]
 ::
-+*  help  ~(. +> [bowl order books])
++*  help  ~(. +> [bowl order rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  ^-  $@(brief:rudder action)
+  ^-  $@(brief:rudder relay)
   =/  args=(map @t @t)  args:help
   ?~  what=(~(get by args) 'action')  ~
   |^  ?+  u.what  'say what now'
       ::
           %new-page
+        =/  host  host:wiki-path:(wiki-url:web url.request.order)
         =/  =path
           ~|  'Invalid page path'  (part (~(got by args) 'page-path'))
         =/  page-title=@t  (~(got by args) 'page-title')
         =/  content=wain
           (to-wain:format (sane-newline (~(got by args) 'content')))
-        [%new-page book-id:help path page-title content]
+        =/  =action  [%new-page book-id:help path page-title content]
+        [%relay (fall host our.bowl) id.order action]
       ==
   ::
   ++  tie
@@ -42,9 +44,9 @@
   ^-  reply:rudder
   =/  next=@t
     ?.  success  url.request.order
-    =/  bid=@t  book-id:help
     =/  =path  (part (~(got by args:help) 'page-path'))
-    (crip "/wiki/{(trip bid)}{(spud path)}")
+    =/  wik-dir=tape  (base-path:web wiki-path:(wiki-url:web url.request.order))
+    (crip "{wik-dir}{(spud path)}?after={(trip id.order)}")
   ((alert:rudder next build))
 ::
 ++  build
@@ -52,10 +54,10 @@
   ^-  reply:rudder
   ::
   =/  [site=wiki-path query=(map @t @t)]  (wiki-url:web url.request.order)
-  ?~  buuk=(~(get by books) book-id.site)
-    [%code 404 (crip "Wiki {<book-id.site>} not found")]
-  =/  =book  u.buuk
-  ?>  (may-edit bowl book)
+  =/  cuver  get-cover:help
+  ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
+  =/  =cover  u.cuver
+  ?>  (may-edit bowl host.site rules.cover)
   ::
   |^  [%page render]
   ::
@@ -65,20 +67,20 @@
   ::
   ++  render
     ^-  manx
-    =/  wik-dir=tape  (spud /wiki/[book-id.site])
+    =/  wik-dir=tape  (base-path:web site)
     =/  target=(unit path)  (target-path:help query)
     =/  default-path=tape  ?~(target "" (tail (spud u.target)))
     ;html
-      ;+  (doc-head:web bowl "New Page - {(trip title.book)}")
+      ;+  (doc-head:web bowl "New Page - {(trip title.cover)}")
       ;script: {(trip codemirror-js)}
       ;style: {(trip codemirror-css)}
       ;script: {(trip markdown-js)}
       ;body#with-sidebar
-        ;+  (global-nav:web bowl order [book-id.site book])
+        ;+  (global-nav:web bowl order [%& cover])
         ;main
           ;*  ?~  msg  ~
               ~[;/((trip text.u.msg))]
-          ;+  (search-bar:web `book-id.site ~)
+          ;+  (search-bar:web `book-id.site host.site)
           ;h1: New Page
           ::
           ;form(method "post")
@@ -92,7 +94,7 @@
               ;a(href wik-dir): Cancel
             ==
             ;h3: Page Path
-            ;span: /wiki/{(trip book-id.site)}/
+            ;span: {wik-dir}/
             ;input
               =type         "text"
               =name         "page-path"
@@ -125,7 +127,7 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder books=(map @ta book)]
+|_  [=bowl:gall =order:rudder rudyard]
 ::
 ++  args  ~+
   ^-  (map @t @t)
@@ -139,4 +141,14 @@
   ^-  (unit path)
   =/  target=(unit @t)  (~(get by query) 'target')
   (bind target stab)
+::
+++  get-cover
+  ^-  (unit cover)
+  ?^  spine  `cover.u.spine
+  =/  =wiki-path  wiki-path:(wiki-url:web url.request.order)
+  =/  book-id=@t  book-id.wiki-path
+  =/  buuk  (~(get by books) book-id)
+  %+  bind  buuk
+  |=(=book [book-id title.book rules.book stamp.book])
+::
 --

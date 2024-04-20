@@ -4,13 +4,13 @@
 /+  multipart, rudder, web=wiki-web, *wiki
 /*  helper-js  %js  /web/wiki/file-import-helper/js
 ::
-^-  (page:rudder state-1 action)
+^-  (page:rudder rudyard relay)
 ::
-|_  [=bowl:gall =order:rudder state-1]
+|_  [=bowl:gall =order:rudder rudyard]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
-  ^-  $@(brief:rudder action)
+  ^-  $@(brief:rudder relay)
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
   =/  data=(map @t (list part:multipart))  (multipart-map:web order)
   =/  paths=(list part:multipart)  (fall (~(get by data) 'paths') ~)
@@ -21,7 +21,7 @@
   =/  md-files  (get-md-files:web u.files paths)
   ?~  md-files  ~|('No .md files in request' !!)
   =/  del-missing  (~(has by data) 'del-missing')
-  [%imp-file book-id.site md-files title-source del-missing]
+  [%relay our.bowl id.order [%imp-file book-id.site md-files title-source del-missing]]
 ::
 ++  final
   |=  [success=? msg=brief:rudder]
@@ -46,9 +46,9 @@
       ;+  (doc-head:web bowl "Import - {(trip title.book)}")
       ;script: {(disable-on-submit:web "upload" `"Uploading...")}
       ;body#with-sidebar(onload (trip helper-js))
-        ;+  (global-nav:web bowl order [book-id.site book])
+        ;+  (global-nav:web bowl order [%| book])
         ;main
-          ;+  (search-bar:web `book-id.site ~)
+          ;+  (search-bar:web `book-id.site host.site)
           ;h1: Import Pages
           ;form#file-form.column-box(method "post", enctype "multipart/form-data")
             ;div.file-upload.box-item
@@ -83,7 +83,7 @@
             ==
             ;button#upload.submit.box-item(type "submit"): Upload
           ==
-          ;+  (footer:web book)
+          ;+  (footer:web [%| book])
         ==
       ==
     ==

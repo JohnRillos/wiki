@@ -38,14 +38,15 @@ On the Settings page, wiki admins can control who can view or edit the wiki.
 Private wikis can only be seen or edited by the host. They can be used for
 personal note-keeping, or writing drafts before making the wiki public later.
 
-Public wikis work like normal websites. Anyone with the URL can view it, as 
-long as your Urbit is online and accessible from the internet.
-
-Currently, there is no way to view a public wiki without the host's URL, unlike
-how other content is commonly distributed in Urbit. This will probably change, 
-since we have plans to let users view remote wikis through their own Urbits, so 
-the host wouldn't need to expose their Urbit to the internet and viewers 
-wouldn't need another URL.
+Public wikis can be viewed in a variety of ways, depending on these settings:
+- "This wiki can be viewed as a website on the clearweb"
+  - Anyone with the URL can view it, as long as your Urbit is online and accessible from the internet.
+- "This wiki can be viewed on Urbit"
+  - Any Urbit user can browse your wiki using their own ship's URL at `/wiki/~/p/~sampel-palnet/your-wiki-id/...`
+- "Share this wiki on the global index so people can discover it"
+  - Info about your wiki will be spread to your pals, their pals, and so on.
+  - Your wiki will appear in a list of public wikis when someone opens the %wiki app.
+  - This option is only available if you _also_ enable "This wiki can be viewed on Urbit"
 
 
 ### Collaboration

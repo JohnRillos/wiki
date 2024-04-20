@@ -3,9 +3,9 @@
 ::
 /-  *wiki
 /+  rudder
-/~  web  (page:rudder state-1 action)  /web/wiki/pages
+/~  web  (page:rudder rudyard relay)  /web/wiki/pages
 ::
-|_  state-1
+|_  rudyard
 ::
 +$  sig  %~.~
 ::
@@ -17,18 +17,18 @@
   =/  pat=(pole knot)  (need (decap:rudder /wiki site))
   |^  ?:  tail-fas              `[%away (snip site)]
       ?+  pat                   page-resource
-        ~                       `[%page & %index]
-        [sig %assets *]         `[%page | %asset]
-        [sig %new ~]            `[%page & %new-book]
-        [@ta ~]                 `[%page r-auth %book]
-        [@ta sig %new ~]        `[%page w-auth %new-page]
-        [@ta sig %import ~]     `[%page w-auth %import]
-        [@ta sig %settings ~]   `[%page & %book-settings]
-        [@ta sig %not-found ~]  `[%page r-auth %page-not-found]
-        [@ta sig %search ~]     `[%page r-auth %hx-search]
+        ~                             `[%page & %index]
+        [sig %assets *]               `[%page | %asset]
+        [sig %new ~]                  `[%page & %new-book]
+        (far [@ta ~])                 `[%page r-auth %book]
+        (far [@ta sig %new ~])        `[%page w-auth %new-page]
+        [@ta sig %import ~]           `[%page w-auth %import]
+        (far [@ta sig %settings ~])   `[%page & %book-settings]
+        [@ta sig %not-found ~]        `[%page r-auth %page-not-found]
+        (far [@ta sig %search ~])     `[%page r-auth %hx-search]
       ==
   ::
-  ++  far :: to-do: wrap remote-compatible paths ^
+  ++  far
     |$  pattern
     ?([sig %p @ta pattern] pattern)
   ::
@@ -36,13 +36,13 @@
     ^-  ?
     =/  book-id=@ta  -.pat
     ?~  book=(~(get by books) book-id)  &
-    !public-read.rules.u.book
+    !urth.read.rules.u.book
   ::
-  ++  w-auth  :: maybe use bowl + may-edit here?
+  ++  w-auth
     ^-  ?
     =/  book-id=@ta  -.pat
     ?~  book=(~(get by books) book-id)  &
-    |(!public-read.rules.u.book !public.edit.rules.u.book)
+    |(!public.read.rules.u.book !public.edit.rules.u.book)
   ::
   ++  tail-fas  ?=([%$ *] (flop pat)) :: detect trailing /
   ::
@@ -58,6 +58,27 @@
       [sig %history ~]   [r-auth %history]
       [sig %download ~]  [r-auth %download]
     ==
+  --
+::
+++  eyre-request
+  |=  [=bowl:gall eyre-id=@ta]
+  ^-  (unit inbound-request:eyre)
+  |^  %+  bind  (~(get by connections) eyre-id)
+      |=(con=outstanding-connection:eyre inbound-request:con)
+  ::
+  ++  connections
+    ^-  (map @ta outstanding-connection:eyre)
+    =/  scry-path=path  /(scot %p our.bowl)/connections/(scot %da now.bowl)
+    =/  raw  .^((map duct outstanding-connection:eyre) %e scry-path)
+    %-  my
+    %+  murn  ~(tap by raw)
+    |=  [=duct con=outstanding-connection:eyre]
+    ^-  (unit (pair @ta outstanding-connection:eyre))
+    `[(duct-to-eyre-id duct) con]
+  ::
+  ++  duct-to-eyre-id
+    |=  =duct
+    (scot %ta (cat 3 'eyre_' (scot %uv (sham duct))))
   --
 ::
 --

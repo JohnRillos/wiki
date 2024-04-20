@@ -1,8 +1,10 @@
 /-  *wiki
-/+  dbug, default-agent, regex, rudder, string, verb
+/+  dbug, default-agent, gossip, regex, rudder, server, string, verb
 /+  *wiki, web=wiki-web, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
+/$  html-to-mime  %html  %mime
+/$  noun-to-lore  %noun  %wiki-lore
 ::
 ::  types core
 ::
@@ -14,12 +16,16 @@
 ::
 ::  state
 ::
-=|  state-1
+=|  state-2
 =*  state  -
 ::
 ::  debugging tools
 ::
 %+  verb  |
+%-  %+  agent:gossip  [3 %anybody %anybody &]
+    %+  ~(put by *(map mark $-(* vase)))
+      %wiki-lore
+    |=(=noun !>((noun-to-lore noun)))
 %-  agent:dbug
 ::
 =<  :: compose helper core into agent core
@@ -30,14 +36,13 @@
 |_  =bowl:gall
 +*  this       .
     default  ~(. (default-agent this %|) bowl)
-    http     ~(. wiki-http state)
+    serv     ~(. wiki-http [state ~ ~])
     main     ~(. +> bowl)
 ::
 ++  on-init
   ^-  (quip card _this)
   =^  cards  state
-    =|  state=state-1
-    =.  books.state  ~
+    =|  state=state-2
     :_  state
     [%pass /eyre/connect %arvo %e %connect [~ /[dap.bowl]] dap.bowl]~
   [cards this]
@@ -53,11 +58,12 @@
   ::
   ++  build-state
     |=  old=versioned-state
-    ^-  (quip card state-1)
+    ^-  (quip card state-2)
     =|  cards=(list card)
     |-
     |^  ?-  -.old
-          %1  [cards old]
+          %2  [cards old]
+          %1  $(old (state-1-to-2 old))
           %0  $(old (state-0-to-1 old))
         ==
     ::
@@ -68,7 +74,7 @@
       ::
       ++  grad-book
         |=  =book-0
-        ^-  book
+        ^-  book-1
         %=  book-0
           tales  (~(run by tales.book-0) grad-tale)
           rules  (grad-rules rules.book-0)
@@ -88,8 +94,30 @@
       ::
       ++  grad-rules
         |=  =access-0
-        ^-  access
+        ^-  access-1
         [public-read.access-0 [%.n %.n]]
+      --
+    ::
+    ++  state-1-to-2
+      |=  =state-1
+      ^-  state-2
+      |^  [%2 ~ ~ grad-books]
+      ::
+      ++  grad-books
+        ^-  (map @ta book)
+        %-  ~(run by books.state-1)
+        |=  =book-1
+        :^    title.book-1
+            tales.book-1
+          (grad-rules rules.book-1)
+        %-  (curr roll max)
+        %+  turn  ~(val by tales.book-1)
+        |=(=tale time:(latest tale))
+      ::
+      ++  grad-rules
+        |=  =access-1
+        ^-  access
+        access-1(- ?:(public-read.access-1 [& & | |] [| | | |]))
       --
     ::
     --
@@ -101,8 +129,10 @@
   |^  ?+  mark  (on-poke:default mark vase)
       ::
           %wiki-action
-        =^  cards  state  (handle-action !<(action vase))
-        [cards this]
+        (handle-action !<(action vase))
+      ::
+          %wiki-relay
+        (handle-relay !<(relay vase))
       ::
           %handle-http-request
         (handle-http !<(order:rudder vase))
@@ -111,7 +141,10 @@
   ::
   ++  handle-action
     |=  act=action
-    ^-  (quip card _state)
+    ^-  (quip card _this)
+    =;  quik
+      =^  cards  state  quik
+      [cards this]
     ?-  -.act
       %new-book       (new-book:main act)
       %mod-book-name  (mod-book-name:main act)
@@ -124,23 +157,126 @@
       %imp-file       (imp-file:main act)
     ==
   ::
+  ++  handle-relay
+    |=  [%relay to=@p eyre-id=@ta =action]
+    ^-  (quip card _this)
+    ?:  =(to our.bowl)  (handle-action action)
+    ~&  "form submitted for remote wiki, waiting for result of poke to {<to>}"
+    =^  cards  state
+      :-  ~[(poke-them to action eyre-id)]
+      =/  =wait  [now.bowl ~ | ~]
+      =.  later  (~(put by later) eyre-id wait)
+      state
+    [cards this]
+  ::
   ++  handle-http
     |=  =order:rudder
     ^-  (quip card _this)
-    |^  =/  out=(quip card _state)
-          (serve [bowl order state])
-        [-.out this(state +.out)]
+    |^  ?:  is-later   handle-later
+        ?:  is-remote  handle-http-remote
+        (paddle [bowl order [state ~ ~]])
     ::
-    ++  serve
-      %-  (steer:rudder _state action)
-      :^    web:http            :: pages
-          http-route:http       :: route
-        (fours:rudder state)    :: adlib
-      |=  act=action            :: solve
-      ^-  $@(brief:rudder [brief:rudder (list card) _state])
+    :: if ?after= and pending request in `later`, use `handle-later` to await poke-ack
+    :: if ?after= but not pending, process normally (URL is probably being reused)
+    ::
+    ++  is-later
+      =/  query=(map @t @t)  query:(sane-url:web url.request.order)
+      ?~  after-eyre-id=(~(get by query) 'after')  |
+      (~(has by later) u.after-eyre-id)
+    ::
+    ++  is-remote
+      =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
+      ?.  ?=([%wiki %~.~ %p who=@ta loc=*] site)  |
+      ?~  who=(slaw %p who.site)  |
+      ?:  =(u.who our.bowl)  |
+      ?:  (~(has by query) 'fresh')  &
+      ?+  loc.site  &
+        :: loading main page for shelved book does not need remote scry
+        [book-id=@ta ~]  ?!((~(has by shelf) [u.who book-id.loc.site]))
+        :: searching in shelved book does not need remote scry
+        [book-id=@ta %~.~ %search ~]  ?!((~(has by shelf) [u.who book-id.loc.site]))
+      ==
+    ::
+    ++  paddle
+      |=  input=[bowl:gall order:rudder rudyard]
+      ^-  (quip card _this)
+      =/  out=(quip card rudyard)  (serve input)
+      out(+ this(state -.+.out))
+    ::
+    ++  serve :: consolidate in main core
+      %-  (steer:rudder rudyard relay)
+      :^    web:serv               :: pages
+          http-route:serv          :: route
+        (fours:rudder [state ~ ~]) :: adlib
+      |=  =relay                   :: solve
+      ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
       =^  cards  this
-        (on-poke %wiki-action !>(act))
-      ['Successfully processed' cards state]
+        (on-poke %wiki-relay !>(relay))
+      ['Successfully processed' cards [state ~ ~]]
+    ::
+    ++  handle-later
+      ^-  (quip card _this)
+      =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
+      =/  last-eyre-id=@ta  (~(got by query) 'after')
+      ~&  "requesting result of poke from request {<last-eyre-id>}"
+      =/  await=(unit wait)  (~(get by later) last-eyre-id)
+      ?~  await
+        ~&  >>>  "something went wrong, pending request not in `later`"
+        `this
+      ?.  done.u.await
+        :: poke-ack not received yet, wait and respond in on-agent > handle-poke-ack
+        =.  later  (~(put by later) last-eyre-id u.await(pending-eyre-id `id.order))
+        [~ this]
+      :: poke-ack already received, respond immediately
+      =.  later  (~(del by later) last-eyre-id)
+      [(relay-response:main order error.u.await this) this]
+    ::
+    ++  handle-http-remote
+      ^-  (quip card _this)
+      =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
+      ?>  ?=([%wiki %~.~ %p who=@ta book-id=@ta page-path=*] site)
+      =/  =ship  (slav %p who.site)
+      =/  book-id=@ta     book-id.site
+      =/  page-path=path
+        ?:  =(~ page-path.site)      ~
+        ?:  =('~' -.page-path.site)  ~
+        (path-before-sig page-path.site)
+      =/  mark=path
+        ?~  page-path  /spine-0
+        /booklet-0
+      =/  ver=@t  (get-case ship book-id page-path query)
+      =/  base=path  /g/x/[ver]/wiki/$/1
+      =/  loc=path  :(weld base mark /[book-id] page-path)
+      =/  sec=(unit [idx=@ key=@])  ~
+      =/  =task:ames  [%keen sec ship loc]
+      =/  =note-arvo  [%a task]
+      =/  req-id=@ta  id.order
+      :_  this
+      ~&  "scrying {<ship>} {<loc>}"
+      =/  =wire  /remote/[req-id]
+      [%pass wire %arvo note-arvo]~
+    ::
+    ++  path-before-sig
+      |=  full=path
+      ^-  path
+      =/  i=(unit @)  (find ~[%~.~] full)
+      ?~  i  full
+      (scag u.i full)
+    ::
+    ++  get-case
+      |=  [=ship book-id=@ta =path query=(map @t @t)]
+      ^-  @t
+      =/  time=(unit @da)
+        ?:  (~(has by query) 'fresh')  ~
+        :: Ideally this would get the last time a page was edited,
+        :: but since the booklet-0 contains data about the book itself,
+        :: that data may have changed.
+        :: Unfortunately this makes page scries load from cache less often
+        :: todo: Maybe split into 2-step scry to get cover @ stamp then page data @edited-at
+        %+  biff  (~(get by shelf) [ship book-id])
+        |=  =spine
+        `stamp.cover.spine
+      (crip <(fall time now.bowl)>)
     --
   --
 ::
@@ -148,21 +284,122 @@
   |=  =path
   ^-  (quip card _this)
   ?+  path  (on-watch:default path)
-    [%http-response *]  [~ this]
+    [%http-response *]        [~ this]
+    [%~.~ %gossip %source ~]  [rant:goss:main this]
   ==
 ::
 ++  on-leave  on-leave:default
 ++  on-peek   on-peek:default
-++  on-agent  on-agent:default
+::
+++  on-agent
+  |=  [=wire =sign:agent:gall]
+  ^-  (quip card _this)
+  |^  ?+  -.sign  (on-agent:default wire sign)
+        %fact       =^  cards  state
+                      (handle-fact cage.sign)
+                    [cards this]
+      ::
+        %poke-ack   =^  cards  state
+                      (handle-poke-ack p.sign)
+                    [cards this]
+      ==
+  ::
+  ++  handle-fact
+    |=  =cage
+    ^-  (quip card _state)
+    ?+  wire  ~|  "Unknown wire {<wire>}"  !!
+      [%~.~ %gossip %gossip ~]  (read:goss:main !<(lore q.cage))
+    ==
+  ::
+  ::  A poke to another ship may contain the eyre-id of a form submission in its path.
+  ::  If any subsequent request is waiting for the poke's result, respond here.
+  ::
+  ++  handle-poke-ack
+    |=  error=(unit tang)
+    ^-  (quip card _state)
+    =/  post-eyre-id=@ta  -.wire
+    =/  await=(unit wait)  (~(get by later) post-eyre-id)
+    ?~  await  `state
+    ?~  pending-eyre-id.u.await
+      :: poke-ack received early, result not yet requested, save for later
+      :: respond in on-poke > handle-http > handle-later
+      =.  later  (~(put by later) post-eyre-id u.await(done &, error error))
+      `state
+    =/  inbound=(unit inbound-request:eyre)  (eyre-request:serv bowl u.pending-eyre-id.u.await)
+    ?~  inbound
+      ~&  "poke-ack received but no pending request found with ID: {<pending-eyre-id.u.await>}"
+      `state
+    =.  later  (~(del by later) post-eyre-id)
+    =/  =order:rudder  [u.pending-eyre-id.u.await u.inbound]
+    [(relay-response:main order error this) state]
+  --
 ::
 ++  on-arvo
-  |=  [=wire =sign-arvo]
+  |=  [wire=(pole knot) =sign-arvo]
   ^-  (quip card _this)
   ?+  sign-arvo  (on-arvo:default wire sign-arvo)
+  ::
       [%eyre %bound *]
     ~?  !accepted.sign-arvo
       [dap.bowl 'eyre bind rejected!' binding.sign-arvo]
     [~ this]
+  ::
+      [%ames %tune *]
+    ?.  ?=([%remote eyre-id=@ta ~] wire)  [~ this]
+    |^  (handle-errors |.(on-remote-scry-response))
+    ::
+    ++  handle-errors
+      |*  =(trap (quip card _this))
+      =/  res=(each (quip card _this) (list tank))  (mule trap)
+      ?-  -.res
+        %&  p.res
+        %|  ((slog p.res) [error-unknown this])
+      ==
+    ::
+    ++  on-remote-scry-response
+      ?~  roar.sign-arvo  [error-404 this]
+      =/  [=path data=(unit (cask))]  dat.u.roar.sign-arvo
+      ?~  data            [error-404 this]
+      =/  rud=rudyard
+        ?+  p.u.data  ~|("Unknown mark {<p.u.data>}" !!)
+        ::
+            %wiki-booklet-0
+          =/  =booklet  ;;(booklet q.u.data)
+          [state ~ `booklet]
+        ::
+            %wiki-spine-0
+          =/  =spine    ;;(spine q.u.data)
+          [state `spine ~]
+        ==
+      =/  req=(unit inbound-request:eyre)  (eyre-request:serv bowl eyre-id.wire)
+      ?~  req  ~|('Remote scry data received but eyre request not found' !!)
+      =/  =order:rudder  [eyre-id.wire u.req]
+      =/  out=(quip card rudyard)  (serve [bowl order rud])
+      [-.out this(state -.+.out)]
+    ::
+    ++  error-404
+      %+  give-simple-payload:app:server  eyre-id.wire
+      ^-  simple-payload:http
+      =/  html=@t  '<html><body>Remote page not found!</body></html>'
+      [[404 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
+    ::
+    ++  error-unknown
+      %+  give-simple-payload:app:server  eyre-id.wire
+      ^-  simple-payload:http
+      =/  html=@t  '<html><body>Error handling remote data!</body></html>'
+      [[500 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
+    ::
+    ++  serve :: consolidate in main core
+      %-  (steer:rudder rudyard relay)
+      :^    web:serv               :: pages
+          http-route:serv          :: route
+        (fours:rudder [state ~ ~]) :: adlib
+      |=  =relay                   :: solve
+      ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
+      =^  cards  this
+        (on-poke %wiki-relay !>(relay))
+      ['Successfully processed' cards [state ~ ~]]
+    --
   ==
 ::
 ++  on-fail   on-fail:default
@@ -180,17 +417,28 @@
     ~|("Invalid wiki ID" !!)
   ?:  (~(has by books) id)  ~|("Wiki '{(trip id)}' already exists!" !!)
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
-  ?:  &(!public-read.rules public.edit.rules)
+  ?:  &(!public.read.rules public.edit.rules)
     ~|("Cannot enable public edits on private wiki." !!)
-  =.  books  (~(put by books) [id [title ~ rules]])
-  [~ state]
+  =/  =book  [title ~ rules now.bowl]
+  =.  books  (~(put by books) id book)
+  :_  state
+  %-  (walt card)
+  :~  [scry.read.rules |.((full:grow id book))]
+      [goss.read.rules |.([(tell:goss id book) ~])]
+  ==
 ::
 ++  del-book
   |=  [%del-book id=@ta]
   ?.  =(src.bowl our.bowl)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %del-book"  !!
+  =/  =book  (~(got by books) id)
   =.  books  (~(del by books) id)
-  [~ state]
+  :_  state
+  =/  r  read.rules.book
+  %-  (walt card)
+  :~  [scry.r |.((book:tomb id))]
+      [goss.r |.([(hush:goss id) ~])]
+  ==
 ::
 ++  mod-book-name
   |=  [%mod-book-name id=@ta title=@t]
@@ -199,31 +447,59 @@
   =/  =book  (~(got by books) id)
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   =.  title.book  title
+  =.  stamp.book  now.bowl
   =.  books  (~(put by books) id book)
-  [~ state]
+  :_  state
+  =/  r  read.rules.book
+  %-  (walt card)
+  :~  [scry.r |.([(spine-0:grow id book) ~])]
+      [goss.r |.([(tell:goss id book) ~])]
+  ==
 ::
 ++  mod-rule-read
-  |=  [%mod-rule-read id=@ta public-read=?]
+  |=  [%mod-rule-read id=@ta read=rule-read]
   ?.  =(src.bowl our.bowl)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-rule-read"  !!
+  ?:  &(!public.read urth.read)  ~|('Private wikis do not support eauth (clearweb)' !!)
+  ?:  &(!public.read scry.read)  ~|('Private wikis do not support remote scry' !!)
+  ?:  &(!public.read goss.read)  ~|('Private wikis do not support gossip (global index)' !!)
+  ?:  &(!scry.read goss.read)    ~|('Cannot gossip index if wiki not accessible via remote scry' !!)
+  ?:  &(public.read ?!(|(urth.read scry.read)))  ~|('Public wikis must be visible via web and/or Urbit' !!)
   =/  =book  (~(got by books) id)
-  =.  public-read.rules.book  public-read
-  =.  edit.rules.book         ?.  public-read  [%.n %.n] :: disable public edit
-                              edit.rules.book
+  =/  en-scry=?  &(!scry.read.rules.book scry.read)
+  =/  un-scry=?  &(scry.read.rules.book !scry.read)
+  =/  en-goss=?  &(!goss.read.rules.book goss.read)
+  =/  un-goss=?  &(goss.read.rules.book !goss.read)
+  =.  read.rules.book   read
+  =.  edit.rules.book   ?.  public.read  [%.n %.n] :: disable public edit
+                        edit.rules.book
+  =.  stamp.book  now.bowl
   =.  books  (~(put by books) id book)
-  [~ state]
+  :_  state
+  %-  (walt card)
+  :~  [en-scry |.((full:grow id book))]
+      [un-scry |.((book:tomb id))]
+      [en-goss |.([(tell:goss id book) ~])]
+      [un-goss |.([(hush:goss id) ~])]
+  ==
 ::
 ++  mod-rule-edit
   |=  [%mod-rule-edit id=@ta =rule-edit]
   ?.  =(src.bowl our.bowl)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-rule-edit"  !!
   =/  =book  (~(got by books) id)
-  ?:  &(!public-read.rules.book public.rule-edit)
+  ?:  &(!public.read.rules.book public.rule-edit)
     ~|  "Cannot enable public edits on private wiki. Enable public-read first"
     !!
   =.  edit.rules.book  rule-edit
+  =.  stamp.book  now.bowl
   =.  books  (~(put by books) id book)
-  [~ state]
+  :_  state
+  =/  r  read.rules.book
+  %-  (walt card)
+  :~  [scry.r |.((full:grow id book))]
+      [goss.r |.([(tell:goss id book) ~])]
+  ==
 ::
 ++  new-page
   |=  [%new-page book-id=@ta =path title=@t content=wain]
@@ -231,16 +507,24 @@
   ?^  (find "~" path)  ~|('Path cannot contain "/~/"' !!)
   ?.  (levy path (sane %ta))  ~|('Invalid path!' !!)
   =/  =book  (~(got by books) book-id)
-  ?.  (may-edit bowl book)
-    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %new-page"  !!
+  ?.  (may-edit bowl ~ rules.book)
+    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %new-page"
+    ~|("Unauthorized" !!)
   ?:  (~(has by tales.book) path)  ~|("Page {<path>} already exists!" !!)
   ?:  =('' title)  ~|("Title cannot be blank!" !!)
   =/  =page  [title content src.bowl]
   =/  =tale  (gas:ton *tale [now.bowl page]~)
   =.  tales.book  (~(put by tales.book) path tale)
+  =.  stamp.book  now.bowl
   =.  books  (~(put by books) book-id book)
   ~&  >  "Wiki page created: {(trip book-id)}{<path>}"
-  [~ state]
+  :_  state
+  =/  r  read.rules.book
+  %-  (walt card)
+  :~  [scry.r |.([(booklet-0:grow book-id book path tale) ~])]
+      [scry.r |.([(spine-0:grow book-id book) ~])]
+      [goss.r |.([(tell:goss book-id book) ~])]
+  ==
 ::
 ++  del-page
   |=  [%del-page book-id=@ta =path]
@@ -248,14 +532,21 @@
       ~&  >>>  "Unauthorized poke from {<src.bowl>}: %del-page"  !!
   =/  =book       (~(got by books) book-id)
   =.  tales.book  (~(del by tales.book) path)
+  =.  stamp.book  now.bowl
   =.  books       (~(put by books) book-id book)
   ~&  >>>  "Wiki page deleted: {(trip book-id)}{<path>}"
-  [~ state]
+  :_  state
+  =/  r  read.rules.book
+  %-  (walt card)
+  :~  [scry.r |.((booklet:tomb book-id path))] 
+      [scry.r |.([(spine-0:grow book-id book) ~])]
+      [goss.r |.([(tell:goss book-id book) ~])]
+  ==
 ::
 ++  mod-page
   |=  [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
   =/  =book  (~(got by books) book-id)
-  ?.  (may-edit bowl book)
+  ?.  (may-edit bowl ~ rules.book)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-page"  !!
   =/  =tale  (~(got by tales.book) path)
   =/  =page  page:(latest tale)
@@ -269,14 +560,21 @@
   =.  edit-by.page  src.bowl
   =.  tale          (put:ton tale now.bowl page)
   =.  tales.book  (~(put by tales.book) path tale)
+  =.  stamp.book  now.bowl
   =.  books       (~(put by books) book-id book)
   ~&  >>  "Wiki page edited: {(trip book-id)}{<path>}"
-  [~ state]
+  :_  state
+  =/  r  read.rules.book
+  %-  (walt card)
+  :~  [scry.r |.([(booklet-0:grow book-id book path tale) ~])]
+      [scry.r |.([(spine-0:grow book-id book) ~])]
+      [goss.r |.([(tell:goss book-id book) ~])]
+  ==
 ::
 ++  imp-file
   |=  [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
   =/  =book  (~(got by books) book-id)
-  ?.  (may-edit bowl book)
+  ?.  (may-edit bowl ~ rules.book)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %imp-file"  !!
   ~&  "importing {<~(wyt by files)>} files..."
   :_  state
@@ -366,5 +664,138 @@
   |=  =action
   ^-  card
   [%pass [-.action ~] %agent [our.bowl %wiki] %poke %wiki-action !>(action)]
+::
+++  poke-them
+  |=  [=ship =action eyre-id=@ta]
+  ^-  card
+  [%pass [eyre-id -.action ~] %agent [ship %wiki] %poke %wiki-action !>(action)]
+::
+++  grow
+  |%
+  ++  booklet-0
+    |=  [book-id=@ta =book tale-path=path =tale]
+    ^-  card
+    =/  =wire  /wiki/booklet
+    =/  loc=path  (weld /booklet-0/[book-id] tale-path)
+    =/  =booklet  [[book-id title.book rules.book stamp.book] tale-path tale]
+    [%pass wire %grow loc %wiki-booklet-0 booklet]
+  ::
+  ++  spine-0
+    |=  [id=@ta =book]
+    ^-  card
+    [%pass /wiki/spine %grow /spine-0/[id] %wiki-spine-0 (book-to-spine id book)]
+  ::
+  ++  full
+    |=  [id=@ta =book]
+    ^-  (list card)
+    :-  (spine-0 id book)
+    %+  turn  ~(tap by tales.book)
+    |=  [=path =tale]
+    (booklet-0 id book path tale)
+  --
+::
+++  tomb
+  |%
+  ++  tomb
+    |=  targ=path
+    ^-  (list card)
+    =/  base=path  ~+  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$/1
+    =/  =fans:gall  (~(got by sky.bowl) targ)
+    %+  murn  ~(tap by fans)
+    |=  [v=@ud =time data=(each page:clay @uvI)]
+    ?.  -.data  ~
+    `[%pass (weld /wiki/tomb targ) %tomb [%ud v] targ]
+  ::
+  ++  book
+    |=  book-id=@ta
+    ^-  (list card)
+    =;  paths=(list path)  (zing (turn paths tomb))
+    :-  /spine-0/[book-id]
+    %+  skim  ~(tap in ~(key by sky.bowl))
+    |=  =(pole knot)
+    ?.  ?=([%booklet-0 bid=@ta *] pole)  |
+    =(book-id bid.pole)
+  ::
+  ++  booklet
+    |=  [book-id=@ta page-path=path]
+    ^-  (list card)
+    =/  targ=path  (weld /booklet-0/[book-id] page-path)
+    ?.  (~(has by sky.bowl) targ)  ~
+    (tomb targ)
+  --
+::
+++  goss
+  |%
+  ::
+  ++  tell
+    |=  [id=@ta =book]
+    ^-  card
+    ~&  '%wiki starting a rumor...'
+    =/  =lore  [%lurn (malt [[our.bowl id] (book-to-spine id book)]~)]
+    [(invent:gossip %wiki-lore !>(lore))]
+  ::
+  ++  hush
+    |=  [id=@ta]
+    ^-  card
+    ~&  '%wiki denying a rumor...'
+    =/  =lore  [%burn our.bowl id now.bowl]
+    [(invent:gossip %wiki-lore !>(lore))]
+  ::
+  ++  rant
+    ^-  (list card)
+    ~&  '%wiki spreading rumors...'
+    =;  library
+      %+  turn  library
+      |=  item=[[@p @ta] spine]
+      =/  =lore  [%lurn (malt [item]~)]
+      (invent:gossip %wiki-lore !>(lore))
+    %+  weld  ~(tap by shelf)
+    %+  murn  ~(tap by books)
+    |=  [id=@ta =book]
+    ?.  goss.read.rules.book  ~
+    `[[our.bowl id] (book-to-spine id book)]
+  ::
+  ++  read
+    |=  =lore
+    ^-  (quip card _state)
+    ~&  '%wiki heard a rumor...'
+    ?-  -.lore
+      %lurn
+        =/  other=_shelf
+          %-  my
+          %+  skip  ~(tap by shelf.lore)
+          |=  [[host=@p @ta] *]
+          =(host our.bowl)
+        =.  shelf
+          %-  (~(uno by shelf) other)
+          |=  [k=[@p @ta] v=spine w=spine]
+          ?:  (gte stamp.cover.v stamp.cover.w)  v
+          ~&  "... updating index for {<k>}"
+          w
+        [~ state]
+      ::
+      %burn
+        :-  ~
+        =/  old=(unit spine)  (~(get by shelf) [host.lore id.lore])
+        ?~  old                              state
+        ?:  (gth stamp.cover.u.old at.lore)  state
+        ~&  "... un-indexing {<[host.lore id.lore]>}"
+        =.  shelf  (~(del by shelf) [host.lore id.lore])
+        state
+    ==
+  --
+::
+++  relay-response
+  |=  [=order:rudder error=(unit tang) =agent:gall]
+  ^-  (list card)
+  =/  pending-eyre-id=@ta  id.order
+  ?~  error
+    =/  base-path=tape  (spud path:(sane-url:web url.request.order))
+    =.  url.request.order  (crip (weld base-path "?fresh=true"))
+    -:(on-poke:agent %handle-http-request !>(order))
+  %+  give-simple-payload:app:server  pending-eyre-id
+  ^-  simple-payload:http
+  =/  html=@t  (error-to-html:web u.error)
+  [[400 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
 ::
 --

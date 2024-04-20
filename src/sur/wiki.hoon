@@ -3,6 +3,7 @@
 +$  versioned-state
   $%  state-0
       state-1
+      state-2
   ==
 ::
 +$  state-0
@@ -12,15 +13,25 @@
 ::
 +$  state-1
   $:  %1
+    books=(map @ta book-1)
+  ==
+::
++$  state-2
+  $:  %2
+    =later
+    =shelf
     books=(map @ta book)
   ==
 ::
-::
+:: todo: track favorite wikis manually, using plain subscription instead of gossip
+::   tbd: mirror full contents or only index
+::   tbd: include in `shelf` or separate
 ::
 +$  book
   $:  title=@t
       tales=(map path tale)
       rules=access
+      stamp=@da
   ==
 ::
 +$  tale  ((mop @da page) gth)
@@ -39,20 +50,21 @@
   ==
 ::
 +$  access
-  $:  public-read=?
+  $:  read=rule-read
       edit=rule-edit
-      :: mods=(set @p)
-      :: bans=(set @p)
   ==
 ::
-++  rule-edit :: maybe
-  ?([public=%.n comet=%.n] [public=%.y comet=?])
++$  rule-read  [public=? urth=? scry=? goss=?]
+::
++$  rule-edit  ?([public=%.n comet=%.n] [public=%.y comet=?])
+::
++$  relay  [%relay to=@p eyre-id=@ta =action]
 ::
 +$  action
   $%  [%new-book id=@ta title=@t rules=access]
       [%del-book id=@ta]
       [%mod-book-name id=@ta title=@t]
-      [%mod-rule-read id=@ta public-read=?]
+      [%mod-rule-read id=@ta =rule-read]
       [%mod-rule-edit id=@ta =rule-edit]
       [%new-page book-id=@ta =path title=@t content=wain]
       [%del-page book-id=@ta =path]
@@ -68,7 +80,43 @@
 ::
 +$  title-source  ?(%header %filename %front-matter)
 ::
++$  cover
+  $:  book-id=@ta
+      title=@t
+      rules=access
+      stamp=@da
+  ==
 ::
++$  shelf    (map [host=@p id=@ta] spine)
+::
++$  spine    [=cover toc=(map path ref)]
+::
++$  ref      [ver=@ edited=@da title=@t]
+::
++$  booklet  [=cover =path =tale]
+::
++$  rudyard  [state-2 spine=(unit spine) booklet=(unit booklet)]
+::
+::
+::
++$  lore
+  $%  [%lurn =shelf]
+      [%burn host=@p id=@ta at=@da]
+  ==
+::
+::
+::  eyre requests awaiting poke-ack before responding
+::
++$  later  (map @ta wait) :: @ta = previous eyre-id (form submit)
+::
++$  wait
+  $:  =time
+      pending-eyre-id=(unit @ta)
+      done=?
+      error=(unit tang)
+  ==
+::
+::  state-0
 ::
 +$  book-0
   $:  title=@t
@@ -82,8 +130,16 @@
 ::
 +$  access-0  [public-read=?]
 ::
+::  state-1
 ::
++$  book-1
+  $:  title=@t
+      tales=(map path tale)
+      rules=access-1
+  ==
 ::
 +$  page-1  [title=@t content=wain edit-by=@p]
+::
++$  access-1  [public-read=? edit=rule-edit]
 ::
 --

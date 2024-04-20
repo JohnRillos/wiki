@@ -37,8 +37,12 @@ main {
 }
 
 ul.wiki-list {
+  list-style-type: none;
+  padding: 0;
   display: flex;
   flex-flow: row;
+  flex-wrap: wrap;
+  justify-content: center;
   & li {
     border: 2px solid gray;
     border-radius: 16px;
@@ -156,6 +160,7 @@ h1, h2, h3, h4, h5, h6 {
 div.access-icon {
   width: 1em;
   display: inline-block;
+  font-size: medium;
 }
 
 div.search-icon {
@@ -163,9 +168,21 @@ div.search-icon {
   display: inline-block;
 }
 
-ul.wiki-list {
-  list-style-type: none;
-  padding: 0;
+.index-header {
+  margin-bottom: 0;
+}
+
+li.wiki-list-item {
+  & a.remote {
+    flex-direction: column;
+    & .wiki-host {
+      margin-top: 0.5em;
+      font-size: small;
+      opacity: 50%;
+      color: unset;
+      text-decoration: none;
+    }
+  }
 }
 
 button {

@@ -6,11 +6,12 @@
 |%
 ::
 ++  may-edit
-  |=  [=bowl:gall =book]
+  |=  [=bowl:gall host=(unit @p) =access]
   ^-  ?
-  ?:  =(src.bowl our.bowl)  &
-  ?:  =(%pawn (clan:title src.bowl))  comet.edit.rules.book
-  public.edit.rules.book
+  ?:  =(src.bowl (fall host our.bowl))  &
+  ?:  =(%pawn (clan:title src.bowl))
+    comet.edit.access
+  public.edit.access
 ::
 ++  part
   |=  =cord
@@ -96,4 +97,46 @@
 ::   :: %-  ~(put burp acc)
 ::   :: [path.arg page.arg]
 ::   :: *_acc
+::
+++  filt
+  |*  [cond=? val=*]
+  ^-  (unit _val)
+  ?:(cond `val ~)
+::
+++  wilt
+  |*  val-type=mold
+  |=  input=(list [? (list val-type)])
+  ^-  (list val-type)
+  (zing (murn input filt))
+::
+++  falt
+  |*  [cond=? get=(trap *)]
+  ?:(cond `(get) ~)
+::
+++  walt
+  |*  val-type=mold
+  |=  input=(list [? (trap (list val-type))])
+  ^-  (list val-type)
+  (zing (murn input falt))
+::
+++  time-ago
+  |=  [now=@da then=@da]
+  ^-  tape
+  =/  ago=@dr  (sub now then)
+  ?:  (gth ago ~d7)  <`@da`(sub then (mod then ~d1))>
+  ?:  (gth ago ~d2)  "{<(div ago ~d1)>} days ago"
+  ?:  (gth ago ~h2)  "{<(div ago ~h1)>} hours ago"
+  ?:  (gth ago ~m2)  "{<(div ago ~m1)>} minutes ago"
+  "{<(div ago ~s1)>} seconds ago"
+::
+++  book-to-spine
+  |=  [id=@ta =book]
+  ^-  spine
+  :-  [id title.book rules.book stamp.book]
+  %-  ~(run by tales.book)
+  |=  =tale
+  =/  [time=@da =page]  (latest tale)
+  =/  ver=@  (dec (wyt:ton tale))
+  [ver time title.page]
+::
 --

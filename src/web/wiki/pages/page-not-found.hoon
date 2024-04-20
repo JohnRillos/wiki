@@ -3,11 +3,11 @@
 /-  *wiki
 /+  rudder, web=wiki-web, *wiki
 ::
-^-  (page:rudder state-1 action)
+^-  (page:rudder rudyard relay)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder state-1]
+|_  [=bowl:gall =order:rudder rudyard]
 ::
 +*  help  ~(. +> [bowl order books])
 ::
@@ -36,9 +36,9 @@
     ;html
       ;+  (doc-head:web bowl "Page Not Found")
       ;body#with-sidebar
-        ;+  (global-nav:web bowl order [book-id.site book])
+        ;+  (global-nav:web bowl order [%| book])
         ;main
-          ;+  (search-bar:web `book-id.site ~)
+          ;+  (search-bar:web `book-id.site host.site)
           ;h1#page-title: Page Not Found
           ;p
             ;span: There is no page at path 
@@ -49,7 +49,7 @@
                 ;button(type "button"): Create Page
               ==
           ==
-          ;+  (footer:web book)
+          ;+  (footer:web [%| book])
         ==
       ==
     ==
