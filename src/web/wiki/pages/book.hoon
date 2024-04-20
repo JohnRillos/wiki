@@ -30,9 +30,10 @@
   ^-  reply:rudder
   ::
   =/  [site=wiki-path query=(map @t @t)]  (wiki-url:web url.request.order)
-  =/  cuver  get-cover:help
-  ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
-  =/  =cover  u.cuver
+  =/  spune  get-spine:help
+  ?~  spune  [%code 404 (crip "Wiki {<book-id.site>} not found")]
+  =/  =^spine  u.spune
+  =/  [=cover toc=(map path ref)]  u.spune
   ::
   |^  [%page render]
   ::
@@ -67,7 +68,7 @@
           :: todo: special UI for "no pages" 
           ;h2: Pages
           ;ul
-            ;*  %+  turn  sorted-toc:help
+            ;*  %+  turn  (sort-toc:help toc)
                 |=  [=path =ref]
                 ^-  manx
                 ;li
@@ -89,33 +90,21 @@
 ::
 |_  [=bowl:gall =order:rudder rudyard]
 ::
-++  get-book
-  ^-  (unit book)
-  =/  =wiki-path  wiki-path:(wiki-url:web url.request.order)
-  (~(get by books) book-id.wiki-path)
-::
-++  get-cover
-  ^-  (unit cover)
-  ?^  spine  `cover.u.spine
+++  get-spine
+  ^-  (unit ^spine)
+  ?^  spine  spine
   =/  =wiki-path  wiki-path:(wiki-url:web url.request.order)
   =/  book-id=@t  book-id.wiki-path
+  =/  host=@p  (fall host.wiki-path our.bowl)
+  ?.  =(our.bowl host)  (~(get by shelf) [host book-id.wiki-path])
   =/  buuk  (~(get by books) book-id)
   %+  bind  buuk
-  |=(=book [book-id title.book rules.book stamp.book])
+  |=(=book (book-to-spine book-id book))
 ::
-++  get-toc
-  ^-  (map path ref)
-  ?^  spine  toc.u.spine
-  =/  =book  (need get-book)
-  %-  ~(run by tales.book)
-  |=  =tale
-  =/  [=time =page]  (latest tale)
-  =/  ver=@  (dec (wyt:ton tale))
-  [ver time title.page]
-::
-++  sorted-toc
+++  sort-toc
+  |=  toc=(map path ref)
   ^-  (list [=path =ref])
-  %+  sort  ~(tap by get-toc)
+  %+  sort  ~(tap by toc)
   |=  [a=[=path =ref] b=[=path =ref]]
   (alpha-less (spud path.a) (spud path.b))
 ::

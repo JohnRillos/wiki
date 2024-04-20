@@ -190,7 +190,9 @@
       ?~  who=(slaw %p who.site)  |
       ?:  =(u.who our.bowl)  |
       ?+  loc.site  &
-      ::  searching in shelved book does not need remote scry
+        :: loading main page for shelved book does not need remote scry
+        [book-id=@ta ~]  ?!((~(has by shelf) [u.who book-id.loc.site]))
+        :: searching in shelved book does not need remote scry
         [book-id=@ta %~.~ %search ~]  ?!((~(has by shelf) [u.who book-id.loc.site]))
       ==
     ::
@@ -228,7 +230,6 @@
       =.  later  (~(del by later) last-eyre-id)
       [(relay-response:main order error.u.await this) this]
     ::
-    :: todo: if loading pages/book.hoon, consider getting spine from shelf instead of scrying
     ++  handle-http-remote
       ^-  (quip card _this)
       =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
@@ -681,7 +682,7 @@
   ++  spine-0
     |=  [id=@ta =book]
     ^-  card
-    [%pass /wiki/spine %grow /spine-0/[id] %wiki-spine-0 (to-spine id book)]
+    [%pass /wiki/spine %grow /spine-0/[id] %wiki-spine-0 (book-to-spine id book)]
   ::
   ++  full
     |=  [id=@ta =book]
@@ -729,7 +730,7 @@
     |=  [id=@ta =book]
     ^-  card
     ~&  '%wiki starting a rumor...'
-    =/  =lore  [%lurn (malt [[our.bowl id] (to-spine id book)]~)]
+    =/  =lore  [%lurn (malt [[our.bowl id] (book-to-spine id book)]~)]
     [(invent:gossip %wiki-lore !>(lore))]
   ::
   ++  hush
@@ -751,7 +752,7 @@
     %+  murn  ~(tap by books)
     |=  [id=@ta =book]
     ?.  goss.read.rules.book  ~
-    `[[our.bowl id] (to-spine id book)]
+    `[[our.bowl id] (book-to-spine id book)]
   ::
   ++  read
     |=  =lore
@@ -782,16 +783,6 @@
         state
     ==
   --
-::
-++  to-spine
-  |=  [id=@ta =book]
-  ^-  spine
-  :-  [id title.book rules.book stamp.book]
-  %-  ~(run by tales.book)
-  |=  =tale
-  =/  [time=@da =page]  (latest tale)
-  =/  ver=@  (dec (wyt:ton tale))
-  [ver time title.page]
 ::
 ++  relay-response
   |=  [=order:rudder error=(unit tang) =agent:gall]
