@@ -80,7 +80,7 @@
         ;main
           ;*  ?~  msg  ~
               ~[;/((trip text.u.msg))]
-          ;+  (search-bar:web `book-id.site ~)
+          ;+  (search-bar:web `book-id.site host.site)
           ;h1: New Page
           ::
           ;form(method "post")
@@ -149,6 +149,6 @@
   =/  book-id=@t  book-id.wiki-path
   =/  buuk  (~(get by books) book-id)
   %+  bind  buuk
-  |=(=book [book-id title.book rules.book])
+  |=(=book [book-id title.book rules.book stamp.book])
 ::
 --

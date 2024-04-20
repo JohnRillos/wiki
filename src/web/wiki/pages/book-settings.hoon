@@ -84,7 +84,7 @@
       ;body#with-sidebar(onload on-page-load)
         ;+  (global-nav:web bowl order [%| book])
         ;main
-          ;+  (search-bar:web `book-id.site ~)
+          ;+  (search-bar:web `book-id.site host.site)
           ;h1: Wiki Settings
           ;div.column-box
             ;fieldset

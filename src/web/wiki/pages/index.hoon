@@ -32,7 +32,7 @@
   ::
   ++  sort-shelf
     |=  [a=[[host=@p id=@ta] =^spine] b=[[host=@p id=@ta] =^spine]]
-    (gth as-of.spine.a as-of.spine.b)
+    (gth stamp.cover.spine.a stamp.cover.spine.b)
   ::
   ++  render
     ^-  manx
@@ -91,7 +91,7 @@
             =/  hover=tape
               """
               Host: {<host>}
-              Edited: {(time-ago now.bowl as-of.spine)}
+              Edited: {(time-ago now.bowl stamp.cover.spine)}
               {<~(wyt by toc.spine)>} pages
               """
             ^-  manx

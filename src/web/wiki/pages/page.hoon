@@ -95,7 +95,7 @@
         :: todo: make some sort of flex container that keeps title + search level, but puts search on top if there isn't room on one line
         ;+  (global-nav:web bowl order [%& cover])
         ;main
-          ;+  (search-bar:web `book-id:help host)
+          ;+  (search-bar:web `book-id:help host.site)
           ;header
             ;h1#page-title: {(trip title.page)}
             ;nav.page
@@ -165,7 +165,7 @@
   ?^  booklet  `cover.u.booklet
   =/  buuk  (~(get by books) book-id)
   %+  bind  buuk
-  |=(=book [book-id title.book rules.book])
+  |=(=book [book-id title.book rules.book stamp.book])
 ::
 ++  get-tale
   ^-  (unit tale)

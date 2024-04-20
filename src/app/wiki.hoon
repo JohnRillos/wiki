@@ -107,7 +107,12 @@
         ^-  (map @ta book)
         %-  ~(run by books.state-1)
         |=  =book-1
-        book-1(rules (grad-rules rules.book-1))
+        :^    title.book-1
+            tales.book-1
+          (grad-rules rules.book-1)
+        %-  (curr roll max)
+        %+  turn  ~(val by tales.book-1)
+        |=(=tale time:(latest tale))
       ::
       ++  grad-rules
         |=  =access-1
@@ -223,6 +228,7 @@
       =.  later  (~(del by later) last-eyre-id)
       [(relay-response:main order error.u.await this) this]
     ::
+    :: todo: if loading pages/book.hoon, consider getting spine from shelf instead of scrying
     ++  handle-http-remote
       ^-  (quip card _this)
       =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
@@ -260,11 +266,14 @@
       ^-  @t
       =/  time=(unit @da)
         ?:  (~(has by query) 'fresh')  ~
+        :: Ideally this would get the last time a page was edited,
+        :: but since the booklet-0 contains data about the book itself,
+        :: that data may have changed.
+        :: Unfortunately this makes page scries load from cache less often
+        :: todo: Maybe split into 2-step scry to get cover @ stamp then page data @edited-at
         %+  biff  (~(get by shelf) [ship book-id])
         |=  =spine
-        ?:  =(~ path)  `as-of.spine
-        %+  bind  (~(get by toc.spine) path)
-        |=(=ref edited.ref)
+        `stamp.cover.spine
       (crip <(fall time now.bowl)>)
     --
   --
@@ -408,12 +417,12 @@
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   ?:  &(!public.read.rules public.edit.rules)
     ~|("Cannot enable public edits on private wiki." !!)
-  =/  =book  [title ~ rules]
+  =/  =book  [title ~ rules now.bowl]
   =.  books  (~(put by books) id book)
   :_  state
   %-  (walt card)
   :~  [scry.read.rules |.((full:grow id book))]
-      [goss.read.rules |.([(tell:goss id [title ~ rules]) ~])]
+      [goss.read.rules |.([(tell:goss id book) ~])]
   ==
 ::
 ++  del-book
@@ -436,6 +445,7 @@
   =/  =book  (~(got by books) id)
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   =.  title.book  title
+  =.  stamp.book  now.bowl
   =.  books  (~(put by books) id book)
   :_  state
   =/  r  read.rules.book
@@ -461,6 +471,7 @@
   =.  read.rules.book   read
   =.  edit.rules.book   ?.  public.read  [%.n %.n] :: disable public edit
                         edit.rules.book
+  =.  stamp.book  now.bowl
   =.  books  (~(put by books) id book)
   :_  state
   %-  (walt card)
@@ -479,11 +490,12 @@
     ~|  "Cannot enable public edits on private wiki. Enable public-read first"
     !!
   =.  edit.rules.book  rule-edit
+  =.  stamp.book  now.bowl
   =.  books  (~(put by books) id book)
   :_  state
   =/  r  read.rules.book
   %-  (walt card)
-  :~  [scry.r |.([(spine-0:grow id book) ~])]
+  :~  [scry.r |.((full:grow id book))]
       [goss.r |.([(tell:goss id book) ~])]
   ==
 ::
@@ -501,6 +513,7 @@
   =/  =page  [title content src.bowl]
   =/  =tale  (gas:ton *tale [now.bowl page]~)
   =.  tales.book  (~(put by tales.book) path tale)
+  =.  stamp.book  now.bowl
   =.  books  (~(put by books) book-id book)
   ~&  >  "Wiki page created: {(trip book-id)}{<path>}"
   :_  state
@@ -517,6 +530,7 @@
       ~&  >>>  "Unauthorized poke from {<src.bowl>}: %del-page"  !!
   =/  =book       (~(got by books) book-id)
   =.  tales.book  (~(del by tales.book) path)
+  =.  stamp.book  now.bowl
   =.  books       (~(put by books) book-id book)
   ~&  >>>  "Wiki page deleted: {(trip book-id)}{<path>}"
   :_  state
@@ -544,6 +558,7 @@
   =.  edit-by.page  src.bowl
   =.  tale          (put:ton tale now.bowl page)
   =.  tales.book  (~(put by tales.book) path tale)
+  =.  stamp.book  now.bowl
   =.  books       (~(put by books) book-id book)
   ~&  >>  "Wiki page edited: {(trip book-id)}{<path>}"
   :_  state
@@ -660,7 +675,7 @@
     ^-  card
     =/  =wire  /wiki/booklet
     =/  loc=path  (weld /booklet-0/[book-id] tale-path)
-    =/  =booklet  [[book-id title.book rules.book] tale-path tale]
+    =/  =booklet  [[book-id title.book rules.book stamp.book] tale-path tale]
     [%pass wire %grow loc %wiki-booklet-0 booklet]
   ::
   ++  spine-0
@@ -724,18 +739,19 @@
     =/  =lore  [%burn our.bowl id now.bowl]
     [(invent:gossip %wiki-lore !>(lore))]
   ::
-  ++  rant  :: todo: instead of returning 1 card, return 1 card per book to help %gossip dedupe
+  ++  rant
     ^-  (list card)
     ~&  '%wiki spreading rumors...'
-    =;  =lore  [(invent:gossip %wiki-lore !>(lore))]~
-    :-  %lurn
-    %-  ~(uni by shelf)
-    %-  my
+    =;  library
+      %+  turn  library
+      |=  item=[[@p @ta] spine]
+      =/  =lore  [%lurn (malt [item]~)]
+      (invent:gossip %wiki-lore !>(lore))
+    %+  weld  ~(tap by shelf)
     %+  murn  ~(tap by books)
     |=  [id=@ta =book]
-    ^-  (unit (pair [@p @ta] spine))
     ?.  goss.read.rules.book  ~
-    (some [[our.bowl id] (to-spine id book)])
+    `[[our.bowl id] (to-spine id book)]
   ::
   ++  read
     |=  =lore
@@ -751,7 +767,7 @@
         =.  shelf
           %-  (~(uno by shelf) other)
           |=  [k=[@p @ta] v=spine w=spine]
-          ?:  (gte as-of.v as-of.w)  v
+          ?:  (gte stamp.cover.v stamp.cover.w)  v
           ~&  "... updating index for {<k>}"
           w
         [~ state]
@@ -759,8 +775,8 @@
       %burn
         :-  ~
         =/  old=(unit spine)  (~(get by shelf) [host.lore id.lore])
-        ?~  old                        state
-        ?:  (gth as-of.u.old at.lore)  state
+        ?~  old                              state
+        ?:  (gth stamp.cover.u.old at.lore)  state
         ~&  "... un-indexing {<[host.lore id.lore]>}"
         =.  shelf  (~(del by shelf) [host.lore id.lore])
         state
@@ -770,18 +786,12 @@
 ++  to-spine
   |=  [id=@ta =book]
   ^-  spine
-  =/  =cover  [id title.book rules.book]
-  =/  toc=(map path ref)
-    %-  ~(run by tales.book)
-    |=  =tale
-    =/  [time=@da =page]  (latest tale)
-    =/  ver=@  (dec (wyt:ton tale))
-    [ver time title.page]
-  =/  as-of=@da
-    %-  (curr roll max)
-    %+  turn  ~(val by toc)
-    |=(=ref edited.ref)
-  [cover toc as-of]
+  :-  [id title.book rules.book stamp.book]
+  %-  ~(run by tales.book)
+  |=  =tale
+  =/  [time=@da =page]  (latest tale)
+  =/  ver=@  (dec (wyt:ton tale))
+  [ver time title.page]
 ::
 ++  relay-response
   |=  [=order:rudder error=(unit tang) =agent:gall]

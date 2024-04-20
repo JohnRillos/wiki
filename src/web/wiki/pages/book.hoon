@@ -52,7 +52,7 @@
       ;body#with-sidebar(onload on-page-load)
         ;+  (global-nav:web bowl order [%& cover])
         ;main
-          ;+  (search-bar:web `book-id.site ~)
+          ;+  (search-bar:web `book-id.site host.site)
           ;h1#page-title: Main Page
           ;nav#wiki-controls
             ;*  ?.  (may-edit bowl host.site rules.cover)  ~
@@ -101,7 +101,7 @@
   =/  book-id=@t  book-id.wiki-path
   =/  buuk  (~(get by books) book-id)
   %+  bind  buuk
-  |=(=book [book-id title.book rules.book])
+  |=(=book [book-id title.book rules.book stamp.book])
 ::
 ++  get-toc
   ^-  (map path ref)

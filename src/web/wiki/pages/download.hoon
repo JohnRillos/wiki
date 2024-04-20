@@ -67,7 +67,7 @@
   ?^  booklet  `cover.u.booklet
   =/  buuk  (~(get by books) book-id)
   %+  bind  buuk
-  |=(=book [book-id title.book rules.book])
+  |=(=book [book-id title.book rules.book stamp.book])
 ::
 ++  get-tale
   ^-  (unit tale)

@@ -28,7 +28,7 @@
         (far [@ta sig %search ~])     `[%page r-auth %hx-search]
       ==
   ::
-  ++  far :: to-do: wrap remote-compatible paths ^
+  ++  far
     |$  pattern
     ?([sig %p @ta pattern] pattern)
   ::

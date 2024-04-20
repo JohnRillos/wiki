@@ -48,7 +48,7 @@
       ;body#with-sidebar(onload (trip helper-js))
         ;+  (global-nav:web bowl order [%| book])
         ;main
-          ;+  (search-bar:web `book-id.site ~)
+          ;+  (search-bar:web `book-id.site host.site)
           ;h1: Import Pages
           ;form#file-form.column-box(method "post", enctype "multipart/form-data")
             ;div.file-upload.box-item

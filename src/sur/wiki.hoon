@@ -31,6 +31,7 @@
   $:  title=@t
       tales=(map path tale)
       rules=access
+      stamp=@da
   ==
 ::
 +$  tale  ((mop @da page) gth)
@@ -83,11 +84,12 @@
   $:  book-id=@ta
       title=@t
       rules=access
+      stamp=@da
   ==
 ::
 +$  shelf    (map [host=@p id=@ta] spine)
 ::
-+$  spine    [=cover toc=(map path ref) as-of=@da]
++$  spine    [=cover toc=(map path ref)]
 ::
 +$  ref      [ver=@ edited=@da title=@t]
 ::
@@ -114,7 +116,7 @@
       error=(unit tang)
   ==
 ::
-::
+::  state-0
 ::
 +$  book-0
   $:  title=@t
@@ -128,7 +130,7 @@
 ::
 +$  access-0  [public-read=?]
 ::
-::
+::  state-1
 ::
 +$  book-1
   $:  title=@t

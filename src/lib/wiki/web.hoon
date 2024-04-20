@@ -362,7 +362,7 @@
   =/  search-url=tape
     ?~  book-id    !!  :: todo: global search: /wiki/~/search
     ?~  host       "/wiki/{(trip u.book-id)}/~/search"
-    "/wiki/~/p/{<u.host>}/{(trip u.book-id)}/~/search" :: todo: get remote search working
+    "/wiki/~/p/{<u.host>}/{(trip u.book-id)}/~/search"
   ;div#search
     ;script: {search-keybind-script}
     ;div#search-bar
@@ -385,7 +385,12 @@
 ++  footer
   |=  =(each cover book)
   ^-  manx
-  =/  public-read=?  public.read.rules.p.each
+  =/  =access
+    ?-  -.each
+      %&  rules.p.each
+      %|  rules.p.each
+    ==
+  =/  public-read=?  public.read.access
   =/  viz=manx
     ?:  public-read
       ;div.note
