@@ -1,5 +1,21 @@
 ;>
 
+## 1.0.0
+
+Date: ~2024.4.20
+- official 1.0 release
+- users can view and edit remote wikis while logged into their own ships
+  - relies on remote scry
+  - URL path for remote wikis is `/wiki/~/p/~sampel-palnet/wiki-name`
+- users can now discover remote wikis via %gossip ("global index")
+  - remote wikis from across the network are listed in `/wiki` under "More Wikis on Urbit"
+  - wikis in the gossiped index are faster to load
+    - loading main page does not require remote scry
+    - articles load from remote scry cache if wiki hasn't been edited since last viewed
+- wiki hosts can now disable eauth/clearweb visibility for public wikis if the wiki is available via remote scry
+- wikis listed in `/wiki` have additional info on mouseover
+
+
 ## 0.2.3
 
 Date: ~2024.2.26
