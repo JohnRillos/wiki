@@ -185,10 +185,11 @@
       (~(has by later) u.after-eyre-id)
     ::
     ++  is-remote
-      =/  [site=(pole knot) *]  (sane-url:web url.request.order)
+      =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
       ?.  ?=([%wiki %~.~ %p who=@ta loc=*] site)  |
       ?~  who=(slaw %p who.site)  |
       ?:  =(u.who our.bowl)  |
+      ?:  (~(has by query) 'fresh')  &
       ?+  loc.site  &
         :: loading main page for shelved book does not need remote scry
         [book-id=@ta ~]  ?!((~(has by shelf) [u.who book-id.loc.site]))
