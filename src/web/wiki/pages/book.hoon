@@ -6,7 +6,7 @@
 ^-  (page:rudder rudyard relay)
 ::
 =<
-:::
+::
 |_  [=bowl:gall =order:rudder =rudyard]
 ::
 +*  help  ~(. +> [bowl order rudyard])

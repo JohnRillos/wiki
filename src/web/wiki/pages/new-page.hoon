@@ -57,7 +57,7 @@
   =/  cuver  get-cover:help
   ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =cover  u.cuver
-  ?>  (may-edit bowl host.site rules.cover)
+  ?.  (may-edit bowl host.site rules.cover)  (unauthorized:web bowl)
   ::
   |^  [%page render]
   ::

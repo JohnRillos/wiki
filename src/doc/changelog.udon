@@ -1,5 +1,13 @@
 ;>
 
+## 1.0.1
+
+Date: ~2024.4.21
+- hotfix for eauth - include `?eauth` parameter in login link
+  - fixes issue where login screen did not allow user to input eauth @p
+- return HTTP 401 or 403 instead of 500 for unauthorized requests
+
+
 ## 1.0.0
 
 Date: ~2024.4.20

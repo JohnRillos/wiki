@@ -306,7 +306,7 @@
       ;*
       ?:  =(%pawn (clan:title src.bowl))
         :_  ~
-        ;a/"/~/login?redirect={(trip url.request.order)}": Log in with Urbit
+        ;a/"/~/login?eauth&redirect={(trip url.request.order)}": Log in with Urbit
       =*  my-req  =(src.bowl our.bowl)
       =*  my-wik  ?~(host & =(u.host our.bowl))
       ?.  my-req
@@ -452,4 +452,11 @@
     %+  turn  tang
     |=(=tank ~(ram re tank))      
   (crip "<html><body><p>{trace}</p></body></html>")
+::
+++  unauthorized :: todo: maybe redirect to login/eauth screen
+  |=  =bowl:gall
+  ^-  reply:rudder
+  ?:  =(%pawn (clan:title src.bowl))
+    [%code 401 'Unauthorized: user must be logged in']
+  [%code 403 (crip "Forbidden: user does not have permission: {<src.bowl>}")]
 --
