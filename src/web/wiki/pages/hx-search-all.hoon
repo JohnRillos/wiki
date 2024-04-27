@@ -1,11 +1,11 @@
-::  search results
+::  global search results
 ::
 /-  *wiki
 /+  multipart, regex, rudder, string, web=wiki-web, *wiki
 ::
 ^-  (page:rudder rudyard relay)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -16,27 +16,30 @@
 ++  build
   |=  [arg=(list [k=@t v=@t]) msg=(unit [success=? text=@t])]
   ^-  reply:rudder
-  =/  [site=wiki-path query=(map @t @t)]  (wiki-url:web url.request.order)
-  |^  =/  t  get-toc
-      ?~  t  [%code 404 (crip "Wiki {<book-id.site>} not found")]
-      [%page render]
+  =/  query=(map @t @t)  query:(sane-url:web url.request.order)
+  |^  [%page render]
   ::
   ++  render
     ^-  manx
     ?:  =(~ search-terms)  stub:web
-    =/  no-results=?   =(~ search-results)
-    ;ul#search-results :: todo: include link to "Search all wikis" below/above local search results
+    =/  no-results=?   =(~ all-search-results)
+    ;ul#search-results
       ;*
       ?:  no-results
         :_  ~
         ;li.search-result
           ;p: No Results
         ==
-      =/  wik-dir=tape  (base-path:web site)
-      %+  turn  search-results
-      |=  [page-path=path =ref]
-      ;li.search-result
-        ;a/"{wik-dir}{(spud page-path)}": {(trip title.ref)}
+      %+  turn  all-search-results
+      |=  [host=@p book-id=@ta page-path=path =ref]
+      =/  host-dir=tape   ?:  =(host our.bowl)  ""
+                          "~/p/{<host>}/"
+      =/  =spine  (~(got by super-shelf) [host book-id])
+      ;li.search-result.search-all-result
+        ;a/"/wiki/{host-dir}{(trip book-id)}{(spud page-path)}"
+          ;span.search-result-book-title: {(trip title.cover.spine)}
+          ;span: {(trip title.ref)}
+        ==
       ==
     ==
   ::
@@ -50,9 +53,20 @@
     ?:  (is-space:string tape)  ~
     `(cass (strip:string tape))
   ::
-  ++  search-results  ~+
-    ^-  (list [page-path=path =ref])
-    =/  toc=(map path ref)  (need get-toc)
+  ++  all-search-results  ~+
+    ^-  (list [host=@p book-id=@ta page-path=path =ref])
+    %-  zing
+    %+  turn  ~(tap in ~(key by super-shelf))
+    |=  [host=@p book-id=@ta]
+    %+  turn  (search-book host book-id)
+    |=  [=path =ref]
+    [host book-id path ref]
+  ::
+  ++  search-book
+    |=  [host=@p book-id=@ta]
+    ^-  (list [path ref])
+    =/  =spine  (~(got by super-shelf) [host book-id])
+    =/  toc=(map path ref)  toc.spine
     =/  limit=@   (fall (bind (~(get by query) 'limit') (cury slav %ud)) 10)
     %-  sort-results
     ^-  (list [path ref])
@@ -81,20 +95,13 @@
     ?.  =(at bt)            |
     (alpha-less (spud path.a) (spud path.b))
   ::
-  ++  host  ~+  (fall host.site our.bowl)
-  ::
-  ++  get-toc  ~+
-    ^-  (unit (map path ref))
-    ?^  spine  `toc.u.spine
-    ?.  =(host our.bowl)
-      %+  bind  (~(get by shelf) [host book-id.site])
-      |=(=^spine toc.spine)
-    %+  bind  (~(get by books) book-id.site)
-    |=  =book
-    %-  ~(run by tales.book)
-    |=  =tale
-    =/  [=time =page]  (latest tale)
-    =/  ver=@  (dec (wyt:ton tale))
-    [ver time title.page]
+  ++  super-shelf  ~+
+    ^-  shelf
+    %-  ~(uni by shelf.rudyard)
+    ^-  shelf
+    %-  malt
+    %+  turn  ~(tap by books.rudyard)
+    |=  [id=@ta =book]
+    [[our.bowl id] (book-to-spine id book)]
   --
 --

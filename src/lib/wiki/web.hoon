@@ -361,8 +361,8 @@
   ^-  manx
   =/  search-url=tape
     ?~  book-id    !!  :: todo: global search: /wiki/~/search
-    ?~  host       "/wiki/{(trip u.book-id)}/~/search"
-    "/wiki/~/p/{<u.host>}/{(trip u.book-id)}/~/search"
+    ?~  host       "/wiki/{(trip u.book-id)}/~/x/search"
+    "/wiki/~/p/{<u.host>}/{(trip u.book-id)}/~/x/search"
   ;div#search
     ;script: {search-keybind-script}
     ;div#search-bar

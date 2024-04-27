@@ -41,8 +41,13 @@
       ;body(onload on-page-load)
         ;div#index-container
           ;h1: %wiki
-          ;a/"/wiki/~/new"
-            ;button.submit(type "button"): New Wiki
+          ;nav#main-controls
+            ;a/"/wiki/~/new"
+              ;button.submit(type "button"): New Wiki
+            ==
+            ;a/"/wiki/~/search"
+              ;button(type "button"): Search
+            ==
           ==
           ;*
           ?:  =(~ books)  [stub:web]~
