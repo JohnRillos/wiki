@@ -16,7 +16,11 @@
 ++  build
   |=  [arg=(list [k=@t v=@t]) msg=(unit [success=? text=@t])]
   ^-  reply:rudder
-  =/  query=(map @t @t)  query:(sane-url:web url.request.order)
+  =/  url=[=path query=(map @t @t)]  (sane-url:web url.request.order)
+  =/  query=(map @t @t)  query:url
+  =/  site=(unit wiki-path)  (mole |.((to-wiki-path:web path.url)))
+  =/  this-host=(unit @p)   ?~(site ~ `(fall host.u.site our.bowl))
+  =/  this-book=(unit @ta)  ?~(site ~ `book-id.u.site)
   |^  [%page render]
   ::
   ++  render
@@ -35,9 +39,14 @@
       =/  host-dir=tape   ?:  =(host our.bowl)  ""
                           "~/p/{<host>}/"
       =/  =spine  (~(got by super-shelf) [host book-id])
+      =/  here=?  (is-here host book-id)
       ;li.search-result.search-result
         ;a/"/wiki/{host-dir}{(trip book-id)}{(spud page-path)}"
-          ;span.search-result-book-title: {(trip title.cover.spine)}
+          ;+  ?:  here  stub:web
+              ;div.search-result-book-title
+                ;span: {(trip title.cover.spine)}
+                ;span: {?:(=(src.bowl host) "" (cite:title host))}
+              ==
           ;span: {(trip title.ref)}
         ==
       ==
@@ -56,7 +65,7 @@
   ++  all-search-results  ~+
     ^-  (list [host=@p book-id=@ta page-path=path =ref])
     %-  zing
-    %+  turn  ~(tap in ~(key by super-shelf))
+    %+  turn  (sort-keys ~(tap in ~(key by super-shelf)))
     |=  [host=@p book-id=@ta]
     %+  turn  (search-book host book-id)
     |=  [=path =ref]
@@ -85,6 +94,16 @@
     |=  [nedl=tape title=@t]
     (has:regex nedl (cass (trip title)))
   ::
+  ++  sort-keys
+    |=  raw=(list [@p @ta])
+    %+  sort  raw
+    |=  [a=[=ship id=@ta] b=[=ship id=@ta]]
+    ?:  &((is-here ship.a id.a) !(is-here ship.b id.b))  &
+    ?:  &(!(is-here ship.a id.a) (is-here ship.b id.b))  |
+    ?:  &(=(src.bowl ship.a) ?!(=(src.bowl ship.b)))  &
+    ?:  &(?!(=(src.bowl ship.a)) =(src.bowl ship.b))  |
+    (alpha-less (trip id.a) (trip id.b))
+  ::
   ++  sort-results
     |=  raw=(list [path ref])
     %+  sort  raw
@@ -95,8 +114,19 @@
     ?.  =(at bt)            |
     (alpha-less (spud path.a) (spud path.b))
   ::
+  ++  is-here
+    |=  [=ship =knot]
+    ~+
+    ?~  this-host  |
+    ?~  this-book  |
+    &(=(u.this-host ship) =(u.this-book knot))
+  ::
   ++  super-shelf  ~+
     ^-  shelf
+    ?.  =(src.bowl our.bowl)
+      =/  id=@ta  (need this-book)
+      =/  =book  (~(got by books.rudyard) id)
+      (malt [[our.bowl id] (book-to-spine id book)]~)
     %-  ~(uni by shelf.rudyard)
     ^-  shelf
     %-  malt

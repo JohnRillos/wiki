@@ -27,7 +27,7 @@
         [@ta sig %import ~]           `[%page w-auth %import]
         (far [@ta sig %settings ~])   `[%page & %book-settings]
         [@ta sig %not-found ~]        `[%page r-auth %page-not-found]
-        (far [@ta sig %x %search ~])  `[%page r-auth %hx-search]
+        (far [@ta sig %x %search ~])  `[%page r-auth %hx-search-all]
       ==
   ::
   ++  far

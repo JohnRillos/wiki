@@ -28,7 +28,6 @@
   ::
   ++  render
     ^-  manx
-    =/  search-url=tape  "/wiki/~/x/search"
     ;html
       ;+  (doc-head:web bowl "Search %wiki")
       ;body#search-page
@@ -42,7 +41,7 @@
             =name         "q"
             =style        "margin-left: 4px"
             =placeholder  "Search all wikis (Ctrl-K)"
-            =hx-get       search-url
+            =hx-get       "/wiki/~/x/search"
             =hx-params    "*"
             =hx-trigger   "keyup changed delay:100ms, search"
             =hx-target    "#search-all-results-container"
