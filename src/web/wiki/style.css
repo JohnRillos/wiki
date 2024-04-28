@@ -282,7 +282,6 @@ div.file-upload {
 }
 
 #search-all-results-container {
-  /* position: absolute; */
   top: 2rem;
 }
 
@@ -304,18 +303,13 @@ li.search-result {
     color: unset;
     margin: 0;
     padding: 0.25em 0.5em;
+    display: flex;
+    flex-direction: column;
   }
 }
 
 li.search-result:hover {
   background-color: lightgray;
-}
-
-.search-all-result {
-  & a {
-    display: flex;
-    flex-direction: column;
-  }
 }
 
 .search-result-book-title {
@@ -330,6 +324,11 @@ li.search-result:hover {
   width: 100vw;
   height: 100vh;
   background-color: lightgray;
+  & .back {
+    margin: 1em;
+    position: absolute;
+    left: 0;
+  }
 }
 
 div.CodeMirror {

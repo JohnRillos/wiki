@@ -26,18 +26,14 @@
     |=  [a=[[host=@p id=@ta] =^spine] b=[[host=@p id=@ta] =^spine]]
     (gth stamp.cover.spine.a stamp.cover.spine.b)
   ::
-  ++  render :: todo: Back button actually returns to previous page, not hardcoded to /wiki
+  ++  render
     ^-  manx
     =/  search-url=tape  "/wiki/~/x/search"
     ;html
       ;+  (doc-head:web bowl "Search %wiki")
       ;body#search-page
+        ;button.back(onclick "history.back()"): Back
         ;h1: Search
-        ;nav#main-controls
-          ;a/"/wiki"
-            ;button: Back
-          ==
-        ==
         ;script: {search-keybind-script:web}
         ;div#search-bar
           ;+  search:icon:web

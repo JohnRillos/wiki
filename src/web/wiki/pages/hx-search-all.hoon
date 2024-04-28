@@ -35,7 +35,7 @@
       =/  host-dir=tape   ?:  =(host our.bowl)  ""
                           "~/p/{<host>}/"
       =/  =spine  (~(got by super-shelf) [host book-id])
-      ;li.search-result.search-all-result
+      ;li.search-result.search-result
         ;a/"/wiki/{host-dir}{(trip book-id)}{(spud page-path)}"
           ;span.search-result-book-title: {(trip title.cover.spine)}
           ;span: {(trip title.ref)}
