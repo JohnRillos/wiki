@@ -21,13 +21,13 @@
         [sig %assets *]               `[%page | %asset]
         [sig %new ~]                  `[%page & %new-book]
         [sig %search ~]               `[%page & %search-all]
-        [sig %x %search ~]            `[%page & %hx-search-all]
+        [sig %x %search ~]            `[%page & %hx-search]
         (far [@ta ~])                 `[%page r-auth %book]
         (far [@ta sig %new ~])        `[%page w-auth %new-page]
         [@ta sig %import ~]           `[%page w-auth %import]
         (far [@ta sig %settings ~])   `[%page & %book-settings]
         [@ta sig %not-found ~]        `[%page r-auth %page-not-found]
-        (far [@ta sig %x %search ~])  `[%page r-auth %hx-search-all]
+        (far [@ta sig %x %search ~])  `[%page r-auth %hx-search]
       ==
   ::
   ++  far

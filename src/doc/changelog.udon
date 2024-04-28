@@ -1,5 +1,14 @@
 ;>
 
+## 1.1.0
+Date: ~2024.4.28
+- global search
+  - there is now a dedicated search page
+    - click "Search" on main page or go to `/wiki/~/search`
+  - search will include results from all wikis the user has access to
+    - clearweb users will only see results for the wiki they are currently reading
+
+
 ## 1.0.1
 
 Date: ~2024.4.21
