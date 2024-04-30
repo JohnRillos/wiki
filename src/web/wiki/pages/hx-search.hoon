@@ -21,6 +21,7 @@
   =/  site=(unit wiki-path)  (mole |.((to-wiki-path:web path.url)))
   =/  this-host=(unit @p)   ?~(site ~ `(fall host.u.site our.bowl))
   =/  this-book=(unit @ta)  ?~(site ~ `book-id.u.site)
+  =/  limit=@   (fall (bind (~(get by query) 'limit') (cury slav %ud)) 10)
   |^  [%page render]
   ::
   ++  render
@@ -63,6 +64,7 @@
     `(cass (strip:string tape))
   ::
   ++  all-search-results  ~+
+    %-  (cury scag limit)
     ^-  (list [host=@p book-id=@ta page-path=path =ref])
     %-  zing
     %+  turn  (sort-keys ~(tap in ~(key by super-shelf)))
@@ -76,7 +78,6 @@
     ^-  (list [path ref])
     =/  =spine  (~(got by super-shelf) [host book-id])
     =/  toc=(map path ref)  toc.spine
-    =/  limit=@   (fall (bind (~(get by query) 'limit') (cury slav %ud)) 10)
     %-  sort-results
     ^-  (list [path ref])
     %^  skil  ~(tap by toc)  limit

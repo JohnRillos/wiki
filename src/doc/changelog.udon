@@ -1,5 +1,11 @@
 ;>
 
+## 1.1.1
+Date: ~2024.4.29
+- fix: "Delete" button no longer appears when viewing remote page
+- search results are now limited to 10 total on wiki pages, and 25 total on dedicated search page
+
+
 ## 1.1.0
 Date: ~2024.4.28
 - global search

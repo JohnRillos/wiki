@@ -41,7 +41,7 @@
             =name         "q"
             =style        "margin-left: 4px"
             =placeholder  "Search all wikis (Ctrl-K)"
-            =hx-get       "/wiki/~/x/search"
+            =hx-get       "/wiki/~/x/search?limit=25"
             =hx-params    "*"
             =hx-trigger   "keyup changed delay:100ms, search"
             =hx-target    "#search-all-results-container"

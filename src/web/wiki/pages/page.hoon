@@ -107,7 +107,7 @@
                 ; Download
               ==
               ;+
-              ?.  =(src.bowl our.bowl)  stub:web
+              ?.  =(src.bowl (fall host our.bowl))  stub:web
               %+  in-form:web  "Are you sure you want to delete this page?"
               ;button.delete
                 =type   "submit"
