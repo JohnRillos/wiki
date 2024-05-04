@@ -24,7 +24,7 @@
         [sig %x %search ~]            `[%page & %hx-search]
         (far [@ta ~])                 `[%page r-auth %book]
         (far [@ta sig %new ~])        `[%page w-auth %new-page]
-        [@ta sig %import ~]           `[%page w-auth %import]
+        (far [@ta sig %import ~])     `[%page w-auth %import]
         (far [@ta sig %settings ~])   `[%page & %book-settings]
         [@ta sig %not-found ~]        `[%page r-auth %page-not-found]
         (far [@ta sig %x %search ~])  `[%page r-auth %hx-search]
