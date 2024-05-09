@@ -2,7 +2,7 @@
 :: misc utility
 ::
 /-  *wiki
-/+  regex
+/+  regex, *wiki-morf
 |%
 ::
 ++  may-edit
@@ -128,15 +128,5 @@
   ?:  (gth ago ~h2)  "{<(div ago ~h1)>} hours ago"
   ?:  (gth ago ~m2)  "{<(div ago ~m1)>} minutes ago"
   "{<(div ago ~s1)>} seconds ago"
-::
-++  book-to-spine
-  |=  [id=@ta =book]
-  ^-  spine
-  :-  [id title.book rules.book stamp.book]
-  %-  ~(run by tales.book)
-  |=  =tale
-  =/  [time=@da =page]  (latest tale)
-  =/  ver=@  (dec (wyt:ton tale))
-  [ver time title.page]
 ::
 --

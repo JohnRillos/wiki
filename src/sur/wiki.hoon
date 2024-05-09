@@ -2,13 +2,14 @@
 ::
 ::  current state type
 ::
-+$  state-x  state-3
++$  state-x  state-4
 ::
 +$  versioned-state
   $%  state-0
       state-1
       state-2
       state-3
+      state-4
   ==
 ::
 +$  state-0
@@ -25,13 +26,22 @@
   $+  state-2
   $:  %2
     =later
-    =shelf
-    books=(map @ta book)
+    shelf=shelf-0
+    books=(map @ta book-2)
   ==
 ::
 +$  state-3
   $+  state-3
   $:  %3
+    early=(list cage)
+    =later
+    shelf=shelf-0
+    books=(map @ta book-2)
+  ==
+::
++$  state-4
+  $+  state-4
+  $:  %4
     early=(list cage)
     =later
     =shelf
@@ -44,7 +54,8 @@
 ::
 +$  book
   $+  book
-  $:  title=@t
+  $:  front=tale
+      title=@t
       tales=(map path tale)
       rules=access
       stamp=@da
@@ -58,7 +69,7 @@
 ::
 ++  latest
   |=  =tale
-  ^-  [time=@da =page]
+  ^-  [=time =page]
   (need (pry:ton tale))
 ::
 +$  page
@@ -102,7 +113,8 @@
 ::
 +$  cover
   $+  cover
-  $:  book-id=@ta
+  $:  front-at=(unit @da)
+      book-id=@ta
       title=@t
       rules=access
       stamp=@da
@@ -162,5 +174,41 @@
 +$  page-1  [title=@t content=wain edit-by=@p]
 ::
 +$  access-1  [public-read=? edit=rule-edit]
+::
+::  state-2
+::
++$  book-2
+  $:  title=@t
+      tales=(map path tale)
+      rules=access
+      stamp=@da
+  ==
+::
++$  shelf-0  (map [host=@p id=@ta] spine-0)
+::
++$  spine-0  [cover=cover-0 toc=(map path ref)]
+::
++$  booklet-0  [cover=cover-0 =path =tale]
+::
++$  cover-0
+  $:  book-id=@ta
+      title=@t
+      rules=access
+      stamp=@da
+  ==
+::
++$  lore-0
+  $%  [%lurn shelf=shelf-0]
+      [%burn host=@p id=@ta at=@da]
+  ==
+::
+::  state-4
+::
++$  book-3   book
++$  lore-1   lore
++$  shelf-1  shelf
++$  spine-1  spine
++$  cover-1  cover
++$  booklet-1  booklet
 ::
 --

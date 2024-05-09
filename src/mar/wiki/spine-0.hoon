@@ -1,13 +1,13 @@
 /-  *wiki
 ::
-|_  lor=lore-0
+|_  spine=spine-0
 ++  grad  %noun
 ++  grow
   |%
-  ++  noun  lor
+  ++  noun  spine
   --
 ++  grab
   |%
-  ++  noun  lore-0
+  ++  noun  spine-0
   --
 --

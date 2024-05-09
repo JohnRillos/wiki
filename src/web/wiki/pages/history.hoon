@@ -1,7 +1,7 @@
 ::  article revision history
 ::
 /-  *wiki
-/+  rudder, web=wiki-web
+/+  rudder, web=wiki-web, *wiki
 /*  format-time-js  %js  /web/wiki/format-time/js
 ::
 ^-  (page:rudder rudyard relay)
@@ -89,9 +89,8 @@
 ++  get-cover
   ^-  (unit cover)
   ?^  booklet  `cover.u.booklet
-  =/  buuk  (~(get by books) book-id)
-  %+  bind  buuk
-  |=(=book [book-id title.book rules.book stamp.book])
+  %+  bind  (~(get by books) book-id)
+  |=(=book (book-to-cover book-id book))
 ::
 ++  get-tale
   ^-  (unit tale)

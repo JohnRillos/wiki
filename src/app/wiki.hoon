@@ -1,10 +1,9 @@
 /-  *wiki
 /+  dbug, default-agent, gossip, regex, rudder, server, string, verb
-/+  *wiki, web=wiki-web, wiki-http
+/+  *wiki, *wiki-grad, *wiki-morf, web=wiki-web, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
 /$  html-to-mime  %html  %mime
-/$  noun-to-lore  %noun  %wiki-lore
 ::
 ::  types core
 ::
@@ -22,10 +21,13 @@
 ::  debugging tools
 ::
 %+  verb  |
+::
 %-  %+  agent:gossip  [3 %anybody %anybody &]
-    %+  ~(put by *(map mark $-(* vase)))
-      %wiki-lore
-    |=(=noun !>((noun-to-lore noun)))
+    %-  ~(gas by *(map mark $-(* vase)))
+    :~  [%wiki-lore |=(=noun !>((lore-0-to-1:grad-4 (lore-0 noun))))]
+        [%wiki-lore-1 |=(=noun !>((lore-1 noun)))]
+    ==
+::
 %-  agent:dbug
 ::
 =<  :: compose helper core into agent core
@@ -61,74 +63,13 @@
     ^-  (quip card state-x)
     =|  cards=(list card)
     |-
-    |^  ?-  -.old
-          %3  [cards old]
-          %2  $(old (state-2-to-3 old))
-          %1  $(old (state-1-to-2 old))
-          %0  $(old (state-0-to-1 old))
-        ==
-    ::
-    ++  state-0-to-1
-      |=  =state-0
-      ^-  state-1
-      |^  [%1 (~(run by books.state-0) grad-book)]
-      ::
-      ++  grad-book
-        |=  =book-0
-        ^-  book-1
-        %=  book-0
-          tales  (~(run by tales.book-0) grad-tale)
-          rules  (grad-rules rules.book-0)
-        ==
-      ::
-      ++  grad-tale
-        |=  =tale-0
-        ^-  tale
-        (~(run by tale-0) grad-page)
-      ::
-      ++  grad-page
-        |=  =page-0
-        ^-  page
-        %=  page-0
-          content  [content.page-0 our.bowl]
-        ==
-      ::
-      ++  grad-rules
-        |=  =access-0
-        ^-  access-1
-        [public-read.access-0 [%.n %.n]]
-      --
-    ::
-    ++  state-1-to-2
-      |=  =state-1
-      ^-  state-2
-      |^  [%2 ~ ~ grad-books]
-      ::
-      ++  grad-books
-        ^-  (map @ta book)
-        %-  ~(run by books.state-1)
-        |=  =book-1
-        :^    title.book-1
-            tales.book-1
-          (grad-rules rules.book-1)
-        %-  (curr roll max)
-        %+  turn  ~(val by tales.book-1)
-        |=(=tale time:(latest tale))
-      ::
-      ++  grad-rules
-        |=  =access-1
-        ^-  access
-        access-1(- ?:(public-read.access-1 [& & | |] [| | | |]))
-      --
-    ::
-    ++  state-2-to-3
-      |=  =state-2
-      ^-  state-3
-      %=  state-2
-        -  %3
-        +  [~ +.state-2]
-      ==
-    --
+    ?-  -.old
+      %4  [cards old]
+      %3  $(old (state:grad-4 old), cards (cards:grad-4 old bowl))
+      %2  $(old (state:grad-3 old))
+      %1  $(old (state:grad-2 old))
+      %0  $(old (state:grad-1 old bowl))
+    ==
   --
 ::
 ++  on-poke
@@ -249,12 +190,16 @@
         ?:  =(~ page-path.site)      ~
         ?:  =('~' -.page-path.site)  ~
         (path-before-sig page-path.site)
-      =/  mark=path
-        ?~  page-path  /spine-0
-        /booklet-0
+      :: =/  old=?  (is-old ship book-id)
+      :: =/  resource=path
+      ::   ?~  page-path  ?:(old /spine-0 /spine)
+      ::   ?:(old /booklet-0 /booklet)
+      =/  resource=path
+        ?~  page-path  /spine
+        /booklet
       =/  ver=@t  (get-case ship book-id page-path query)
       =/  base=path  /g/x/[ver]/wiki/$/1
-      =/  loc=path  :(weld base mark /[book-id] page-path)
+      =/  loc=path  :(weld base resource /[book-id] page-path)
       =/  sec=(unit [idx=@ key=@])  ~
       =/  =task:ames  [%keen sec ship loc]
       =/  =note-arvo  [%a task]
@@ -271,13 +216,20 @@
       ?~  i  full
       (scag u.i full)
     ::
+    :: ++  is-old
+    ::   |=  [=ship book-id=@ta]
+    ::   ^-  path
+    ::   =/  spine=(unit spine)  (~(get by shelf) ship book-id)
+    ::   ?~  |
+    ::   =(~ front.cover.u.spine)
+    ::
     ++  get-case
       |=  [=ship book-id=@ta =path query=(map @t @t)]
       ^-  @t
       =/  time=(unit @da)
         ?:  (~(has by query) 'fresh')  ~
         :: Ideally this would get the last time a page was edited,
-        :: but since the booklet-0 contains data about the book itself,
+        :: but since the booklet-1 contains data about the book itself,
         :: that data may have changed.
         :: Unfortunately this makes page scries load from cache less often
         :: todo: Maybe split into 2-step scry to get cover @ stamp then page data @edited-at
@@ -371,13 +323,13 @@
       =/  rud=rudyard
         ?+  p.u.data  ~|("Unknown mark {<p.u.data>}" !!)
         ::
-            %wiki-booklet-0
-          =/  =booklet  ;;(booklet q.u.data)
-          [state ~ `booklet]
+          %wiki-booklet-0  [state ~ `(booklet-0-to-1:grad-4 ;;(booklet-0 q.u.data))]
         ::
-            %wiki-spine-0
-          =/  =spine    ;;(spine q.u.data)
-          [state `spine ~]
+          %wiki-spine-0    [state `(spine-0-to-1:grad-4 ;;(spine-0 q.u.data)) ~]
+        ::
+          %wiki-booklet-1  [state ~ `(booklet-1 q.u.data)]
+        ::
+          %wiki-spine-1    [state `(spine-1 q.u.data) ~]
         ==
       =/  req=(unit inbound-request:eyre)  (eyre-request:serv bowl eyre-id.wire)
       ?~  req  ~|('Remote scry data received but eyre request not found' !!)
@@ -427,7 +379,7 @@
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   ?:  &(!public.read.rules public.edit.rules)
     ~|("Cannot enable public edits on private wiki." !!)
-  =/  =book  [title ~ rules now.bowl]
+  =/  =book  [~ title ~ rules now.bowl]
   =.  books  (~(put by books) id book)
   :_  state
   %-  (walt card)
@@ -444,7 +396,7 @@
   :_  state
   =/  r  read.rules.book
   %-  (walt card)
-  :~  [scry.r |.((book:tomb id))]
+  :~  [scry.r |.((full:tomb id))]
       [goss.r |.([(hush:goss id) ~])]
   ==
 ::
@@ -460,7 +412,7 @@
   :_  state
   =/  r  read.rules.book
   %-  (walt card)
-  :~  [scry.r |.([(spine-0:grow id book) ~])]
+  :~  [scry.r |.([(back:grow id book) ~])]
       [goss.r |.([(tell:goss id book) ~])]
   ==
 ::
@@ -486,7 +438,7 @@
   :_  state
   %-  (walt card)
   :~  [en-scry |.((full:grow id book))]
-      [un-scry |.((book:tomb id))]
+      [un-scry |.((full:tomb id))]
       [en-goss |.([(tell:goss id book) ~])]
       [un-goss |.([(hush:goss id) ~])]
   ==
@@ -529,8 +481,8 @@
   :_  state
   =/  r  read.rules.book
   %-  (walt card)
-  :~  [scry.r |.([(booklet-0:grow book-id book path tale) ~])]
-      [scry.r |.([(spine-0:grow book-id book) ~])]
+  :~  [scry.r |.([(part:grow book-id book path tale) ~])]
+      [scry.r |.([(back:grow book-id book) ~])]
       [goss.r |.([(tell:goss book-id book) ~])]
   ==
 ::
@@ -546,8 +498,8 @@
   :_  state
   =/  r  read.rules.book
   %-  (walt card)
-  :~  [scry.r |.((booklet:tomb book-id path))] 
-      [scry.r |.([(spine-0:grow book-id book) ~])]
+  :~  [scry.r |.((part:tomb book-id path))]
+      [scry.r |.([(back:grow book-id book) ~])]
       [goss.r |.([(tell:goss book-id book) ~])]
   ==
 ::
@@ -574,8 +526,8 @@
   :_  state
   =/  r  read.rules.book
   %-  (walt card)
-  :~  [scry.r |.([(booklet-0:grow book-id book path tale) ~])]
-      [scry.r |.([(spine-0:grow book-id book) ~])]
+  :~  [scry.r |.([(part:grow book-id book path tale) ~])]
+      [scry.r |.([(back:grow book-id book) ~])]
       [goss.r |.([(tell:goss book-id book) ~])]
   ==
 ::
@@ -678,28 +630,28 @@
   ^-  card
   [%pass [eyre-id -.action ~] %agent [ship %wiki] %poke %wiki-action !>(action)]
 ::
-++  grow
+++  grow :: todo: decide if I keep using /booklet-0 (safe, but gross), or force switch to /booklet (potentially breaking)
   |%
-  ++  booklet-0
+  ++  part
     |=  [book-id=@ta =book tale-path=path =tale]
     ^-  card
     =/  =wire  /wiki/booklet
-    =/  loc=path  (weld /booklet-0/[book-id] tale-path)
-    =/  =booklet  [[book-id title.book rules.book stamp.book] tale-path tale]
-    [%pass wire %grow loc %wiki-booklet-0 booklet]
+    =/  loc=path  (weld /booklet/[book-id] tale-path)
+    =/  =booklet  [(book-to-cover book-id book) tale-path tale]
+    [%pass wire %grow loc %wiki-booklet-1 booklet]
   ::
-  ++  spine-0
+  ++  back
     |=  [id=@ta =book]
     ^-  card
-    [%pass /wiki/spine %grow /spine-0/[id] %wiki-spine-0 (book-to-spine id book)]
+    [%pass /wiki/spine %grow /spine/[id] %wiki-spine-1 (book-to-spine id book)]
   ::
   ++  full
     |=  [id=@ta =book]
     ^-  (list card)
-    :-  (spine-0 id book)
+    :-  (back id book)
     %+  turn  ~(tap by tales.book)
     |=  [=path =tale]
-    (booklet-0 id book path tale)
+    (part id book path tale)
   --
 ::
 ++  tomb
@@ -708,28 +660,32 @@
     |=  targ=path
     ^-  (list card)
     =/  base=path  ~+  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$/1
-    =/  =fans:gall  (~(got by sky.bowl) targ)
-    %+  murn  ~(tap by fans)
+    =/  fans=(unit fans:gall)  (~(get by sky.bowl) targ)
+    ?~  fans  ~
+    %+  murn  ~(tap by u.fans)
     |=  [v=@ud =time data=(each page:clay @uvI)]
     ?.  -.data  ~
     `[%pass (weld /wiki/tomb targ) %tomb [%ud v] targ]
   ::
-  ++  book
+  ++  full
     |=  book-id=@ta
     ^-  (list card)
     =;  paths=(list path)  (zing (turn paths tomb))
+    :-  /spine/[book-id]
     :-  /spine-0/[book-id]
     %+  skim  ~(tap in ~(key by sky.bowl))
     |=  =(pole knot)
-    ?.  ?=([%booklet-0 bid=@ta *] pole)  |
-    =(book-id bid.pole)
+    ?+  pole  |
+      [%booklet bid=@ta *]    =(book-id bid.pole)
+      [%booklet-0 bid=@ta *]  =(book-id bid.pole)
+    ==
   ::
-  ++  booklet
+  ++  part
     |=  [book-id=@ta page-path=path]
     ^-  (list card)
-    =/  targ=path  (weld /booklet-0/[book-id] page-path)
-    ?.  (~(has by sky.bowl) targ)  ~
-    (tomb targ)
+    %+  weld
+      (tomb (weld /booklet/[book-id] page-path))
+    (tomb (weld /booklet-0/[book-id] page-path))
   --
 ::
 ++  goss

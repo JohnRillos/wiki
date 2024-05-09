@@ -163,9 +163,8 @@
 ++  get-cover
   ^-  (unit cover)
   ?^  booklet  `cover.u.booklet
-  =/  buuk  (~(get by books) book-id)
-  %+  bind  buuk
-  |=(=book [book-id title.book rules.book stamp.book])
+  %+  bind  (~(get by books) book-id)
+  |=(=book (book-to-cover book-id book))
 ::
 ++  get-tale
   ^-  (unit tale)

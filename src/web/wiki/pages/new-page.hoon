@@ -147,8 +147,7 @@
   ?^  spine  `cover.u.spine
   =/  =wiki-path  wiki-path:(wiki-url:web url.request.order)
   =/  book-id=@t  book-id.wiki-path
-  =/  buuk  (~(get by books) book-id)
-  %+  bind  buuk
-  |=(=book [book-id title.book rules.book stamp.book])
+  %+  bind  (~(get by books) book-id)
+  |=(=book (book-to-cover book-id book))
 ::
 --
