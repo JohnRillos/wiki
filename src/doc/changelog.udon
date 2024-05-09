@@ -1,5 +1,14 @@
 ;>
 
+## 1.1.2
+Date: ~2024.5.8
+- fix: import page is accessible when viewing own wiki through remote-style path
+- less spam when handling gossip with unknown marks
+  - preparation for future updates with new gossip marks
+  - no stacktrace, short informative log instead
+  - retry after 5 minutes instead of 15 seconds
+
+
 ## 1.1.1
 Date: ~2024.4.29
 - fix: "Delete" button no longer appears when viewing remote page
