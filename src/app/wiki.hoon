@@ -696,14 +696,14 @@
     ^-  card
     ~&  '%wiki starting a rumor...'
     =/  =lore  [%lurn (malt [[our.bowl id] (book-to-spine id book)]~)]
-    [(invent:gossip %wiki-lore !>(lore))]
+    [(invent:gossip %wiki-lore-1 !>(lore))]
   ::
   ++  hush
     |=  [id=@ta]
     ^-  card
     ~&  '%wiki denying a rumor...'
     =/  =lore  [%burn our.bowl id now.bowl]
-    [(invent:gossip %wiki-lore !>(lore))]
+    [(invent:gossip %wiki-lore-1 !>(lore))]
   ::
   ++  rant
     ^-  (list card)
@@ -712,7 +712,7 @@
       %+  turn  library
       |=  item=[[@p @ta] spine]
       =/  =lore  [%lurn (malt [item]~)]
-      (invent:gossip %wiki-lore !>(lore))
+      (invent:gossip %wiki-lore-1 !>(lore))
     %+  weld  ~(tap by shelf)
     %+  murn  ~(tap by books)
     |=  [id=@ta =book]
