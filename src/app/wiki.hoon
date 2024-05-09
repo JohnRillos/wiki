@@ -308,7 +308,7 @@
     |=  =cage
     ^-  (quip card _state)
     ?+  wire  ~|  "Unknown wire {<wire>}"  !!
-      [%~.~ %gossip %gossip ~]  (read:goss:main !<(lore q.cage))
+      [%~.~ %gossip %gossip ~]  (read:goss:main cage)
     ==
   ::
   ::  A poke to another ship may contain the eyre-id of a form submission in its path.
@@ -756,9 +756,11 @@
     `[[our.bowl id] (book-to-spine id book)]
   ::
   ++  read
-    |=  =lore
+    |=  =cage
     ^-  (quip card _state)
-    ~&  '%wiki heard a rumor...'
+    ~&  "%wiki heard a rumor from {<src.bowl>}..."
+    ?.  ?=(%wiki-lore p.cage)  [(cope) state]
+    =/  =lore  !<(lore q.cage)
     ?-  -.lore
       %lurn
         =/  other=_shelf
@@ -782,6 +784,14 @@
         ~&  "... un-indexing {<[host.lore id.lore]>}"
         =.  shelf  (~(del by shelf) [host.lore id.lore])
         state
+    ==
+  ::
+  ++  cope
+    |.
+    ^-  (list card)
+    ~&  "... but didn't understand it (asking again later)"
+    :~  [%pass /~/gossip/gossip/(scot %p src.bowl) [%agent [src.bowl dap.bowl] %leave ~]]
+        [%pass /~/gossip/retry/watch/(scot %p src.bowl) [%arvo %b %wait (add now.bowl ~m5)]]
     ==
   --
 ::
