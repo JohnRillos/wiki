@@ -18,7 +18,7 @@
 =|  state-x
 =*  state  -
 ::
-::  debugging tools
+::  wrappers
 ::
 %+  verb  |
 ::
@@ -30,7 +30,7 @@
 ::
 %-  agent:dbug
 ::
-=<  :: compose helper core into agent core
+=<
 ::
 ::  agent core
 ::
@@ -723,7 +723,7 @@
     |=  =cage
     ^-  (quip card _state)
     ~&  "%wiki heard a rumor from {<src.bowl>}..."
-    ?.  ?=(%wiki-lore p.cage)  (cope cage)
+    ?.  ?=(%wiki-lore-1 p.cage)  (cope cage)
     =/  =lore  !<(lore q.cage)
     ?-  -.lore
       %lurn
