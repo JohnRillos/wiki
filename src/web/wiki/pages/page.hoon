@@ -20,7 +20,7 @@
   ?.  (~(has by args) 'del-page')  ~
   =/  [=wiki-path *]  (wiki-url:web url.request.order)
   [%relay our.bowl id.order [%del-page book-id.wiki-path where:space-time:help]]
-::
+:: 
 ++  final
   |=  [success=? msg=brief:rudder]
   ^-  reply:rudder

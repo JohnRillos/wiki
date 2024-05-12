@@ -13,6 +13,7 @@
 ++  book-to-spine
   |=  [id=@ta =book]
   ^-  spine
+  :-  our-era
   :-  (book-to-cover id book)
   %-  ~(run by tales.book)
   |=  =tale

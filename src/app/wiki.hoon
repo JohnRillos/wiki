@@ -24,7 +24,7 @@
 ::
 %-  %+  agent:gossip  [3 %anybody %anybody &]
     %-  ~(gas by *(map mark $-(* vase)))
-    :~  [%wiki-lore |=(=noun !>((lore-0-to-1:grad-4 (lore-0 noun))))]
+    :~  [%wiki-lore |=(=noun !>((lore-0 noun)))]
         [%wiki-lore-1 |=(=noun !>((lore-1 noun)))]
     ==
 ::
@@ -637,7 +637,7 @@
     ^-  card
     =/  =wire  /wiki/booklet
     =/  loc=path  (weld /booklet/[book-id] tale-path)
-    =/  =booklet  [(book-to-cover book-id book) tale-path tale]
+    =/  =booklet  [our-era (book-to-cover book-id book) tale-path tale]
     [%pass wire %grow loc %wiki-booklet-1 booklet]
   ::
   ++  back
@@ -723,7 +723,10 @@
     |=  =cage
     ^-  (quip card _state)
     ~&  "%wiki heard a rumor from {<src.bowl>}..."
-    ?.  ?=(%wiki-lore-1 p.cage)  (cope cage)
+    ?:  ?=(%gossip-unknown p.cage)  (cope cage)
+    ?:  ?=(%wiki-lore p.cage)
+      $(cage [%wiki-lore-1 !>((lore-0-to-1:grad-4 !<(lore-0 q.cage)))])
+    ?>  ?=(%wiki-lore-1 p.cage)
     =/  =lore  !<(lore q.cage)
     ?-  -.lore
       %lurn

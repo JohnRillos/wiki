@@ -1,7 +1,6 @@
 /-  *wiki
-/+  wiki-morf
 ::
-|_  lor=lore
+|_  lor=lore-1
 ++  grad  %noun
 ++  grow
   |%
@@ -9,7 +8,6 @@
   --
 ++  grab
   |%
-  ++  noun  lore
-  ++  lore-0  lore-0-to-1:wiki-morf
+  ++  noun  lore-1
   --
 --

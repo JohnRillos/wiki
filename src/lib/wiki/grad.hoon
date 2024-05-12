@@ -5,6 +5,8 @@
 ::
 ++  grad-4
   |%
+  ++  old-era  3
+  ::
   ++  state
     |=  old=state-3
     ^-  state-4
@@ -35,12 +37,12 @@
   ++  spine-0-to-1
     |=  old=spine-0
     ^-  spine-1
-    [[~ cover.old] toc.old]
+    [old-era [~ cover.old] toc.old]
   ::
   ++  booklet-0-to-1
     |=  old=booklet-0
     ^-  booklet-1
-    [[~ cover.old] +.old]
+    [old-era [~ cover.old] +.old]
   ::
   ++  cards
     |=  [=state-3 =bowl:gall]

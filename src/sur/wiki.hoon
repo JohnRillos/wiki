@@ -4,6 +4,8 @@
 ::
 +$  state-x  state-4
 ::
+++  our-era  %4
+::
 +$  versioned-state
   $%  state-0
       state-1
@@ -122,11 +124,11 @@
 ::
 +$  shelf    $+(shelf (map [host=@p id=@ta] spine))
 ::
-+$  spine    $+(spine [=cover toc=(map path ref)])
++$  spine    $+(spine [era=@ud =cover toc=(map path ref)])
 ::
 +$  ref      [ver=@ edited=@da title=@t]
 ::
-+$  booklet  [=cover =path =tale]
++$  booklet  [era=@ud =cover =path =tale]
 ::
 +$  rudyard  [state-x spine=(unit spine) booklet=(unit booklet)]
 ::
@@ -148,6 +150,10 @@
       done=?
       error=(unit tang)
   ==
+::
+::  facts from newer versions of %wiki, to be consumed on-load
+::
++$  early  (list cage)
 ::
 ::  state-0
 ::
@@ -184,7 +190,7 @@
       stamp=@da
   ==
 ::
-+$  shelf-0  (map [host=@p id=@ta] spine-0)
++$  shelf-0  $+(shelf-0 (map [host=@p id=@ta] spine-0))
 ::
 +$  spine-0  [cover=cover-0 toc=(map path ref)]
 ::
