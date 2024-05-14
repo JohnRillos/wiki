@@ -14,7 +14,6 @@ The overall aims of this grant are:
 
 ### Milestone 1 - Public Remote Access + Global Search
 
-* Estimated completion: March 1st 2024
 * Compensation: 2 stars
 * Deliverables
   * User can create and edit content on remote public wikis
@@ -30,7 +29,6 @@ The overall aims of this grant are:
 
 ### Milestone 2 - User Experience Enhancements
 
-* Estimated completion: April 2024
 * Compensation: 1 star
 * Deliverables:
   * Mobile-friendly UI
@@ -43,7 +41,6 @@ The overall aims of this grant are:
 
 ### Milestone 3 - Shared Private Wikis + User Roles
 
-* Estimated completion: May 2024
 * Compensation: 2 stars
 * Deliverables:
   * Hosts can assign roles to other users such as admin, moderator, and editor

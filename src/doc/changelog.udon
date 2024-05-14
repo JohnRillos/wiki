@@ -1,5 +1,13 @@
 ;>
 
+## 1.1.3
+Date: TBD
+- add pretty-printer aliases for types
+- better handling for gossip with unknown marks
+  - store rumor cage in state, to be re-attempted after app update
+  - no longer unsubscribe from source
+
+
 ## 1.1.2
 Date: ~2024.5.8
 - fix: import page is accessible when viewing own wiki through remote-style path

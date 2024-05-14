@@ -1,10 +1,12 @@
 # %wiki
 
-An app for building your own wiki on [Urbit](https://urbit.org).
+An app for building and reading wikis on [Urbit](https://urbit.org).
 
 ---
 
-[Proposal](https://urbit.org/grants/wiki) <sup>[(mirror)](./proposal.md)</sup>
+[Proposal 1](https://urbit.org/grants/wiki) <sup>[(mirror)](./proposal_1.md)</sup>
+
+[Proposal 2](https://urbit.org/grants/wiki-2) <sup>[(mirror)](./proposal_2.md)</sup>
 
 [Overview](./src/doc/overview.udon)
 
