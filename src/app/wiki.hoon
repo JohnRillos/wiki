@@ -55,8 +55,9 @@
   |=  old-vase=vase
   ^-  (quip card _this)
   |^  =+  !<(old=versioned-state old-vase)
-      =^  cards  state  (build-state old)
-      [cards this]
+      =^  cards-1  state  (build-state old)
+      =^  cards-2  state  retry-early-goss
+      [(weld cards-1 cards-2) this]
   ::
   ++  build-state
     |=  old=versioned-state
@@ -70,22 +71,38 @@
       %1  $(old (state:grad-2 old))
       %0  $(old (state:grad-1 old bowl))
     ==
+  ::
+  ++  retry-early-goss
+    ^-  (quip card _state)
+    =/  split=(list [? cage])
+      %+  turn  early
+      |=  raw=cage
+      ^-  [? cage]
+      ?.  ?=(%gossip-unknown p.raw)  [| raw]
+      =/  mask=(cask cage)  !<((cask cage) q.raw)
+      ?+  p.mask  [| raw]
+        %wiki-lore-1  [& q.mask]
+      ==
+    =/  [go=(list cage) no=(list cage)]
+      =/  s  (skid split head)
+      [(turn p.s tail) (turn q.s tail)]
+    =.  early  no
+    :_  state
+    %+  turn   go
+    |=  =cage
+    ^-  card
+    =/  =wire  /retry/[p.cage]/(scot %uv (sham q.cage))
+    [%pass wire %agent [our.bowl %wiki] %poke %wiki-retry !>([%old-goss cage])]
   --
 ::
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card _this)
   |^  ?+  mark  (on-poke:default mark vase)
-      ::
-          %wiki-action
-        (handle-action !<(action vase))
-      ::
-          %wiki-relay
-        (handle-relay !<(relay vase))
-      ::
-          %handle-http-request
-        (handle-http !<(order:rudder vase))
-      ::
+        %wiki-action          (handle-action !<(action vase))
+        %wiki-relay           (handle-relay !<(relay vase))
+        %wiki-retry           (handle-old-goss !<(old-goss vase))
+        %handle-http-request  (handle-http !<(order:rudder vase))
       ==
   ::
   ++  handle-action
@@ -116,6 +133,12 @@
       =/  =wait  [now.bowl ~ | ~]
       =.  later  (~(put by later) eyre-id wait)
       state
+    [cards this]
+  ::
+  ++  handle-old-goss
+    |=  [%old-goss =cage]
+    ^-  (quip card _this)
+    =^  cards  state  (read:goss:main cage)
     [cards this]
   ::
   ++  handle-http

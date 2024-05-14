@@ -92,6 +92,8 @@
 ::
 +$  relay  [%relay to=@p eyre-id=@ta =action]
 ::
++$  old-goss  [%old-goss =cage]
+::
 +$  action
   $+  wiki-action
   $%  [%new-book id=@ta title=@t rules=access]
@@ -103,10 +105,6 @@
       [%del-page book-id=@ta =path]
       [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
       [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
-      :: [%knight book-id=@ta =ship]
-      :: [%demote book-id=@ta =ship]
-      :: [%banish book-id=@ta =ship]
-      :: [%pardon book-id=@ta =ship]
   ==
 ::
 +$  wiki-path  [[book-id=@ta loc=path] host=(unit @p)]
