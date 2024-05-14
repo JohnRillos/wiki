@@ -6,6 +6,7 @@ Date: TBD
 - better handling for gossip with unknown marks
   - store rumor cage in state, to be re-attempted after app update
   - no longer unsubscribe from source
+- fix styling on gray backgrounds
 
 
 ## 1.1.2
