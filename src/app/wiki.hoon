@@ -71,7 +71,7 @@
       %1  $(old (state:grad-2 old))
       %0  $(old (state:grad-1 old bowl))
     ==
-  ::
+  ::  todo: try re-writing this as recursive function, might be simpler
   ++  retry-early-goss
     ^-  (quip card _state)
     =/  split=(list [? cage])
@@ -79,9 +79,9 @@
       |=  raw=cage
       ^-  [? cage]
       ?.  ?=(%gossip-unknown p.raw)  [| raw]
-      =/  mask=(cask cage)  !<((cask cage) q.raw)
-      ?+  p.mask  [| raw]
-        %wiki-lore-1  [& q.mask]
+      =/  k=(cask *)  !<((cask *) q.raw)
+      ?+  p.k  [| raw]
+        %wiki-lore-1  [& [p.k !>((lore-1 q.k))]]
       ==
     =/  [go=(list cage) no=(list cage)]
       =/  s  (skid split head)
