@@ -16,7 +16,7 @@
 ::
 ::  state
 ::
-=|  state-2
+=|  state-x
 =*  state  -
 ::
 ::  debugging tools
@@ -42,7 +42,7 @@
 ++  on-init
   ^-  (quip card _this)
   =^  cards  state
-    =|  state=state-2
+    =|  state=state-x
     :_  state
     [%pass /eyre/connect %arvo %e %connect [~ /[dap.bowl]] dap.bowl]~
   [cards this]
@@ -58,11 +58,12 @@
   ::
   ++  build-state
     |=  old=versioned-state
-    ^-  (quip card state-2)
+    ^-  (quip card state-x)
     =|  cards=(list card)
     |-
     |^  ?-  -.old
-          %2  [cards old]
+          %3  [cards old]
+          %2  $(old (state-2-to-3 old))
           %1  $(old (state-1-to-2 old))
           %0  $(old (state-0-to-1 old))
         ==
@@ -120,6 +121,13 @@
         access-1(- ?:(public-read.access-1 [& & | |] [| | | |]))
       --
     ::
+    ++  state-2-to-3
+      |=  =state-2
+      ^-  state-3
+      %=  state-2
+        -  %3
+        +  [~ +.state-2]
+      ==
     --
   --
 ::
@@ -759,7 +767,7 @@
     |=  =cage
     ^-  (quip card _state)
     ~&  "%wiki heard a rumor from {<src.bowl>}..."
-    ?.  ?=(%wiki-lore p.cage)  [(cope) state]
+    ?.  ?=(%wiki-lore p.cage)  (cope cage)
     =/  =lore  !<(lore q.cage)
     ?-  -.lore
       %lurn
@@ -787,12 +795,11 @@
     ==
   ::
   ++  cope
-    |.
-    ^-  (list card)
-    ~&  "... but didn't understand it (asking again later)"
-    :~  [%pass /~/gossip/gossip/(scot %p src.bowl) [%agent [src.bowl dap.bowl] %leave ~]]
-        [%pass /~/gossip/retry/watch/(scot %p src.bowl) [%arvo %b %wait (add now.bowl ~m5)]]
-    ==
+    |=  =cage
+    ^-  (quip card _state)
+    ~&  "... but didn't understand it (will try again after next update)"
+    =.  early  (snoc early cage)
+    [~ state]
   --
 ::
 ++  relay-response

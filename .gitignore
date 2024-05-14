@@ -9,3 +9,5 @@ ui/.eslintcache
 ui/.vercel
 
 .vscode
+
+temp/

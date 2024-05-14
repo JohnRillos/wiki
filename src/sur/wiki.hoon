@@ -1,9 +1,14 @@
 |%
 ::
+::  current state type
+::
++$  state-x  state-3
+::
 +$  versioned-state
   $%  state-0
       state-1
       state-2
+      state-3
   ==
 ::
 +$  state-0
@@ -17,7 +22,17 @@
   ==
 ::
 +$  state-2
+  $+  state-2
   $:  %2
+    =later
+    =shelf
+    books=(map @ta book)
+  ==
+::
++$  state-3
+  $+  state-3
+  $:  %3
+    early=(list cage)
     =later
     =shelf
     books=(map @ta book)
@@ -28,13 +43,16 @@
 ::   tbd: include in `shelf` or separate
 ::
 +$  book
+  $+  book
   $:  title=@t
       tales=(map path tale)
       rules=access
       stamp=@da
   ==
 ::
-+$  tale  ((mop @da page) gth)
++$  tale
+  $+  tale
+  ((mop @da page) gth)
 ::
 ++  ton   ((on @da page) gth)
 ::
@@ -44,6 +62,7 @@
   (need (pry:ton tale))
 ::
 +$  page
+  $+  page
   $:  title=@t
       content=wain
       edit-by=@p
@@ -61,6 +80,7 @@
 +$  relay  [%relay to=@p eyre-id=@ta =action]
 ::
 +$  action
+  $+  wiki-action
   $%  [%new-book id=@ta title=@t rules=access]
       [%del-book id=@ta]
       [%mod-book-name id=@ta title=@t]
@@ -81,21 +101,22 @@
 +$  title-source  ?(%header %filename %front-matter)
 ::
 +$  cover
+  $+  cover
   $:  book-id=@ta
       title=@t
       rules=access
       stamp=@da
   ==
 ::
-+$  shelf    (map [host=@p id=@ta] spine)
++$  shelf    $+(shelf (map [host=@p id=@ta] spine))
 ::
-+$  spine    [=cover toc=(map path ref)]
++$  spine    $+(spine [=cover toc=(map path ref)])
 ::
 +$  ref      [ver=@ edited=@da title=@t]
 ::
 +$  booklet  [=cover =path =tale]
 ::
-+$  rudyard  [state-2 spine=(unit spine) booklet=(unit booklet)]
++$  rudyard  [state-x spine=(unit spine) booklet=(unit booklet)]
 ::
 ::
 ::
