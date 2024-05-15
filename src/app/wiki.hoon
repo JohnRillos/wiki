@@ -138,6 +138,7 @@
   ++  handle-old-goss
     |=  [%old-goss =cage]
     ^-  (quip card _this)
+    ~&  "Remembering rumor..."
     =^  cards  state  (read:goss:main cage)
     [cards this]
   ::
@@ -175,7 +176,7 @@
       =/  out=(quip card rudyard)  (serve input)
       out(+ this(state -.+.out))
     ::
-    ++  serve :: consolidate in main core
+    ++  serve :: todo: consolidate in main core
       %-  (steer:rudder rudyard relay)
       :^    web:serv               :: pages
           http-route:serv          :: route
@@ -213,13 +214,7 @@
         ?:  =(~ page-path.site)      ~
         ?:  =('~' -.page-path.site)  ~
         (path-before-sig page-path.site)
-      :: =/  old=?  (is-old ship book-id)
-      :: =/  resource=path
-      ::   ?~  page-path  ?:(old /spine-0 /spine)
-      ::   ?:(old /booklet-0 /booklet)
-      =/  resource=path
-        ?~  page-path  /spine
-        /booklet
+      =/  resource=path  (get-resource ship book-id page-path)
       =/  ver=@t  (get-case ship book-id page-path query)
       =/  base=path  /g/x/[ver]/wiki/$/1
       =/  loc=path  :(weld base resource /[book-id] page-path)
@@ -239,12 +234,15 @@
       ?~  i  full
       (scag u.i full)
     ::
-    :: ++  is-old
-    ::   |=  [=ship book-id=@ta]
-    ::   ^-  path
-    ::   =/  spine=(unit spine)  (~(get by shelf) ship book-id)
-    ::   ?~  |
-    ::   =(~ front.cover.u.spine)
+    ++  get-resource
+      |=  [=ship book-id=@ta page-path=path]
+      ^-  path
+      =/  spine=(unit spine)  (~(get by shelf) ship book-id)
+      ?:  &(?=(^ spine) =(3 era.u.spine))
+        ?~  page-path  /spine-0
+        /booklet-0
+      ?~  page-path  /spine
+      /booklet
     ::
     ++  get-case
       |=  [=ship book-id=@ta =path query=(map @t @t)]
