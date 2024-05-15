@@ -43,12 +43,6 @@
     |=  old=booklet-0
     ^-  booklet-1
     [old-era [~ cover.old] +.old]
-  ::
-  ++  cards
-    |=  [=state-3 =bowl:gall]
-    ^-  (list card)
-    :: todo: cards -> re-grow all /booklet-0 + /spine-0 paths -> /booklet & /spine
-    ~
   --
 ::
 ++  grad-3

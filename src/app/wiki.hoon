@@ -66,23 +66,21 @@
     |-
     ?-  -.old
       %4  [cards old]
-      %3  $(old (state:grad-4 old), cards (cards:grad-4 old bowl))
+      %3  =/  new  (state:grad-4 old)
+          $(old new, cards (grow-all new))
       %2  $(old (state:grad-3 old))
       %1  $(old (state:grad-2 old))
       %0  $(old (state:grad-1 old bowl))
     ==
-  ::  todo: try re-writing this as recursive function, might be simpler
+  ::
+  ++  grow-all
+    |=  =state-x
+    ^-  (list card)
+    (zing (turn ~(tap by books.state-x) full:grow:main))
+  ::
   ++  retry-early-goss
     ^-  (quip card _state)
-    =/  split=(list [? cage])
-      %+  turn  early
-      |=  raw=cage
-      ^-  [? cage]
-      ?.  ?=(%gossip-unknown p.raw)  [| raw]
-      =/  k=(cask *)  !<((cask *) q.raw)
-      ?+  p.k  [| raw]
-        %wiki-lore-1  [& [p.k !>((lore-1 q.k))]]
-      ==
+    =/  split=(list [? cage])  (turn early cage-from-cask-in-cage)
     =/  [go=(list cage) no=(list cage)]
       =/  s  (skid split head)
       [(turn p.s tail) (turn q.s tail)]
@@ -93,6 +91,21 @@
     ^-  card
     =/  =wire  /retry/[p.cage]/(scot %uv (sham q.cage))
     [%pass wire %agent [our.bowl %wiki] %poke %wiki-retry !>([%old-goss cage])]
+  ::
+  ++  cage-from-cask-in-cage
+    |=  raw=cage
+    ^-  [parsed=? cage]
+    ?.  ?=(%gossip-unknown p.raw)  [| raw]
+    =/  k=(cask *)  !<((cask *) q.raw)
+    =;  out
+      %+  fall  out
+      ~&  >>>  "failed to parse old rumor w/ known mark {<p.k>}"
+      [| raw]
+    %-  mole
+    |.
+    ?+  p.k         [| raw]
+      %wiki-lore-1  [& [p.k !>((lore-1 q.k))]]
+    ==
   --
 ::
 ++  on-poke
@@ -651,7 +664,7 @@
   ^-  card
   [%pass [eyre-id -.action ~] %agent [ship %wiki] %poke %wiki-action !>(action)]
 ::
-++  grow :: todo: decide if I keep using /booklet-0 (safe, but gross), or force switch to /booklet (potentially breaking)
+++  grow
   |%
   ++  part
     |=  [book-id=@ta =book tale-path=path =tale]
