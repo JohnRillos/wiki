@@ -1,4 +1,4 @@
-::  global search results
+::  htmx partial: global search results
 ::
 /-  *wiki
 /+  multipart, regex, rudder, string, web=wiki-web, *wiki

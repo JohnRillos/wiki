@@ -65,7 +65,8 @@
                 ==
             ==
           ==
-          :: todo: special UI for "no pages" 
+          ;div(hx-get "{wik-dir}/~/x/front", hx-trigger "load");
+          :: todo: special UI for "no pages"
           ;h2: Pages
           ;ul
             ;*  %+  turn  (sort-toc:help toc)
