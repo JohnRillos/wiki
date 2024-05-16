@@ -39,7 +39,7 @@
 +*  this       .
     default  ~(. (default-agent this %|) bowl)
     serv     ~(. wiki-http [state ~ ~])
-    main     ~(. +.+ bowl)
+    main     ~(. +> bowl)
 ::
 ++  on-init
   ^-  (quip card _this)
@@ -186,8 +186,19 @@
     ++  paddle
       |=  input=[bowl:gall order:rudder rudyard]
       ^-  (quip card _this)
-      =/  out=(quip card rudyard)  ((serve:main this) input)
+      =/  out=(quip card rudyard)  (serve input)
       out(+ this(state -.+.out))
+    ::
+    ++  serve :: todo: consolidate in main core
+      %-  (steer:rudder rudyard relay)
+      :^    web:serv               :: pages
+          http-route:serv          :: route
+        (fours:rudder [state ~ ~]) :: adlib
+      |=  =relay                   :: solve
+      ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
+      =^  cards  this
+        (on-poke %wiki-relay !>(relay))
+      ['Successfully processed' cards [state ~ ~]]
     ::
     ++  handle-later
       ^-  (quip card _this)
@@ -357,7 +368,7 @@
       =/  req=(unit inbound-request:eyre)  (eyre-request:serv bowl eyre-id.wire)
       ?~  req  ~|('Remote scry data received but eyre request not found' !!)
       =/  =order:rudder  [eyre-id.wire u.req]
-      =/  out=(quip card rudyard)  ((serve:main this) [bowl order rud])
+      =/  out=(quip card rudyard)  (serve [bowl order rud])
       [-.out this(state -.+.out)]
     ::
     ++  error-404
@@ -372,6 +383,16 @@
       =/  html=@t  '<html><body>Error handling remote data!</body></html>'
       [[500 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
     ::
+    ++  serve :: consolidate in main core
+      %-  (steer:rudder rudyard relay)
+      :^    web:serv               :: pages
+          http-route:serv          :: route
+        (fours:rudder [state ~ ~]) :: adlib
+      |=  =relay                   :: solve
+      ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
+      =^  cards  this
+        (on-poke %wiki-relay !>(relay))
+      ['Successfully processed' cards [state ~ ~]]
     --
   ==
 ::
@@ -381,20 +402,6 @@
 ::  helper core (main)
 ::
 |_  =bowl:gall
-::
-+*  serv  ~(. wiki-http [state ~ ~])
-::
-++  serve
-  |=  inner=agent:gall
-  %-  (steer:rudder rudyard relay)
-  :^    web:serv               :: pages
-      http-route:serv          :: route
-    (fours:rudder [state ~ ~]) :: adlib
-  |=  =relay                   :: solve
-  ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
-  =^  cards  inner
-    (on-poke:inner %wiki-relay !>(relay))
-  ['Successfully processed' cards [state ~ ~]]
 ::
 ++  new-book
   |=  [%new-book id=@ta title=@t rules=access]
