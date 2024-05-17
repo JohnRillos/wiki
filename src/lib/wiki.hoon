@@ -13,6 +13,10 @@
     comet.edit.access
   public.edit.access
 ::
+++  is-admin
+  |=  [=bowl:gall host=(unit @p) =access] :: access isn't used... yet
+  =(src.bowl (fall host our.bowl))
+::
 ++  part
   |=  =cord
   ^-  path

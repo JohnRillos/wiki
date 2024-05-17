@@ -224,9 +224,11 @@
       =/  =ship  (slav %p who.site)
       =/  book-id=@ta     book-id.site
       =/  page-path=path
-        ?:  =(~ page-path.site)      ~
-        ?:  =('~' -.page-path.site)  ~
-        (path-before-sig page-path.site)
+        ?+  page-path.site    (path-before-sig page-path.site)
+          [%~.~ %x %front ~]  /[%~.-]/front
+          [%~.~ *]            ~
+          ~                   ~
+        ==
       =/  resource=path  (get-resource ship book-id page-path)
       =/  ver=@t  (get-case ship book-id page-path query)
       =/  base=path  /g/x/[ver]/wiki/$/1
@@ -500,6 +502,7 @@
   ?:  =(~ path)  ~|('Path cannot be blank!' !!)
   ?^  (find "~" path)  ~|('Path cannot contain "/~/"' !!)
   ?.  (levy path (sane %ta))  ~|('Invalid path!' !!)
+  ?>  (check-reserved-path path)
   =/  =book  (~(got by books) book-id)
   ?.  (may-edit bowl ~ rules.book)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %new-page"
@@ -518,6 +521,14 @@
   :~  [scry.r |.([(part:grow book-id book path tale) ~])]
       [scry.r |.([(back:grow book-id book) ~])]
       [goss.r |.([(tell:goss book-id book) ~])]
+  ==
+::
+++  check-reserved-path
+  |=  =path
+  ^-  ?
+  ?+  path  &
+    [%~.- %front ~]  ~|('Only the host can set up the front page' ?>(=(src.bowl our.bowl) &))
+    [%~.- *]         ~|('Paths beginning with "/-/" are reserved' !!)
   ==
 ::
 ++  del-page

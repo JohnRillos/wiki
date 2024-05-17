@@ -32,7 +32,9 @@
   =/  next=@t
     ?.  success  url.request.order
     =/  wik-dir=tape  (base-path:web wiki-path:(wiki-url:web url.request.order))
-    =/  pag-dir=tape  (spud page-path:help)
+    =/  pag-dir=tape
+      ?:  =(/[~.-]/front page-path:help)  ""
+      (spud page-path:help)
     (crip "{wik-dir}{pag-dir}?after={(trip id.order)}")
   ((alert:rudder next build))
 ::
@@ -97,6 +99,8 @@
                   ==
                 ==
                 ;td
+                  ;+
+                  %+  disable-if:web  =(/[%~.-]/front page-path:help)
                   ;input
                     =type      "text"
                     =name      "page-title"

@@ -8,6 +8,25 @@ body {
   visibility: hidden;
 }
 
+.loader {
+  display: flex;
+  justify-content: center;
+}
+
+#front {
+  min-height: 80px;
+}
+
+.fade-in {
+  opacity: 0%;
+}
+
+.fading-in {
+  opacity: 100%;
+  transition-delay: 500ms;
+  transition: opacity 1s ease-in;
+}
+
 body#with-sidebar {
   display: flex;
   flex-direction: row;

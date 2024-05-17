@@ -56,29 +56,38 @@
           ;+  (search-bar:web `book-id.site host.site)
           ;h1#page-title: Main Page
           ;nav#wiki-controls
-            ;*  ?.  (may-edit bowl host.site rules.cover)  ~
-            ;=  ;a/"{wik-dir}/~/new"
-                  ;button(type "button"): New Page
-                ==
+            ;*
+            ?.  (is-admin bowl host.site rules.cover)  ~
+            ;=  ;+  (edit-front-link wik-dir toc)
                 ;a/"{wik-dir}/~/import"
                   ;button(type "button"): Import
                 ==
             ==
           ==
-          ;div(hx-get "{wik-dir}/~/x/front", hx-trigger "load");
-          :: todo: special UI for "no pages"
-          ;h2: Pages
-          ;ul
-            ;*  %+  turn  (sort-toc:help toc)
-                |=  [=path =ref]
-                ^-  manx
-                ;li
-                  ;form(method "post")
-                    ;a/"{wik-dir}{(spud path)}"
-                      ; {(trip title.ref)}
-                    ==
+          ;+
+          ?.  (~(has by toc) /[~.-]/front)  ;stub:web
+          ;article#front(hx-get "{wik-dir}/~/x/front", hx-trigger "load", hx-swap "outerHTML")
+            ;div.loader.fade-in
+              ;+  load:icon:web
+            ==
+          ==
+          ;h2: Contents
+          ;+  ?~  (no-special toc)
+              ;p:"This wiki doesn't have any pages yet."
+          ;div
+            ;ul
+              ;*
+              %+  turn  (sort-toc:help (no-special toc))
+              |=  [=path =ref]
+              ^-  manx
+              ;li
+                ;form(method "post")
+                  ;a/"{wik-dir}{(spud path)}"
+                    ; {(trip title.ref)}
                   ==
                 ==
+              ==
+            ==
           ==
           ;+  (footer:web [%& cover])
         ==
@@ -108,5 +117,21 @@
   %+  sort  ~(tap by toc)
   |=  [a=[=path =ref] b=[=path =ref]]
   (alpha-less (spud path.a) (spud path.b))
+::
+++  no-special
+  |=  toc=(map path ref)
+  ^-  _toc
+  (~(del by toc) /[~.-]/front)
+::
+++  edit-front-link
+  |=  [wik-dir=tape toc=(map path ref)]
+  ^-  manx
+  =/  link=tape
+    ?:  (~(has by toc) /[~.-]/front)
+      "{wik-dir}/-/front/~/edit"
+    "{wik-dir}/~/new?target=/-/front"
+  ;a/"{link}"
+    ;button(type "button"): Edit
+  ==
 ::
 --

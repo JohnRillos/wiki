@@ -77,7 +77,7 @@
     |=  [host=@p book-id=@ta]
     ^-  (list [path ref])
     =/  =spine  (~(got by super-shelf) [host book-id])
-    =/  toc=(map path ref)  toc.spine
+    =/  toc=(map path ref)  (no-special toc.spine)
     %-  sort-results
     ^-  (list [path ref])
     %^  skil  ~(tap by toc)  limit
@@ -134,5 +134,10 @@
     %+  turn  ~(tap by books.rudyard)
     |=  [id=@ta =book]
     [[our.bowl id] (book-to-spine id book)]
+  ::
+  ++  no-special
+  |=  toc=(map path ref)
+  ^-  _toc
+  (~(del by toc) /[~.-]/front)
   --
 --
