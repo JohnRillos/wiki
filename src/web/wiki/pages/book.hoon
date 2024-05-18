@@ -48,6 +48,7 @@
   ++  render
     ^-  manx
     =/  wik-dir=tape  (base-path:web site)
+    =/  has-front=?  (~(has by toc) /[~.-]/front)
     ;html
       ;+  (doc-head:web bowl (trip title.cover))
       ;body#with-sidebar(onload on-page-load)
@@ -65,7 +66,7 @@
             ==
           ==
           ;+
-          ?.  (~(has by toc) /[~.-]/front)  ;stub:web
+          ?.  has-front  ;stub:web
           ;article#front(hx-get "{wik-dir}/~/x/front", hx-trigger "load", hx-swap "outerHTML")
             ;div.loader.fade-in
               ;+  load:icon:web

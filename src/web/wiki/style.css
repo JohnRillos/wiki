@@ -9,12 +9,7 @@ body {
 }
 
 .loader {
-  display: flex;
-  justify-content: center;
-}
-
-#front {
-  min-height: 80px;
+  margin-left: 2rem;
 }
 
 .fade-in {
@@ -23,8 +18,7 @@ body {
 
 .fading-in {
   opacity: 100%;
-  transition-delay: 500ms;
-  transition: opacity 1s ease-in;
+  transition: opacity 0.5s ease-in 0.5s;
 }
 
 body#with-sidebar {

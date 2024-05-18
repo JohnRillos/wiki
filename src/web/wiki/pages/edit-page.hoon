@@ -20,10 +20,10 @@
   ^-  $@(brief:rudder relay)
   =/  args=(map @t @t)  (form-data:web order)
   ?>  ?=(%mod-page (~(got by args) 'action'))
-  =/  page-title=@t  (~(got by args) 'page-title')
+  =/  page-title=(unit @t)  (~(get by args) 'page-title')
   =/  content=wain  (to-wain:format (sane-newline (~(got by args) 'content')))
   =/  host  host:wiki-path:(wiki-url:web url.request.order)
-  =/  =action  [%mod-page book-id:help page-path:help `page-title `content]
+  =/  =action  [%mod-page book-id:help page-path:help page-title `content]
   [%relay (fall host our.bowl) id.order action]
 ::
 ++  final
