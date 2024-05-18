@@ -8,6 +8,7 @@
 /*  show-on-load-js  %js   /web/wiki/show-on-load/js
 /*  globe-svg        %svg  /web/wiki/icons/globe/svg
 /*  info-svg         %svg  /web/wiki/icons/info/svg
+/*  load-svg         %svg  /web/wiki/icons/load/svg
 /*  lock-svg         %svg  /web/wiki/icons/lock/svg
 /*  search-svg       %svg  /web/wiki/icons/search/svg
 ::
@@ -207,6 +208,12 @@
   ?.  if  manx
   manx(a.g [[%disabled ""] a.g.manx])
 ::
+++  hide-if
+  |=  [if=? =manx]
+  ^-  ^manx
+  ?.  if  manx
+  manx(a.g [[%style "display:none;"] a.g.manx])
+::
 ++  elem-id
   |=  =manx
   ^-  tape
@@ -299,17 +306,24 @@
       %&  title.p.data
       %|  title.p.data
     ==
+  =/  =access
+    ?-  -.data
+      %&  rules.p.data
+      %|  rules.p.data
+    ==
+  =/  admin=?  (is-admin bowl host access)
+  =/  write=?  (may-edit bowl host access)
   ;nav.sidebar
     ;a#wiki-title/"{wik-dir}": {(trip book-title)}
     ;div#global-menu
       ;a/"{wik-dir}": Home
+      ;+  ?.  write  stub
+          ;a/"{wik-dir}/~/new": New Page
       ;*
       ?:  =(%pawn (clan:title src.bowl))
-        :_  ~
+        :_  ~ :: todo: fix issue where redirect includes ?after= and it redirects infinitely
         ;a/"/~/login?eauth&redirect={(trip url.request.order)}": Log in with Urbit
-      =*  my-req  =(src.bowl our.bowl)
-      =*  my-wik  ?~(host & =(u.host our.bowl))
-      ?.  my-req
+      ?.  =(src.bowl our.bowl)
         :~  ;p: User: {<src.bowl>}
             ;button
               =type  "button"
@@ -317,7 +331,7 @@
               ; Log out
             ==
         ==
-      :~  ?.  my-wik  stub
+      :~  ?.  admin  stub
           ;a/"{wik-dir}/~/settings": Settings
           ;a/"/wiki": All Wikis
           ;button
@@ -420,6 +434,12 @@
     |=  hover=tape
     ;div.access-icon(title hover)
       ;+  (need (de-xml:html info-svg))
+    ==
+  ::
+  ++  load
+    ^~
+    ;div.loading-icon(title "loading")
+      ;+  (need (de-xml:html load-svg))
     ==
   ::
   ++  lock

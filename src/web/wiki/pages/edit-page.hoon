@@ -20,10 +20,10 @@
   ^-  $@(brief:rudder relay)
   =/  args=(map @t @t)  (form-data:web order)
   ?>  ?=(%mod-page (~(got by args) 'action'))
-  =/  page-title=@t  (~(got by args) 'page-title')
+  =/  page-title=(unit @t)  (~(get by args) 'page-title')
   =/  content=wain  (to-wain:format (sane-newline (~(got by args) 'content')))
   =/  host  host:wiki-path:(wiki-url:web url.request.order)
-  =/  =action  [%mod-page book-id:help page-path:help `page-title `content]
+  =/  =action  [%mod-page book-id:help page-path:help page-title `content]
   [%relay (fall host our.bowl) id.order action]
 ::
 ++  final
@@ -32,7 +32,9 @@
   =/  next=@t
     ?.  success  url.request.order
     =/  wik-dir=tape  (base-path:web wiki-path:(wiki-url:web url.request.order))
-    =/  pag-dir=tape  (spud page-path:help)
+    =/  pag-dir=tape
+      ?:  =(/[~.-]/front page-path:help)  ""
+      (spud page-path:help)
     (crip "{wik-dir}{pag-dir}?after={(trip id.order)}")
   ((alert:rudder next build))
 ::
@@ -97,6 +99,8 @@
                   ==
                 ==
                 ;td
+                  ;+
+                  %+  disable-if:web  =(/[%~.-]/front page-path:help)
                   ;input
                     =type      "text"
                     =name      "page-title"
@@ -135,9 +139,8 @@
 ++  get-cover
   ^-  (unit cover)
   ?^  booklet  `cover.u.booklet
-  =/  buuk  (~(get by books) book-id)
-  %+  bind  buuk
-  |=(=book [book-id title.book rules.book stamp.book])
+  %+  bind  (~(get by books) book-id)
+  |=(=book (book-to-cover book-id book))
 ::
 ++  get-tale
   ^-  (unit tale)

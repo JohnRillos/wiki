@@ -8,6 +8,19 @@ body {
   visibility: hidden;
 }
 
+.loader {
+  margin-left: 2rem;
+}
+
+.fade-in {
+  opacity: 0%;
+}
+
+.fading-in {
+  opacity: 100%;
+  transition: opacity 0.5s ease-in 0.5s;
+}
+
 body#with-sidebar {
   display: flex;
   flex-direction: row;

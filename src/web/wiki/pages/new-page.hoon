@@ -45,8 +45,11 @@
   =/  next=@t
     ?.  success  url.request.order
     =/  =path  (part (~(got by args:help) 'page-path'))
+    =/  pag-dir=tape
+      ?:  =(/[~.-]/front path)  ""
+      (spud path)
     =/  wik-dir=tape  (base-path:web wiki-path:(wiki-url:web url.request.order))
-    (crip "{wik-dir}{(spud path)}?after={(trip id.order)}")
+    (crip "{wik-dir}{pag-dir}?after={(trip id.order)}")
   ((alert:rudder next build))
 ::
 ++  build
@@ -70,6 +73,7 @@
     =/  wik-dir=tape  (base-path:web site)
     =/  target=(unit path)  (target-path:help query)
     =/  default-path=tape  ?~(target "" (tail (spud u.target)))
+    =/  is-front=?  =("-/front" default-path)
     ;html
       ;+  (doc-head:web bowl "New Page - {(trip title.cover)}")
       ;script: {(trip codemirror-js)}
@@ -81,7 +85,9 @@
           ;*  ?~  msg  ~
               ~[;/((trip text.u.msg))]
           ;+  (search-bar:web `book-id.site host.site)
-          ;h1: New Page
+          ;+  ?:  is-front
+                ;h1: Edit Front Page
+              ;h1: New Page
           ::
           ;form(method "post")
             ;div
@@ -93,26 +99,32 @@
               ==
               ;a(href wik-dir): Cancel
             ==
-            ;h3: Page Path
-            ;span: {wik-dir}/
-            ;input
-              =type         "text"
-              =name         "page-path"
-              =placeholder  "my/page"
-              =required     "true"
-              =pattern      path-regex
-              =title        path-explain
-              =value        default-path
-              ;
-            ==
 
-            ;h3: Page Title
-            ;input
-              =type         "text"
-              =name         "page-title"
-              =placeholder  "My Page"
-              =required     "true"
-              ;
+            ;+
+            %+  hide-if:web  is-front
+            ;div
+              ;h3: Page Path
+              ;span: {wik-dir}/
+              ;input
+                =type         "text"
+                =name         "page-path"
+                =placeholder  "my/page"
+                =required     "true"
+                =pattern      path-regex
+                =title        path-explain
+                =value        default-path
+                ;
+              ==
+
+              ;h3: Page Title
+              ;input
+                =type         "text"
+                =name         "page-title"
+                =placeholder  "My Page"
+                =required     "true"
+                =value        ?:(is-front "Front Page" "")
+                ;
+              ==
             ==
 
             ;h3: Content
@@ -147,8 +159,7 @@
   ?^  spine  `cover.u.spine
   =/  =wiki-path  wiki-path:(wiki-url:web url.request.order)
   =/  book-id=@t  book-id.wiki-path
-  =/  buuk  (~(get by books) book-id)
-  %+  bind  buuk
-  |=(=book [book-id title.book rules.book stamp.book])
+  %+  bind  (~(get by books) book-id)
+  |=(=book (book-to-cover book-id book))
 ::
 --

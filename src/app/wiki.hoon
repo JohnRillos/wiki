@@ -1,10 +1,9 @@
 /-  *wiki
 /+  dbug, default-agent, gossip, regex, rudder, server, string, verb
-/+  *wiki, web=wiki-web, wiki-http
+/+  *wiki, *wiki-grad, *wiki-morf, web=wiki-web, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
 /$  html-to-mime  %html  %mime
-/$  noun-to-lore  %noun  %wiki-lore
 ::
 ::  types core
 ::
@@ -19,16 +18,18 @@
 =|  state-x
 =*  state  -
 ::
-::  debugging tools
+::  wrappers
 ::
 %+  verb  |
+::
 %-  %+  agent:gossip  [3 %anybody %anybody &]
-    %+  ~(put by *(map mark $-(* vase)))
-      %wiki-lore
-    |=(=noun !>((noun-to-lore noun)))
+    %-  ~(gas by *(map mark $-(* vase)))
+    :~  [%wiki-lore |=(=noun !>((lore-0 noun)))]
+    ==
+::
 %-  agent:dbug
 ::
-=<  :: compose helper core into agent core
+=<
 ::
 ::  agent core
 ::
@@ -53,98 +54,64 @@
   |=  old-vase=vase
   ^-  (quip card _this)
   |^  =+  !<(old=versioned-state old-vase)
-      =^  cards  state  (build-state old)
-      [cards this]
+      =^  cards-1  state  (build-state old)
+      =^  cards-2  state  retry-early-goss
+      [(weld cards-1 cards-2) this]
   ::
   ++  build-state
     |=  old=versioned-state
     ^-  (quip card state-x)
     =|  cards=(list card)
     |-
-    |^  ?-  -.old
-          %3  [cards old]
-          %2  $(old (state-2-to-3 old))
-          %1  $(old (state-1-to-2 old))
-          %0  $(old (state-0-to-1 old))
-        ==
-    ::
-    ++  state-0-to-1
-      |=  =state-0
-      ^-  state-1
-      |^  [%1 (~(run by books.state-0) grad-book)]
-      ::
-      ++  grad-book
-        |=  =book-0
-        ^-  book-1
-        %=  book-0
-          tales  (~(run by tales.book-0) grad-tale)
-          rules  (grad-rules rules.book-0)
-        ==
-      ::
-      ++  grad-tale
-        |=  =tale-0
-        ^-  tale
-        (~(run by tale-0) grad-page)
-      ::
-      ++  grad-page
-        |=  =page-0
-        ^-  page
-        %=  page-0
-          content  [content.page-0 our.bowl]
-        ==
-      ::
-      ++  grad-rules
-        |=  =access-0
-        ^-  access-1
-        [public-read.access-0 [%.n %.n]]
-      --
-    ::
-    ++  state-1-to-2
-      |=  =state-1
-      ^-  state-2
-      |^  [%2 ~ ~ grad-books]
-      ::
-      ++  grad-books
-        ^-  (map @ta book)
-        %-  ~(run by books.state-1)
-        |=  =book-1
-        :^    title.book-1
-            tales.book-1
-          (grad-rules rules.book-1)
-        %-  (curr roll max)
-        %+  turn  ~(val by tales.book-1)
-        |=(=tale time:(latest tale))
-      ::
-      ++  grad-rules
-        |=  =access-1
-        ^-  access
-        access-1(- ?:(public-read.access-1 [& & | |] [| | | |]))
-      --
-    ::
-    ++  state-2-to-3
-      |=  =state-2
-      ^-  state-3
-      %=  state-2
-        -  %3
-        +  [~ +.state-2]
-      ==
-    --
+    ?-  -.old
+      %3  [cards old]
+      %2  $(old (state:grad-3 old))
+      %1  $(old (state:grad-2 old))
+      %0  $(old (state:grad-1 old bowl))
+    ==
+  ::
+  ++  grow-all
+    |=  =state-x
+    ^-  (list card)
+    (zing (turn ~(tap by books.state-x) full:grow:main))
+  ::
+  ++  retry-early-goss
+    ^-  (quip card _state)
+    =/  split=(list [? cage])  (turn early cage-from-cask-in-cage)
+    =/  [go=(list cage) no=(list cage)]
+      =/  s  (skid split head)
+      [(turn p.s tail) (turn q.s tail)]
+    =.  early  no
+    :_  state
+    %+  turn   go
+    |=  =cage
+    ^-  card
+    =/  =wire  /retry/[p.cage]/(scot %uv (sham q.cage))
+    [%pass wire %agent [our.bowl %wiki] %poke %wiki-retry !>([%old-goss cage])]
+  ::
+  ++  cage-from-cask-in-cage
+    |=  raw=cage
+    ^-  [parsed=? cage]
+    ?.  ?=(%gossip-unknown p.raw)  [| raw]
+    =/  k=(cask *)  !<((cask *) q.raw)
+    =;  out
+      %+  fall  out
+      ~&  >>>  "failed to parse old rumor w/ known mark {<p.k>}"
+      [| raw]
+    %-  mole
+    |.
+    :: todo: this is where we'll parse rumor cages embedded in raw casks
+    [| raw]
   --
 ::
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card _this)
   |^  ?+  mark  (on-poke:default mark vase)
-      ::
-          %wiki-action
-        (handle-action !<(action vase))
-      ::
-          %wiki-relay
-        (handle-relay !<(relay vase))
-      ::
-          %handle-http-request
-        (handle-http !<(order:rudder vase))
-      ::
+        %wiki-action          (handle-action !<(action vase))
+        %wiki-relay           (handle-relay !<(relay vase))
+        %wiki-retry           (handle-old-goss !<(old-goss vase))
+        %handle-http-request  (handle-http !<(order:rudder vase))
       ==
   ::
   ++  handle-action
@@ -175,6 +142,13 @@
       =/  =wait  [now.bowl ~ | ~]
       =.  later  (~(put by later) eyre-id wait)
       state
+    [cards this]
+  ::
+  ++  handle-old-goss
+    |=  [%old-goss =cage]
+    ^-  (quip card _this)
+    ~&  "Remembering rumor..."
+    =^  cards  state  (read:goss:main cage)
     [cards this]
   ::
   ++  handle-http
@@ -211,7 +185,7 @@
       =/  out=(quip card rudyard)  (serve input)
       out(+ this(state -.+.out))
     ::
-    ++  serve :: consolidate in main core
+    ++  serve :: todo: consolidate in main core
       %-  (steer:rudder rudyard relay)
       :^    web:serv               :: pages
           http-route:serv          :: route
@@ -246,15 +220,15 @@
       =/  =ship  (slav %p who.site)
       =/  book-id=@ta     book-id.site
       =/  page-path=path
-        ?:  =(~ page-path.site)      ~
-        ?:  =('~' -.page-path.site)  ~
-        (path-before-sig page-path.site)
-      =/  mark=path
-        ?~  page-path  /spine-0
-        /booklet-0
+        ?+  page-path.site    (path-before-sig page-path.site)
+          [%~.~ %x %front ~]  /[%~.-]/front
+          [%~.~ *]            ~
+          ~                   ~
+        ==
+      =/  resource=path  (get-resource ship book-id page-path)
       =/  ver=@t  (get-case ship book-id page-path query)
       =/  base=path  /g/x/[ver]/wiki/$/1
-      =/  loc=path  :(weld base mark /[book-id] page-path)
+      =/  loc=path  :(weld base resource /[book-id] page-path)
       =/  sec=(unit [idx=@ key=@])  ~
       =/  =task:ames  [%keen sec ship loc]
       =/  =note-arvo  [%a task]
@@ -271,13 +245,20 @@
       ?~  i  full
       (scag u.i full)
     ::
+    ++  get-resource
+      |=  [=ship book-id=@ta page-path=path]
+      ^-  path
+      =/  spine=(unit spine)  (~(get by shelf) ship book-id)
+      ?~  page-path  /spine-0
+      /booklet-0
+    ::
     ++  get-case
       |=  [=ship book-id=@ta =path query=(map @t @t)]
       ^-  @t
       =/  time=(unit @da)
         ?:  (~(has by query) 'fresh')  ~
         :: Ideally this would get the last time a page was edited,
-        :: but since the booklet-0 contains data about the book itself,
+        :: but since the booklet contains data about the book itself,
         :: that data may have changed.
         :: Unfortunately this makes page scries load from cache less often
         :: todo: Maybe split into 2-step scry to get cover @ stamp then page data @edited-at
@@ -371,13 +352,9 @@
       =/  rud=rudyard
         ?+  p.u.data  ~|("Unknown mark {<p.u.data>}" !!)
         ::
-            %wiki-booklet-0
-          =/  =booklet  ;;(booklet q.u.data)
-          [state ~ `booklet]
+          %wiki-booklet-0  [state ~ `(booklet-0 q.u.data)]
         ::
-            %wiki-spine-0
-          =/  =spine    ;;(spine q.u.data)
-          [state `spine ~]
+          %wiki-spine-0    [state `(spine-0 q.u.data) ~]
         ==
       =/  req=(unit inbound-request:eyre)  (eyre-request:serv bowl eyre-id.wire)
       ?~  req  ~|('Remote scry data received but eyre request not found' !!)
@@ -444,7 +421,7 @@
   :_  state
   =/  r  read.rules.book
   %-  (walt card)
-  :~  [scry.r |.((book:tomb id))]
+  :~  [scry.r |.((full:tomb id))]
       [goss.r |.([(hush:goss id) ~])]
   ==
 ::
@@ -460,7 +437,7 @@
   :_  state
   =/  r  read.rules.book
   %-  (walt card)
-  :~  [scry.r |.([(spine-0:grow id book) ~])]
+  :~  [scry.r |.([(back:grow id book) ~])]
       [goss.r |.([(tell:goss id book) ~])]
   ==
 ::
@@ -486,7 +463,7 @@
   :_  state
   %-  (walt card)
   :~  [en-scry |.((full:grow id book))]
-      [un-scry |.((book:tomb id))]
+      [un-scry |.((full:tomb id))]
       [en-goss |.([(tell:goss id book) ~])]
       [un-goss |.([(hush:goss id) ~])]
   ==
@@ -514,6 +491,7 @@
   ?:  =(~ path)  ~|('Path cannot be blank!' !!)
   ?^  (find "~" path)  ~|('Path cannot contain "/~/"' !!)
   ?.  (levy path (sane %ta))  ~|('Invalid path!' !!)
+  ?>  (check-reserved-path path)
   =/  =book  (~(got by books) book-id)
   ?.  (may-edit bowl ~ rules.book)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %new-page"
@@ -529,16 +507,24 @@
   :_  state
   =/  r  read.rules.book
   %-  (walt card)
-  :~  [scry.r |.([(booklet-0:grow book-id book path tale) ~])]
-      [scry.r |.([(spine-0:grow book-id book) ~])]
+  :~  [scry.r |.([(part:grow book-id book path tale) ~])]
+      [scry.r |.([(back:grow book-id book) ~])]
       [goss.r |.([(tell:goss book-id book) ~])]
+  ==
+::
+++  check-reserved-path
+  |=  =path
+  ^-  ?
+  ?+  path  &
+    [%~.- %front ~]  ~|('Only the host can set up the front page' ?>(=(src.bowl our.bowl) &))
+    [%~.- *]         ~|('Paths beginning with "/-/" are reserved' !!)
   ==
 ::
 ++  del-page
   |=  [%del-page book-id=@ta =path]
-  ?.  =(src.bowl our.bowl)
-      ~&  >>>  "Unauthorized poke from {<src.bowl>}: %del-page"  !!
   =/  =book       (~(got by books) book-id)
+  ?.  (is-admin bowl ~ rules.book)
+    ~|("You must be an admin to delete this page" !!)
   =.  tales.book  (~(del by tales.book) path)
   =.  stamp.book  now.bowl
   =.  books       (~(put by books) book-id book)
@@ -546,8 +532,8 @@
   :_  state
   =/  r  read.rules.book
   %-  (walt card)
-  :~  [scry.r |.((booklet:tomb book-id path))] 
-      [scry.r |.([(spine-0:grow book-id book) ~])]
+  :~  [scry.r |.((part:tomb book-id path))]
+      [scry.r |.([(back:grow book-id book) ~])]
       [goss.r |.([(tell:goss book-id book) ~])]
   ==
 ::
@@ -556,6 +542,8 @@
   =/  =book  (~(got by books) book-id)
   ?.  (may-edit bowl ~ rules.book)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-page"  !!
+  ?:  &(=(/[~.-]/front path) ?!((is-admin bowl ~ rules.book)))
+    ~|("You must be an admin to edit this page" !!)
   =/  =tale  (~(got by tales.book) path)
   =/  =page  page:(latest tale)
   ?:  ?~(title | =('' u.title))  ~|("Title cannot be blank!" !!)
@@ -574,8 +562,8 @@
   :_  state
   =/  r  read.rules.book
   %-  (walt card)
-  :~  [scry.r |.([(booklet-0:grow book-id book path tale) ~])]
-      [scry.r |.([(spine-0:grow book-id book) ~])]
+  :~  [scry.r |.([(part:grow book-id book path tale) ~])]
+      [scry.r |.([(back:grow book-id book) ~])]
       [goss.r |.([(tell:goss book-id book) ~])]
   ==
 ::
@@ -680,15 +668,15 @@
 ::
 ++  grow
   |%
-  ++  booklet-0
+  ++  part
     |=  [book-id=@ta =book tale-path=path =tale]
     ^-  card
     =/  =wire  /wiki/booklet
     =/  loc=path  (weld /booklet-0/[book-id] tale-path)
-    =/  =booklet  [[book-id title.book rules.book stamp.book] tale-path tale]
+    =/  =booklet  [(book-to-cover book-id book) tale-path tale]
     [%pass wire %grow loc %wiki-booklet-0 booklet]
   ::
-  ++  spine-0
+  ++  back
     |=  [id=@ta =book]
     ^-  card
     [%pass /wiki/spine %grow /spine-0/[id] %wiki-spine-0 (book-to-spine id book)]
@@ -696,10 +684,10 @@
   ++  full
     |=  [id=@ta =book]
     ^-  (list card)
-    :-  (spine-0 id book)
+    :-  (back id book)
     %+  turn  ~(tap by tales.book)
     |=  [=path =tale]
-    (booklet-0 id book path tale)
+    (part id book path tale)
   --
 ::
 ++  tomb
@@ -708,28 +696,28 @@
     |=  targ=path
     ^-  (list card)
     =/  base=path  ~+  /(scot %p our.bowl)/wiki/(scot %da now.bowl)/$/1
-    =/  =fans:gall  (~(got by sky.bowl) targ)
-    %+  murn  ~(tap by fans)
+    =/  fans=(unit fans:gall)  (~(get by sky.bowl) targ)
+    ?~  fans  ~
+    %+  murn  ~(tap by u.fans)
     |=  [v=@ud =time data=(each page:clay @uvI)]
     ?.  -.data  ~
     `[%pass (weld /wiki/tomb targ) %tomb [%ud v] targ]
   ::
-  ++  book
+  ++  full
     |=  book-id=@ta
     ^-  (list card)
     =;  paths=(list path)  (zing (turn paths tomb))
     :-  /spine-0/[book-id]
     %+  skim  ~(tap in ~(key by sky.bowl))
     |=  =(pole knot)
-    ?.  ?=([%booklet-0 bid=@ta *] pole)  |
-    =(book-id bid.pole)
+    ?+  pole  |
+      [%booklet-0 bid=@ta *]  =(book-id bid.pole)
+    ==
   ::
-  ++  booklet
+  ++  part
     |=  [book-id=@ta page-path=path]
     ^-  (list card)
-    =/  targ=path  (weld /booklet-0/[book-id] page-path)
-    ?.  (~(has by sky.bowl) targ)  ~
-    (tomb targ)
+    (tomb (weld /booklet-0/[book-id] page-path))
   --
 ::
 ++  goss
@@ -767,7 +755,8 @@
     |=  =cage
     ^-  (quip card _state)
     ~&  "%wiki heard a rumor from {<src.bowl>}..."
-    ?.  ?=(%wiki-lore p.cage)  (cope cage)
+    ?:  ?=(%gossip-unknown p.cage)  (cope cage)
+    ?>  ?=(%wiki-lore p.cage)
     =/  =lore  !<(lore q.cage)
     ?-  -.lore
       %lurn

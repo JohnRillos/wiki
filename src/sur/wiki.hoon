@@ -4,6 +4,8 @@
 ::
 +$  state-x  state-3
 ::
+++  our-era  %3
+::
 +$  versioned-state
   $%  state-0
       state-1
@@ -25,8 +27,8 @@
   $+  state-2
   $:  %2
     =later
-    =shelf
-    books=(map @ta book)
+    shelf=shelf-0
+    books=(map @ta book-2)
   ==
 ::
 +$  state-3
@@ -34,8 +36,8 @@
   $:  %3
     early=(list cage)
     =later
-    =shelf
-    books=(map @ta book)
+    shelf=shelf-0
+    books=(map @ta book-2)
   ==
 ::
 :: todo: track favorite wikis manually, using plain subscription instead of gossip
@@ -58,7 +60,7 @@
 ::
 ++  latest
   |=  =tale
-  ^-  [time=@da =page]
+  ^-  [=time =page]
   (need (pry:ton tale))
 ::
 +$  page
@@ -79,6 +81,8 @@
 ::
 +$  relay  [%relay to=@p eyre-id=@ta =action]
 ::
++$  old-goss  [%old-goss =cage]
+::
 +$  action
   $+  wiki-action
   $%  [%new-book id=@ta title=@t rules=access]
@@ -90,10 +94,6 @@
       [%del-page book-id=@ta =path]
       [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
       [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
-      :: [%knight book-id=@ta =ship]
-      :: [%demote book-id=@ta =ship]
-      :: [%banish book-id=@ta =ship]
-      :: [%pardon book-id=@ta =ship]
   ==
 ::
 +$  wiki-path  [[book-id=@ta loc=path] host=(unit @p)]
@@ -137,6 +137,10 @@
       error=(unit tang)
   ==
 ::
+::  facts from newer versions of %wiki, to be consumed on-load
+::
++$  early  (list cage)
+::
 ::  state-0
 ::
 +$  book-0
@@ -162,5 +166,14 @@
 +$  page-1  [title=@t content=wain edit-by=@p]
 ::
 +$  access-1  [public-read=? edit=rule-edit]
+::
+::  state-3
+::
++$  book-2     book
++$  lore-0     lore
++$  shelf-0    shelf
++$  spine-0    spine
++$  cover-0    cover
++$  booklet-0  booklet
 ::
 --
