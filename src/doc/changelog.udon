@@ -1,15 +1,24 @@
 ;>
 
-## 1.1.3
-Date: TBD
+## 1.2.0
+
+Date: ~2024.5.18
+- host can set up custom front page
+  - embedded in main page above page list
+  - front page is an unlisted page at reserved path `/-/front`
+  - front page does not appear in page list or search results
+  - loading indicator for slow-loading front pages
 - add pretty-printer aliases for types
 - better handling for gossip with unknown marks
   - store rumor cage in state, to be re-attempted after app update
   - no longer unsubscribe from source
 - fix styling on gray backgrounds
+- hide "Import" button from non-hosts
+- move "New Page" button to sidebar so it's present on every page
 
 
 ## 1.1.2
+
 Date: ~2024.5.8
 - fix: import page is accessible when viewing own wiki through remote-style path
 - less spam when handling gossip with unknown marks
@@ -19,12 +28,14 @@ Date: ~2024.5.8
 
 
 ## 1.1.1
+
 Date: ~2024.4.29
 - fix: "Delete" button no longer appears when viewing remote page
 - search results are now limited to 10 total on wiki pages, and 25 total on dedicated search page
 
 
 ## 1.1.0
+
 Date: ~2024.4.28
 - global search
   - there is now a dedicated search page
