@@ -1,6 +1,10 @@
 ;>
 
-## 1.2.0
+# Version 1
+
+## 1.2
+
+### 1.2.0
 
 Date: ~2024.5.18
 - host can set up custom front page
@@ -17,7 +21,9 @@ Date: ~2024.5.18
 - move "New Page" button to sidebar so it's present on every page
 
 
-## 1.1.2
+## 1.1
+
+### 1.1.2
 
 Date: ~2024.5.8
 - fix: import page is accessible when viewing own wiki through remote-style path
@@ -27,14 +33,14 @@ Date: ~2024.5.8
   - retry after 5 minutes instead of 15 seconds
 
 
-## 1.1.1
+### 1.1.1
 
 Date: ~2024.4.29
 - fix: "Delete" button no longer appears when viewing remote page
 - search results are now limited to 10 total on wiki pages, and 25 total on dedicated search page
 
 
-## 1.1.0
+### 1.1.0
 
 Date: ~2024.4.28
 - global search
@@ -44,7 +50,9 @@ Date: ~2024.4.28
     - clearweb users will only see results for the wiki they are currently reading
 
 
-## 1.0.1
+## 1.0
+
+### 1.0.1
 
 Date: ~2024.4.21
 - hotfix for eauth - include `?eauth` parameter in login link
@@ -52,7 +60,7 @@ Date: ~2024.4.21
 - return HTTP 401 or 403 instead of 500 for unauthorized requests
 
 
-## 1.0.0
+### 1.0.0
 
 Date: ~2024.4.20
 - official 1.0 release
@@ -68,7 +76,11 @@ Date: ~2024.4.20
 - wikis listed in `/wiki` have additional info on mouseover
 
 
-## 0.2.3
+# Version 0
+
+## 0.2
+
+### 0.2.3
 
 Date: ~2024.2.26
 - fix file import for Safari
@@ -76,7 +88,7 @@ Date: ~2024.2.26
   - imported pages retain relative directory hierarchy
 
 
-## 0.2.2
+### 0.2.2
 
 Date: ~2024.2.25
 - file import improvements
@@ -89,7 +101,7 @@ Date: ~2024.2.25
   - prevent non-hosts from deleting content via import
 
 
-## 0.2.1
+### 0.2.1
 
 Date: ~2024.2.24
 - timestamps are formatted for user's locale
@@ -98,13 +110,15 @@ Date: ~2024.2.24
 - add logging during file import
 
 
-## 0.2.0
+### 0.2.0
 
 Date: ~2024.2.3
 - `%zuse` 411
 
 
-## 0.1.2
+## 0.1
+
+### 0.1.2
 
 Date: ~2023.12.11
 - file imports will now update pages if the page already exists
@@ -113,7 +127,7 @@ Date: ~2023.12.11
 - JSON over HTTP can now be used for the %imp-file action poke
 
 
-## 0.1.1
+### 0.1.1
 
 Date: ~2023.11.16
 - write documentation
@@ -121,7 +135,7 @@ Date: ~2023.11.16
 - fix bug preventing confirmation dialog from rendering
 
 
-## 0.1.0
+### 0.1.0
 
 Date: ~2023.10.27 (Assembly Lisboa)
 - public beta release
@@ -129,14 +143,16 @@ Date: ~2023.10.27 (Assembly Lisboa)
 - multiplayer: support edits from users logged in via EAuth
 
 
-## 0.0.4
+## 0.0
+
+### 0.0.4
 
 Date: ~2023.10.26
 - parse imported page title from TOML front matter
 - nicer index page
 
 
-## 0.0.3
+### 0.0.3
 
 Date: ~2023.10.20
 - better styling for markdown tables
@@ -145,13 +161,13 @@ Date: ~2023.10.20
 - host can change wiki's visibility
 
 
-## 0.0.2
+### 0.0.2
 
 Date: ~2023.10.18
 - search bar
 
 
-## 0.0.1
+### 0.0.1
 
 Date: ~2023.10.16
 - public alpha release
