@@ -2,16 +2,15 @@
 ::
 ::  current state type
 ::
-+$  state-x  state-4
++$  state-x  state-3
 ::
-++  our-era  %4
+++  our-era  %3
 ::
 +$  versioned-state
   $%  state-0
       state-1
       state-2
       state-3
-      state-4
   ==
 ::
 +$  state-0
@@ -41,23 +40,13 @@
     books=(map @ta book-2)
   ==
 ::
-+$  state-4
-  $+  state-4
-  $:  %4
-    early=(list cage)
-    =later
-    =shelf
-    books=(map @ta book)
-  ==
-::
 :: todo: track favorite wikis manually, using plain subscription instead of gossip
 ::   tbd: mirror full contents or only index
 ::   tbd: include in `shelf` or separate
 ::
 +$  book
   $+  book
-  $:  front=tale
-      title=@t
+  $:  title=@t
       tales=(map path tale)
       rules=access
       stamp=@da
@@ -113,8 +102,7 @@
 ::
 +$  cover
   $+  cover
-  $:  front-at=(unit @da)
-      book-id=@ta
+  $:  book-id=@ta
       title=@t
       rules=access
       stamp=@da
@@ -122,11 +110,11 @@
 ::
 +$  shelf    $+(shelf (map [host=@p id=@ta] spine))
 ::
-+$  spine    $+(spine [era=@ud =cover toc=(map path ref)])
++$  spine    $+(spine [=cover toc=(map path ref)])
 ::
 +$  ref      [ver=@ edited=@da title=@t]
 ::
-+$  booklet  [era=@ud =cover =path =tale]
++$  booklet  [=cover =path =tale]
 ::
 +$  rudyard  [state-x spine=(unit spine) booklet=(unit booklet)]
 ::
@@ -179,40 +167,13 @@
 ::
 +$  access-1  [public-read=? edit=rule-edit]
 ::
-::  state-2
+::  state-3
 ::
-+$  book-2
-  $:  title=@t
-      tales=(map path tale)
-      rules=access
-      stamp=@da
-  ==
-::
-+$  shelf-0  $+(shelf-0 (map [host=@p id=@ta] spine-0))
-::
-+$  spine-0  [cover=cover-0 toc=(map path ref)]
-::
-+$  booklet-0  [cover=cover-0 =path =tale]
-::
-+$  cover-0
-  $:  book-id=@ta
-      title=@t
-      rules=access
-      stamp=@da
-  ==
-::
-+$  lore-0
-  $%  [%lurn shelf=shelf-0]
-      [%burn host=@p id=@ta at=@da]
-  ==
-::
-::  state-4
-::
-+$  book-3   book
-+$  lore-1   lore
-+$  shelf-1  shelf
-+$  spine-1  spine
-+$  cover-1  cover
-+$  booklet-1  booklet
++$  book-2     book
++$  lore-0     lore
++$  shelf-0    shelf
++$  spine-0    spine
++$  cover-0    cover
++$  booklet-0  booklet
 ::
 --

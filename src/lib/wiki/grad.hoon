@@ -3,48 +3,6 @@
 ::
 +$  card  card:agent:gall
 ::
-++  grad-4
-  |%
-  ++  old-era  3
-  ::
-  ++  state
-    |=  old=state-3
-    ^-  state-4
-    %=  old
-      -  %4
-      shelf  (shelf-0-to-1 shelf.old)
-      books  (~(run by books.old) book-2-to-3)
-    ==
-  ::
-  ++  book-2-to-3
-    |=  old=book-2
-    ^-  book-3
-    [~ old]
-  ::
-  ++  lore-0-to-1
-    |=  old=lore-0
-    ^-  lore-1
-    ?-  -.old
-      %burn  old
-      %lurn  [-.old (shelf-0-to-1 shelf.old)]
-    ==
-  ::
-  ++  shelf-0-to-1
-    |=  old=shelf-0
-    ^-  shelf-1
-    (~(run by old) spine-0-to-1)
-  ::
-  ++  spine-0-to-1
-    |=  old=spine-0
-    ^-  spine-1
-    [old-era [~ cover.old] toc.old]
-  ::
-  ++  booklet-0-to-1
-    |=  old=booklet-0
-    ^-  booklet-1
-    [old-era [~ cover.old] +.old]
-  --
-::
 ++  grad-3
   |%
   ++  state

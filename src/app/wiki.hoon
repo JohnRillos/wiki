@@ -25,7 +25,6 @@
 %-  %+  agent:gossip  [3 %anybody %anybody &]
     %-  ~(gas by *(map mark $-(* vase)))
     :~  [%wiki-lore |=(=noun !>((lore-0 noun)))]
-        [%wiki-lore-1 |=(=noun !>((lore-1 noun)))]
     ==
 ::
 %-  agent:dbug
@@ -65,9 +64,7 @@
     =|  cards=(list card)
     |-
     ?-  -.old
-      %4  [cards old]
-      %3  =/  new  (state:grad-4 old)
-          $(old new, cards (grow-all new))
+      %3  [cards old]
       %2  $(old (state:grad-3 old))
       %1  $(old (state:grad-2 old))
       %0  $(old (state:grad-1 old bowl))
@@ -103,9 +100,8 @@
       [| raw]
     %-  mole
     |.
-    ?+  p.k         [| raw]
-      %wiki-lore-1  [& [p.k !>((lore-1 q.k))]]
-    ==
+    :: todo: this is where we'll parse rumor cages embedded in raw casks
+    [| raw]
   --
 ::
 ++  on-poke
@@ -253,11 +249,8 @@
       |=  [=ship book-id=@ta page-path=path]
       ^-  path
       =/  spine=(unit spine)  (~(get by shelf) ship book-id)
-      ?:  &(?=(^ spine) =(3 era.u.spine))
-        ?~  page-path  /spine-0
-        /booklet-0
-      ?~  page-path  /spine
-      /booklet
+      ?~  page-path  /spine-0
+      /booklet-0
     ::
     ++  get-case
       |=  [=ship book-id=@ta =path query=(map @t @t)]
@@ -265,7 +258,7 @@
       =/  time=(unit @da)
         ?:  (~(has by query) 'fresh')  ~
         :: Ideally this would get the last time a page was edited,
-        :: but since the booklet-1 contains data about the book itself,
+        :: but since the booklet contains data about the book itself,
         :: that data may have changed.
         :: Unfortunately this makes page scries load from cache less often
         :: todo: Maybe split into 2-step scry to get cover @ stamp then page data @edited-at
@@ -359,13 +352,9 @@
       =/  rud=rudyard
         ?+  p.u.data  ~|("Unknown mark {<p.u.data>}" !!)
         ::
-          %wiki-booklet-0  [state ~ `(booklet-0-to-1:grad-4 ;;(booklet-0 q.u.data))]
+          %wiki-booklet-0  [state ~ `(booklet-0 q.u.data)]
         ::
-          %wiki-spine-0    [state `(spine-0-to-1:grad-4 ;;(spine-0 q.u.data)) ~]
-        ::
-          %wiki-booklet-1  [state ~ `(booklet-1 q.u.data)]
-        ::
-          %wiki-spine-1    [state `(spine-1 q.u.data) ~]
+          %wiki-spine-0    [state `(spine-0 q.u.data) ~]
         ==
       =/  req=(unit inbound-request:eyre)  (eyre-request:serv bowl eyre-id.wire)
       ?~  req  ~|('Remote scry data received but eyre request not found' !!)
@@ -415,7 +404,7 @@
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   ?:  &(!public.read.rules public.edit.rules)
     ~|("Cannot enable public edits on private wiki." !!)
-  =/  =book  [~ title ~ rules now.bowl]
+  =/  =book  [title ~ rules now.bowl]
   =.  books  (~(put by books) id book)
   :_  state
   %-  (walt card)
@@ -681,14 +670,14 @@
     |=  [book-id=@ta =book tale-path=path =tale]
     ^-  card
     =/  =wire  /wiki/booklet
-    =/  loc=path  (weld /booklet/[book-id] tale-path)
-    =/  =booklet  [our-era (book-to-cover book-id book) tale-path tale]
-    [%pass wire %grow loc %wiki-booklet-1 booklet]
+    =/  loc=path  (weld /booklet-0/[book-id] tale-path)
+    =/  =booklet  [(book-to-cover book-id book) tale-path tale]
+    [%pass wire %grow loc %wiki-booklet-0 booklet]
   ::
   ++  back
     |=  [id=@ta =book]
     ^-  card
-    [%pass /wiki/spine %grow /spine/[id] %wiki-spine-1 (book-to-spine id book)]
+    [%pass /wiki/spine %grow /spine-0/[id] %wiki-spine-0 (book-to-spine id book)]
   ::
   ++  full
     |=  [id=@ta =book]
@@ -716,20 +705,16 @@
     |=  book-id=@ta
     ^-  (list card)
     =;  paths=(list path)  (zing (turn paths tomb))
-    :-  /spine/[book-id]
     :-  /spine-0/[book-id]
     %+  skim  ~(tap in ~(key by sky.bowl))
     |=  =(pole knot)
     ?+  pole  |
-      [%booklet bid=@ta *]    =(book-id bid.pole)
       [%booklet-0 bid=@ta *]  =(book-id bid.pole)
     ==
   ::
   ++  part
     |=  [book-id=@ta page-path=path]
     ^-  (list card)
-    %+  weld
-      (tomb (weld /booklet/[book-id] page-path))
     (tomb (weld /booklet-0/[book-id] page-path))
   --
 ::
@@ -741,14 +726,14 @@
     ^-  card
     ~&  '%wiki starting a rumor...'
     =/  =lore  [%lurn (malt [[our.bowl id] (book-to-spine id book)]~)]
-    [(invent:gossip %wiki-lore-1 !>(lore))]
+    [(invent:gossip %wiki-lore !>(lore))]
   ::
   ++  hush
     |=  [id=@ta]
     ^-  card
     ~&  '%wiki denying a rumor...'
     =/  =lore  [%burn our.bowl id now.bowl]
-    [(invent:gossip %wiki-lore-1 !>(lore))]
+    [(invent:gossip %wiki-lore !>(lore))]
   ::
   ++  rant
     ^-  (list card)
@@ -757,7 +742,7 @@
       %+  turn  library
       |=  item=[[@p @ta] spine]
       =/  =lore  [%lurn (malt [item]~)]
-      (invent:gossip %wiki-lore-1 !>(lore))
+      (invent:gossip %wiki-lore !>(lore))
     %+  weld  ~(tap by shelf)
     %+  murn  ~(tap by books)
     |=  [id=@ta =book]
@@ -769,9 +754,7 @@
     ^-  (quip card _state)
     ~&  "%wiki heard a rumor from {<src.bowl>}..."
     ?:  ?=(%gossip-unknown p.cage)  (cope cage)
-    ?:  ?=(%wiki-lore p.cage)
-      $(cage [%wiki-lore-1 !>((lore-0-to-1:grad-4 !<(lore-0 q.cage)))])
-    ?>  ?=(%wiki-lore-1 p.cage)
+    ?>  ?=(%wiki-lore p.cage)
     =/  =lore  !<(lore q.cage)
     ?-  -.lore
       %lurn

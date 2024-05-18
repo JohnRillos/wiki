@@ -437,11 +437,11 @@
     ==
   ::
   ++  load
-    ^~ 
+    ^~
     ;div.loading-icon(title "loading")
       ;+  (need (de-xml:html load-svg))
     ==
-  :: 
+  ::
   ++  lock
     ^~
     ;div.access-icon(title "private")

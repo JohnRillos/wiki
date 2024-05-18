@@ -33,7 +33,7 @@
   =/  spune  get-spine:help
   ?~  spune  [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =^spine  u.spune
-  =/  [era=@ud =cover toc=(map path ref)]  u.spune
+  =/  [=cover toc=(map path ref)]  u.spune
   ::
   |^  [%page render]
   ::
