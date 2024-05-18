@@ -321,7 +321,7 @@
           ;a/"{wik-dir}/~/new": New Page
       ;*
       ?:  =(%pawn (clan:title src.bowl))
-        :_  ~
+        :_  ~ :: todo: fix issue where redirect includes ?after= and it redirects infinitely
         ;a/"/~/login?eauth&redirect={(trip url.request.order)}": Log in with Urbit
       ?.  =(src.bowl our.bowl)
         :~  ;p: User: {<src.bowl>}

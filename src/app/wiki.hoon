@@ -522,9 +522,9 @@
 ::
 ++  del-page
   |=  [%del-page book-id=@ta =path]
-  ?.  =(src.bowl our.bowl)
-      ~&  >>>  "Unauthorized poke from {<src.bowl>}: %del-page"  !!
   =/  =book       (~(got by books) book-id)
+  ?.  (is-admin bowl ~ rules.book)
+    ~|("You must be an admin to delete this page" !!)
   =.  tales.book  (~(del by tales.book) path)
   =.  stamp.book  now.bowl
   =.  books       (~(put by books) book-id book)
@@ -542,6 +542,8 @@
   =/  =book  (~(got by books) book-id)
   ?.  (may-edit bowl ~ rules.book)
     ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-page"  !!
+  ?:  &(=(/[~.-]/front path) ?!((is-admin bowl ~ rules.book)))
+    ~|("You must be an admin to edit this page" !!)
   =/  =tale  (~(got by tales.book) path)
   =/  =page  page:(latest tale)
   ?:  ?~(title | =('' u.title))  ~|("Title cannot be blank!" !!)
