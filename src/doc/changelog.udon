@@ -4,6 +4,14 @@
 
 ## 1.2
 
+### 1.2.1
+
+Date: ~2024.5.20
+- hotfix: attempt to reduce %gossip watch spam
+  - modify /lib/gossip to wait 5 minutes before resubscribing after kick (default was 15 seconds)
+  - log source of on-watch for gossip
+
+
 ### 1.2.0
 
 Date: ~2024.5.18

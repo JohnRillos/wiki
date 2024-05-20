@@ -588,7 +588,7 @@
           ::  so we cannot take more accurate/appropriate action here.
           ::  (notably, "do we still care" check also lives in %wake logic.)
           ::
-          [(retry-timer:up ~s15 /watch/(scot %p src.bowl))]~
+          [(retry-timer:up ~m5 /watch/(scot %p src.bowl))]~ :: edited from original ~s15
         ::
             %poke-ack
           ~&  [gossip+dap.bowl %unexpected-poke-ack wire]

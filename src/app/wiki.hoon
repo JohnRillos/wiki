@@ -274,7 +274,9 @@
   ^-  (quip card _this)
   ?+  path  (on-watch:default path)
     [%http-response *]        [~ this]
-    [%~.~ %gossip %source ~]  [rant:goss:main this]
+    [%~.~ %gossip %source ~]
+      ~&  "{<src.bowl>} wants gossip..."
+      [rant:goss:main this]
   ==
 ::
 ++  on-leave  on-leave:default
