@@ -145,7 +145,7 @@
       pass=?     ::  whether to (50/50) emit through proxy
   ==
 ::
-++  pass-timeout  ~s30
+++  pass-timeout  ~m10 :: edited from original ~s30
 ::
 ++  invent
   |=  =cage

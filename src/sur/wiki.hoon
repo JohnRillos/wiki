@@ -61,6 +61,7 @@
 ++  latest
   |=  =tale
   ^-  [=time =page]
+  ~+
   (need (pry:ton tale))
 ::
 +$  page

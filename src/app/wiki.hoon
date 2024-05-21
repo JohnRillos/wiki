@@ -107,6 +107,7 @@
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card _this)
+  ~>  %bout
   |^  ?+  mark  (on-poke:default mark vase)
         %wiki-action          (handle-action !<(action vase))
         %wiki-relay           (handle-relay !<(relay vase))
@@ -742,6 +743,9 @@
   ++  rant
     ^-  (list card)
     ~&  '%wiki spreading rumors...'
+    ~>  %bout
+    %-  (log-if-crash (list card))
+    |.
     =;  library
       %+  turn  library
       |=  item=[[@p @ta] spine]
@@ -757,6 +761,7 @@
     |=  =cage
     ^-  (quip card _state)
     ~&  "%wiki heard a rumor from {<src.bowl>}..."
+    ~>  %bout
     ?:  ?=(%gossip-unknown p.cage)  (cope cage)
     ?>  ?=(%wiki-lore p.cage)
     =/  =lore  !<(lore q.cage)

@@ -133,4 +133,15 @@
   ?:  (gth ago ~m2)  "{<(div ago ~m1)>} minutes ago"
   "{<(div ago ~s1)>} seconds ago"
 ::
+++  log-if-crash
+  |*  t=mold
+  |=  run=(trap t)
+  ^-  t
+  =/  out=(each t tang)  (mule run)
+  ?-  -.out
+    %&  p.out
+    %|  ~&  >>>  "%wiki error:"
+        ((slog p.out) |-(!!))
+  ==
+::
 --
