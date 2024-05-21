@@ -4,6 +4,14 @@
 
 ## 1.2
 
+### 1.2.2
+
+Date: ~2024.5.20
+- hotfix: attempt to reduce %gossip watch spam more
+  - modify /lib/gossip to increase "pass timeout" ~s30 -> ~m10
+  - log any crashes during rant:goss (gossip watch)
+
+
 ### 1.2.1
 
 Date: ~2024.5.20
