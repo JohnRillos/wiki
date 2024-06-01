@@ -62,45 +62,53 @@
     $(big +.big)
   $(big +.big, limit (dec limit), out [-.big out])
 :::
-++  bush  :: to-do: move into /sur/wiki.hoon ?
+++  bush :: to-do: move into other lib?
   |$  [node leaf]
+  $+  bush
   $@(~ (map node (pair (bush node leaf) (unit leaf))))
 ::
-::  to-do: implement method to transform (map path page) -> (bush knot page)
-::         this will be used to help render nested directory structure in UI
+++  bush-put
+  |*  [k-type=mold v-type=mold]
+  |*  [b=(bush k-type v-type) k=(list k-type) v=v-type]
+  ^-  _b
+  ?:  =(~ k)  !!
+  %-  ~(put by b)
+  |-
+  ^-  (pair k-type (pair _b (unit _v)))
+  ?<  ?=(~ k)
+  :-  -.k
+  =/  g=(unit (pair _b (unit _v)))  (~(get by b) -.k)
+  =/  twig=_b  (fall (bind g head) ~)
+  ?:  =(~ +.k)  [twig `v] :: put berry
+  =/  gery=(unit _v)  (biff g tail)
+  ^-  (pair _b (unit _v))
+  :-  ^-  _b
+      (~(put by twig) $(k +.k, b twig)) :: put twig
+  gery
 ::
-:: ++  bush-put
-::   |*  b=(bush * *)
-::   |*  [k=(list *) v=*]
-::   ^-  _b
-::   ?:  =(~ k)  !!
-::   %-  ~(put by b)
-::   |-
-::   ^-  (pair * (pair _b (unit _v)))
-::   ?<  ?=(~ k)
-::   :-  -.k
-::   =/  g=(unit (pair _b (unit _v)))  (~(get by b) -.k)
-::   =/  twig=_b  (fall (bind g head) ~)
-::   ?:  =(~ +.k)  [twig `v]     :: put berry
-::   =/  gery=(unit _v)  (biff g tail)
-::   ^-  (pair _b (unit _v))
-::   :-  ^-  _b
-::       (~(put by twig) $(k +.k, b twig)) :: put twig
-::   gery
-:: ::
-:: ++  path-bush
-::   |=  mage=(map path page)
-::   :: *bush
-::   ^-  (bush knot page)
-::   %-  ~(rep by mage)
-::   |=  [arg=[=path =page] acc=(bush knot page)]
-::   :: =/  buu  ~(. bbbbbb acc)
-::   :: ~&  "engine: {<buu>}"
-::   :: (punt:buu path.arg page.arg)
-::   ((bush-put acc) path.arg page.arg)
-::   :: %-  ~(put burp acc)
-::   :: [path.arg page.arg]
-::   :: *_acc
+++  path-ref-bush
+  |=  mage=(map path ref)
+  ~+
+  ^-  (bush knot ref)
+  %-  ~(rep by mage)
+  |=  [arg=[=path =ref] acc=(bush knot ref)]
+  ((bush-put knot ref) acc path.arg ref.arg)
+::
+++  bush-summary-at
+  |*  [k-type=mold leaf=mold]
+  |*  [b=(bush k-type leaf) loc=(list k-type)]
+  ~+
+  ^-  (list [k-type kids=@ud item=(unit leaf)])
+  ?.  ?=(%~ loc)
+    =/  newb=(bush k-type leaf)  p:(~(got by b) -.loc)
+    =/  newl=(list k-type)       +.loc
+    ((bush-summary-at k-type leaf) newb newl)
+  %+  turn  ~(tap by b)
+  |=  [key=k-type branch=(pair (bush k-type leaf) (unit leaf))]
+  ^-  [k-type kids=@ud item=(unit leaf)]
+  :-  key
+  :-  ~(wyt by p.branch)
+  q.branch
 ::
 ++  filt
   |*  [cond=? val=*]

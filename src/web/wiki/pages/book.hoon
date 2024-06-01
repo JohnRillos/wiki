@@ -73,23 +73,10 @@
             ==
           ==
           ;h2: Contents
-          ;+  ?~  (no-special toc)
-              ;p:"This wiki doesn't have any pages yet."
-          ;div
-            ;ul
-              ;*
-              %+  turn  (sort-toc:help (no-special toc))
-              |=  [=path =ref]
-              ^-  manx
-              ;li
-                ;form(method "post")
-                  ;a/"{wik-dir}{(spud path)}"
-                    ; {(trip title.ref)}
-                  ==
-                ==
-              ==
-            ==
-          ==
+          ;+
+          ?~  (no-special toc)
+            ;p:"This wiki doesn't have any pages yet."
+          (render-toc:help toc wik-dir)
           ;+  (footer:web [%& cover])
         ==
       ==
@@ -134,5 +121,61 @@
   ;a/"{link}"
     ;button(type "button"): Edit
   ==
+::
+++  render-toc
+  |=  [toc=(map path ref) wik-dir=tape]
+  ^-  manx
+  |^  (render-bush (path-ref-bush (no-special toc)) ~)
+  ::
+  ++  render-bush
+    |=  [=(bush knot ref) =path]
+    =/  data=(list [knot @ud (unit ref)])
+      ((bush-summary-at knot ref) bush path)
+    =/  start-expanded=?  =(~ path)
+    ^-  manx
+    ;ul(id <path>, class (weld "toc-list " ?:(start-expanded "expanded" "collapsed")))
+      ;*
+      %+  turn  (sort-sections data)
+      |=  [chapter=knot kids=@ud item=(unit ref)]
+      =/  loc=^path  (snoc path chapter)
+      =*  on-click  ~+  (toggle-expand:web (spud loc))
+      ;li
+        ;div
+          ;+
+          ?~  item
+            ;span.chapter-list-item-label.clickable(onclick on-click): {(trip chapter)}
+          (render-item loc u.item)
+          ;+
+          ?:  =(0 kids)  stub:web
+          =/  label=tape
+            ?:  =(1 kids)  " (1 child)"
+            " ({<kids>} children)"
+          ;span.clickable.note(onclick on-click): {label}
+        ==
+        ;+
+        ?:  =(0 kids)  stub:web
+        (render-bush bush loc)
+      ==
+    ==
+  ::
+  ++  render-item
+    |=  [=path =ref]
+    ^-  manx
+    ;a/"{wik-dir}{(spud path)}": {(trip title.ref)}
+  ::
+  ++  sort-sections
+    |=  data=(list [knot @ud (unit ref)])
+    ^-  _data
+    %+  sort  data
+    |=  [a=[chap=knot kids=@ud item=(unit ref)] b=[chap=knot kids=@ud item=(unit ref)]]
+    ?:  &((is-pure-leaf a) !(is-pure-leaf b))  &
+    ?:  &((is-pure-leaf b) !(is-pure-leaf a))  |
+    (alpha-less (trip chap.a) (trip chap.b))
+  ::
+  ++  is-pure-leaf
+    |=  [chap=knot kids=@ud item=(unit ref)]
+    ?~  item  |
+    =(0 kids)
+  --
 ::
 --

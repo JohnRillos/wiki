@@ -4,6 +4,15 @@
 
 ## 1.2
 
+### 1.2.3
+
+Date: ~2024.6.1
+- revamp table of contents on main page
+  - is now a nested list by path hierarchy
+  - each path segment is a category with sub-items
+  - each category can be expanded/collapsed
+
+
 ### 1.2.2
 
 Date: ~2024.5.20

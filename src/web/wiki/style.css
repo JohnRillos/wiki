@@ -61,7 +61,7 @@ ul.wiki-list {
     border-radius: 16px;
     margin: 0.5rem;
     font-size: large;
-    background-color: white;;
+    background-color: white;
     & a {
       color: inherit;
       display: flex;
@@ -114,6 +114,31 @@ div#global-menu {
   & *:not(:last-child) {
     margin-bottom: 1em;
   }
+}
+
+.chapter-list-item-label {
+  font-family: monospace;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.note {
+  opacity: 50%;
+  font-size: .75rem;
+}
+
+.collapsed {
+  max-height: 0;
+  overflow-y: hidden;
+}
+
+.expanded {
+  max-height: fit-content;
+  overflow-y: hidden;
 }
 
 article {

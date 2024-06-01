@@ -479,4 +479,20 @@
   ?:  =(%pawn (clan:title src.bowl))
     [%code 401 'Unauthorized: user must be logged in']
   [%code 403 (crip "Forbidden: user does not have permission: {<src.bowl>}")]
+::
+++  toggle-expand
+  |=  id=tape
+  ~+
+  """
+  var elem = document.getElementById('{id}');
+  if (elem) \{
+    if (elem.className.includes('collapsed')) \{
+      elem.className = elem.className.replace('collapsed', 'expanded');
+    } else \{
+      elem.className = elem.className.replace('expanded', 'collapsed');
+    }
+  } else \{
+    console.error('missing elem: ' + '{id}')
+  }
+  """
 --
