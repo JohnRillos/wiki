@@ -128,6 +128,10 @@
       =/  id=@ta  (need this-book)
       =/  =book  (~(got by books.rudyard) id)
       (malt [[our.bowl id] (book-to-spine id book)]~)
+    =/  scried=(list (pair [@p @ta] spine))
+      ?~  spine.rudyard  ~
+      [[(need this-host) (need this-book)] u.spine.rudyard]~
+    =;  local=shelf  (~(gas by local) scried)
     %-  ~(uni by shelf.rudyard)
     ^-  shelf
     %-  malt

@@ -11,6 +11,9 @@ Date: ~2024.6.1
   - is now a nested list by path hierarchy
   - each path segment is a category with sub-items
   - each category can be expanded/collapsed
+- fix search results when browsing unlisted remote wiki
+  - results for an unlisted wiki will now appear if searching with that wiki's search bar
+  - results not included in dedicated search page or other wiki search bars
 
 
 ### 1.2.2
