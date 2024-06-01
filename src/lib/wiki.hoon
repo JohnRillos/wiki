@@ -86,6 +86,20 @@
       (~(put by twig) $(k +.k, b twig)) :: put twig
   gery
 ::
+::  recursively count the number of leaves in a bush
+::
+++  bush-size
+  |=  b=(bush * *)
+  ~+
+  ^-  @ud
+  ?:  =(~ b)  0
+  %+  roll  ~(val by b)
+  |=  [arg=[kids=(bush * *) item=(unit *)] acc=@ud]
+  %+  add  acc
+  %+  add  ?~(item.arg 0 1)
+  |-
+  (bush-size kids.arg)
+::
 ++  path-ref-bush
   |=  mage=(map path ref)
   ~+
@@ -98,17 +112,18 @@
   |*  [k-type=mold leaf=mold]
   |*  [b=(bush k-type leaf) loc=(list k-type)]
   ~+
-  ^-  (list [k-type kids=@ud item=(unit leaf)])
+  ^-  (list [k-type kids=@ud item=(unit leaf) size=@ud])
   ?.  ?=(%~ loc)
     =/  newb=(bush k-type leaf)  p:(~(got by b) -.loc)
     =/  newl=(list k-type)       +.loc
     ((bush-summary-at k-type leaf) newb newl)
   %+  turn  ~(tap by b)
   |=  [key=k-type branch=(pair (bush k-type leaf) (unit leaf))]
-  ^-  [k-type kids=@ud item=(unit leaf)]
+  ^-  [k-type kids=@ud item=(unit leaf) size=@ud]
   :-  key
   :-  ~(wyt by p.branch)
-  q.branch
+  :-  q.branch
+  (bush-size p.branch)
 ::
 ++  filt
   |*  [cond=? val=*]

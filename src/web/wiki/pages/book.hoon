@@ -129,14 +129,14 @@
   ::
   ++  render-bush
     |=  [=(bush knot ref) =path]
-    =/  data=(list [knot @ud (unit ref)])
+    =/  data=(list [knot @ud (unit ref) @ud])
       ((bush-summary-at knot ref) bush path)
     =/  start-expanded=?  =(~ path)
     ^-  manx
     ;ul(id <path>, class (weld "toc-list " ?:(start-expanded "expanded" "collapsed")))
       ;*
       %+  turn  (sort-sections data)
-      |=  [chapter=knot kids=@ud item=(unit ref)]
+      |=  [chapter=knot kids=@ud item=(unit ref) size=@ud]
       =/  loc=^path  (snoc path chapter)
       =*  on-click  ~+  (toggle-expand:web (spud loc))
       ;li
@@ -148,8 +148,8 @@
           ;+
           ?:  =(0 kids)  stub:web
           =/  label=tape
-            ?:  =(1 kids)  " (1 child)"
-            " ({<kids>} children)"
+            ?:  =(1 size)  " (1 page)"
+            " ({<size>} pages)"
           ;span.clickable.note(onclick on-click): {label}
         ==
         ;+
@@ -164,16 +164,16 @@
     ;a/"{wik-dir}{(spud path)}": {(trip title.ref)}
   ::
   ++  sort-sections
-    |=  data=(list [knot @ud (unit ref)])
+    |=  data=(list [knot @ud (unit ref) @ud])
     ^-  _data
     %+  sort  data
-    |=  [a=[chap=knot kids=@ud item=(unit ref)] b=[chap=knot kids=@ud item=(unit ref)]]
+    |=  [a=[chap=knot kids=@ud item=(unit ref) @ud] b=[chap=knot kids=@ud item=(unit ref) @ud]]
     ?:  &((is-pure-leaf a) !(is-pure-leaf b))  &
     ?:  &((is-pure-leaf b) !(is-pure-leaf a))  |
     (alpha-less (trip chap.a) (trip chap.b))
   ::
   ++  is-pure-leaf
-    |=  [chap=knot kids=@ud item=(unit ref)]
+    |=  [chap=knot kids=@ud item=(unit ref) @ud]
     ?~  item  |
     =(0 kids)
   --

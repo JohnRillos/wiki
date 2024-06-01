@@ -113,7 +113,7 @@
 ::
 +$  spine    $+(spine [=cover toc=(map path ref)])
 ::
-+$  ref      [ver=@ edited=@da title=@t]
++$  ref      $+(ref [ver=@ edited=@da title=@t])
 ::
 +$  booklet  [=cover =path =tale]
 ::
