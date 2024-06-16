@@ -3,6 +3,7 @@
 /+  *wiki, *wiki-grad, *wiki-morf, web=wiki-web, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
+/$  css-to-mime   %css   %mime
 /$  html-to-mime  %html  %mime
 ::
 ::  types core
@@ -25,6 +26,7 @@
 %-  %+  agent:gossip  [3 %anybody %anybody &]
     %-  ~(gas by *(map mark $-(* vase)))
     :~  [%wiki-lore |=(=noun !>((lore-0 noun)))]
+        [%wiki-lore-1 |=(=noun !>((lore-1 noun)))]
     ==
 ::
 %-  agent:dbug
@@ -37,7 +39,7 @@
 |_  =bowl:gall
 +*  this       .
     default  ~(. (default-agent this %|) bowl)
-    serv     ~(. wiki-http [state ~ ~])
+    serv     ~(. wiki-http [state ~ ~ ~])
     main     ~(. +> bowl)
 ::
 ++  on-init
@@ -64,7 +66,8 @@
     =|  cards=(list card)
     |-
     ?-  -.old
-      %3  [cards old]
+      %4  [cards old]
+      %3  $(old (state:grad-4 old))
       %2  $(old (state:grad-3 old))
       %1  $(old (state:grad-2 old))
       %0  $(old (state:grad-1 old bowl))
@@ -100,8 +103,9 @@
       [| raw]
     %-  mole
     |.
-    :: todo: this is where we'll parse rumor cages embedded in raw casks
-    [| raw]
+    ?+  p.k         [| raw]
+      %wiki-lore-1  [& [p.k !>((lore-1 q.k))]]
+    ==
   --
 ::
 ++  on-poke
@@ -126,6 +130,7 @@
       %mod-book-name  (mod-book-name:main act)
       %mod-rule-read  (mod-rule-read:main act)
       %mod-rule-edit  (mod-rule-edit:main act)
+      %mod-look       (mod-look:main act)
       %del-book       (del-book:main act)
       %new-page       (new-page:main act)
       %mod-page       (mod-page:main act)
@@ -157,7 +162,7 @@
     ^-  (quip card _this)
     |^  ?:  is-later   handle-later
         ?:  is-remote  handle-http-remote
-        (paddle [bowl order [state ~ ~]])
+        (paddle [bowl order [state ~ ~ ~]])
     ::
     :: if ?after= and pending request in `later`, use `handle-later` to await poke-ack
     :: if ?after= but not pending, process normally (URL is probably being reused)
@@ -188,14 +193,14 @@
     ::
     ++  serve :: todo: consolidate in main core
       %-  (steer:rudder rudyard relay)
-      :^    web:serv               :: pages
-          http-route:serv          :: route
-        (fours:rudder [state ~ ~]) :: adlib
-      |=  =relay                   :: solve
+      :^    web:serv                 :: pages
+          http-route:serv            :: route
+        (fours:rudder [state ~ ~ ~]) :: adlib
+      |=  =relay                     :: solve
       ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
       =^  cards  this
         (on-poke %wiki-relay !>(relay))
-      ['Successfully processed' cards [state ~ ~]]
+      ['Successfully processed' cards [state ~ ~ ~]]
     ::
     ++  handle-later
       ^-  (quip card _this)
@@ -226,7 +231,8 @@
           [%~.~ *]            ~
           ~                   ~
         ==
-      =/  resource=path  (get-resource ship book-id page-path)
+      =/  special=path  (path-after-sig page-path.site)
+      =/  resource=path  (get-resource ship book-id page-path special)
       =/  ver=@t  (get-case ship book-id page-path query)
       =/  base=path  /g/x/[ver]/wiki/$/1
       =/  loc=path  :(weld base resource /[book-id] page-path)
@@ -246,12 +252,22 @@
       ?~  i  full
       (scag u.i full)
     ::
-    ++  get-resource
-      |=  [=ship book-id=@ta page-path=path]
+    ++  path-after-sig
+      |=  full=path
       ^-  path
-      =/  spine=(unit spine)  (~(get by shelf) ship book-id)
-      ?~  page-path  /spine-0
-      /booklet-0
+      =/  i=(unit @)  (find ~[%~.~] full)
+      ?~  i  ~
+      (slag +(u.i) full)
+    ::
+    ++  get-resource
+      |=  [=ship book-id=@ta page-path=path special=path]
+      ^-  path
+      ~&  >>  "page-path: {<page-path>}"
+      ~&  >>  "special: {<special>}"
+      ?^  page-path               /booklet-0
+      ?+  special                 /spine-0
+        [%assets %~.style.css ~]  /style
+      ==
     ::
     ++  get-case
       |=  [=ship book-id=@ta =path query=(map @t @t)]
@@ -353,11 +369,18 @@
       =/  [=path data=(unit (cask))]  dat.u.roar.sign-arvo
       ?~  data            [error-404 this]
       =/  rud=rudyard
+        :-  state
         ?+  p.u.data  ~|("Unknown mark {<p.u.data>}" !!)
         ::
-          %wiki-booklet-0  [state ~ `(booklet-0 q.u.data)]
+          %wiki-booklet-0  [~ `(grad-booklet:grad-4 (booklet-0 q.u.data)) ~]
         ::
-          %wiki-spine-0    [state `(spine-0 q.u.data) ~]
+          %wiki-spine-0    [`(grad-spine:grad-4 (spine-0 q.u.data)) ~ ~]
+        ::
+          %wiki-booklet-1  [~ `(booklet-1 q.u.data) ~]
+        ::
+          %wiki-spine-1    [`(spine-1 q.u.data) ~ ~]
+        ::
+          %mime            [~ ~ `(mime q.u.data)]
         ==
       =/  req=(unit inbound-request:eyre)  (eyre-request:serv bowl eyre-id.wire)
       ?~  req  ~|('Remote scry data received but eyre request not found' !!)
@@ -379,14 +402,14 @@
     ::
     ++  serve :: consolidate in main core
       %-  (steer:rudder rudyard relay)
-      :^    web:serv               :: pages
-          http-route:serv          :: route
-        (fours:rudder [state ~ ~]) :: adlib
-      |=  =relay                   :: solve
+      :^    web:serv                 :: pages
+          http-route:serv            :: route
+        (fours:rudder [state ~ ~ ~]) :: adlib
+      |=  =relay                     :: solve
       ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
       =^  cards  this
         (on-poke %wiki-relay !>(relay))
-      ['Successfully processed' cards [state ~ ~]]
+      ['Successfully processed' cards [state ~ ~ ~]]
     --
   ==
 ::
@@ -407,7 +430,7 @@
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   ?:  &(!public.read.rules public.edit.rules)
     ~|("Cannot enable public edits on private wiki." !!)
-  =/  =book  [title ~ rules now.bowl]
+  =/  =book  [[%& %default] title ~ rules now.bowl]
   =.  books  (~(put by books) id book)
   :_  state
   %-  (walt card)
@@ -487,6 +510,27 @@
   %-  (walt card)
   :~  [scry.r |.((full:grow id book))]
       [goss.r |.([(tell:goss id book) ~])]
+  ==
+::
+++  mod-look
+  |=  [%mod-look book-id=@ta theme=(each @tas @t)]
+  ?>  =(src.bowl our.bowl)
+  =/  =book  (~(got by books) book-id)
+  ?:  ?+  theme        &
+        [%| @t]        |
+        [%& %default]  |
+      ==
+    ~|('Unknown theme' !!)
+  =.  theme.book  theme
+  =.  stamp.book  now.bowl
+  =.  books  (~(put by books) book-id book)
+  ~&  >  "Wiki theme updated: {(trip book-id)}"
+  :_  state
+  =/  r  read.rules.book
+  =/  remote  &(scry.r ?!(-.theme))
+  %-  (walt card)
+  :~  [remote |.((full:grow book-id book))] :: todo: refactor so only look:grow is needed
+      [goss.r |.([(tell:goss book-id book) ~])]
   ==
 ::
 ++  new-page
@@ -669,7 +713,7 @@
   ^-  card
   [%pass [eyre-id -.action ~] %agent [ship %wiki] %poke %wiki-action !>(action)]
 ::
-++  grow
+++  grow :: todo: paths /booklet-0 -> /booklet & /spine-0 -> /spine
   |%
   ++  part
     |=  [book-id=@ta =book tale-path=path =tale]
@@ -677,23 +721,37 @@
     =/  =wire  /wiki/booklet
     =/  loc=path  (weld /booklet-0/[book-id] tale-path)
     =/  =booklet  [(book-to-cover book-id book) tale-path tale]
-    [%pass wire %grow loc %wiki-booklet-0 booklet]
+    [%pass wire %grow loc %wiki-booklet-1 booklet]
   ::
   ++  back
     |=  [id=@ta =book]
     ^-  card
-    [%pass /wiki/spine %grow /spine-0/[id] %wiki-spine-0 (book-to-spine id book)]
+    [%pass /wiki/spine %grow /spine-0/[id] %wiki-spine-1 (book-to-spine id book)]
+  ::
+  ++  look
+    |=  [book-id=@ta =book]
+    ^-  (list card)
+    =/  style=(unit @t)
+      ?-  -.theme.book
+        %&  ~
+        %|  `+.theme.book
+      ==
+    %-  drop
+    %+  bind  style
+    |=  css=@t
+    [%pass /wiki/style %grow /style/[book-id] %mime (css-to-mime css)]
   ::
   ++  full
     |=  [id=@ta =book]
     ^-  (list card)
     :-  (back id book)
+    %+  weld  (look id book)
     %+  turn  ~(tap by tales.book)
     |=  [=path =tale]
     (part id book path tale)
   --
 ::
-++  tomb
+++  tomb :: todo: paths /booklet-0 -> /booklet & /spine-0 -> /spine
   |%
   ++  tomb
     |=  targ=path
@@ -731,14 +789,14 @@
     ^-  card
     ~&  '%wiki starting a rumor...'
     =/  =lore  [%lurn (malt [[our.bowl id] (book-to-spine id book)]~)]
-    [(invent:gossip %wiki-lore !>(lore))]
+    [(invent:gossip %wiki-lore-1 !>(lore))]
   ::
   ++  hush
     |=  [id=@ta]
     ^-  card
     ~&  '%wiki denying a rumor...'
     =/  =lore  [%burn our.bowl id now.bowl]
-    [(invent:gossip %wiki-lore !>(lore))]
+    [(invent:gossip %wiki-lore-1 !>(lore))]
   ::
   ++  rant
     ^-  (list card)
@@ -750,7 +808,7 @@
       %+  turn  library
       |=  item=[[@p @ta] spine]
       =/  =lore  [%lurn (malt [item]~)]
-      (invent:gossip %wiki-lore !>(lore))
+      (invent:gossip %wiki-lore-1 !>(lore))
     %+  weld  ~(tap by shelf)
     %+  murn  ~(tap by books)
     |=  [id=@ta =book]
@@ -763,7 +821,9 @@
     ~&  "%wiki heard a rumor from {<src.bowl>}..."
     ~>  %bout
     ?:  ?=(%gossip-unknown p.cage)  (cope cage)
-    ?>  ?=(%wiki-lore p.cage)
+    ?:  ?=(%wiki-lore p.cage)
+      $(cage [%wiki-lore-1 !>((grad-lore:grad-4 !<(lore-0 q.cage)))])
+    ?>  ?=(%wiki-lore-1 p.cage)
     =/  =lore  !<(lore q.cage)
     ?-  -.lore
       %lurn

@@ -91,6 +91,10 @@
               ;legend: Wiki Name
               ;+  setting-book-name
             ==
+            ;fieldset
+              ;legend: Appearance
+              ;a/"./settings/theme": Edit Theme
+            ==
           ==
           ;div.column-box
             ;fieldset

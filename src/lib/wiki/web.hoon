@@ -495,4 +495,14 @@
     console.error('missing elem: ' + '{id}')
   }
   """
+::
+++  link-theme
+  |=  [=bowl:gall host=(unit @p) =cover]
+  ^-  manx
+  =/  =ship  (fall host our.bowl)
+  ?~  theme.cover
+    ;link(rel "stylesheet", href "/wiki/~/p/{<ship>}/{(trip book-id.cover)}/~/assets/style.css");
+  ?+  u.theme.cover  stub
+    %default  stub
+  ==
 --

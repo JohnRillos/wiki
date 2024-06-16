@@ -15,20 +15,24 @@
   ^-  (unit place:rudder)
   =/  site=(list @t)  site.trail
   =/  pat=(pole knot)  (need (decap:rudder /wiki site))
-  |^  ?:  tail-fas              `[%away (snip site)]
-      ?+  pat                   page-resource
-        ~                             `[%page & %index]
-        [sig %assets *]               `[%page | %asset]
-        [sig %new ~]                  `[%page & %new-book]
-        [sig %search ~]               `[%page & %search-all]
-        [sig %x %search ~]            `[%page & %hx-search]
-        (far [@ta ~])                 `[%page r-auth %book]
-        (far [@ta sig %new ~])        `[%page w-auth %new-page]
-        (far [@ta sig %import ~])     `[%page w-auth %import]
-        (far [@ta sig %settings ~])   `[%page & %book-settings]
-        [@ta sig %not-found ~]        `[%page r-auth %page-not-found]
-        (far [@ta sig %x %front ~])   `[%page r-auth %hx-front]
-        (far [@ta sig %x %search ~])  `[%page r-auth %hx-search]
+  |^  ?:  tail-fas                    `[%away (snip site)]
+      :-  ~
+      :-  %page
+      ?+  pat                               page-resource
+        ~                                   [& %index]
+        [sig %assets *]                     [| %asset]
+        [sig %new ~]                        [& %new-book]
+        [sig %search ~]                     [& %search-all]
+        [sig %x %search ~]                  [& %hx-search]
+        (far [@ta ~])                       [r-auth %book]
+        (far [@ta sig %assets *])           [| %book-asset]
+        (far [@ta sig %new ~])              [w-auth %new-page]
+        (far [@ta sig %import ~])           [w-auth %import]
+        (far [@ta sig %settings ~])         [& %book-settings]
+        (far [@ta sig %settings %theme ~])  [& %edit-theme]
+        [@ta sig %not-found ~]              [r-auth %page-not-found]
+        (far [@ta sig %x %front ~])         [r-auth %hx-front]
+        (far [@ta sig %x %search ~])        [r-auth %hx-search]
       ==
   ::
   ++  far
@@ -50,9 +54,7 @@
   ++  tail-fas  ?=([%$ *] (flop pat)) :: detect trailing /
   ::
   ++  page-resource
-    ^-  (unit place:rudder)
-    :-  ~
-    :-  %page
+    ^-  [? @tas]
     =/  n=@  (lent pat)
     ?:  (lth n 3)        [r-auth %page]
     =/  suf=path  (slag (sub n 2) pat)

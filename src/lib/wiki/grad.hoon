@@ -3,6 +3,47 @@
 ::
 +$  card  card:agent:gall
 ::
+++  grad-4
+  |%
+  ++  state
+    |=  old=state-3
+    ^-  state-4
+    %=  old
+      -  %4
+      shelf  (~(run by shelf.old) grad-spine)
+      books  (~(run by books.old) grad-book)
+    ==
+  ::
+  ++  grad-booklet
+    |=  =booklet-0
+    ^-  booklet-1
+    booklet-0(cover (grad-cover cover.booklet-0))
+  ::
+  ++  grad-spine
+    |=  =spine-0
+    ^-  spine-1
+    spine-0(cover (grad-cover cover.spine-0))
+  ::
+  ++  grad-cover
+    |=  =cover-0
+    ^-  cover-1
+    :-  book-id.cover-0
+    [`%default +.cover-0]
+  ::
+  ++  grad-book
+    |=  =book-2
+    ^-  book-3
+    [[%& %default] book-2]
+  ::
+  ++  grad-lore
+    |=  =lore-0
+    ^-  lore-1
+    ?-  -.lore-0
+      %burn  lore-0
+      %lurn  [-.lore-0 (~(run by shelf.lore-0) grad-spine)]
+    ==
+  --
+::
 ++  grad-3
   |%
   ++  state
