@@ -111,7 +111,8 @@
 ::
 +$  cover
   $+  cover
-  $:  book-id=@ta
+  $:  era=@ud
+      book-id=@ta
       theme=(unit @tas)
       title=@t
       rules=access

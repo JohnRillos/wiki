@@ -27,6 +27,7 @@
   ++  grad-cover
     |=  =cover-0
     ^-  cover-1
+    :-  %3
     :-  book-id.cover-0
     [`%default +.cover-0]
   ::

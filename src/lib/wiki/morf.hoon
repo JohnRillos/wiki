@@ -9,7 +9,7 @@
     ?:  -.theme
       `+.theme
     ~
-  [id look title rules stamp]
+  [our-era id look title rules stamp]
 ::
 ++  book-to-spine
   |=  [id=@ta =book]

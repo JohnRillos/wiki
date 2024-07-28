@@ -264,10 +264,28 @@
       ^-  path
       ~&  >>  "page-path: {<page-path>}"
       ~&  >>  "special: {<special>}"
-      ?^  page-path               /booklet-0
-      ?+  special                 /spine-0
-        [%assets %~.style.css ~]  /style
-      ==
+      =/  era=@
+        =;  it  (fall it our-era)
+        %+  bind  (~(get by shelf) [ship book-id])
+        |=(=spine era.cover.spine)
+      :: scry path depends on wiki's era
+      |^  ?:  =(era 4)  (era-4 page-path special)
+          ?:  =(era 3)  (era-3 page-path)
+          ~&  "Unknown wiki API {<era>}, defaulting to {<our-era>}"
+          (era-4 page-path special)
+      ::
+      ++  era-4
+        |=  [page-path=path special=path]
+        ?^  page-path               /booklet
+        ?+  special                 /spine
+          [%assets %~.style.css ~]  /style
+        ==
+      ::
+      ++  era-3
+        |=  page-path=path
+        ?^  page-path  /booklet-0
+        /spine-0
+      --
     ::
     ++  get-case
       |=  [=ship book-id=@ta =path query=(map @t @t)]
@@ -316,7 +334,9 @@
     |=  =cage
     ^-  (quip card _state)
     ?+  wire  ~|  "Unknown wire {<wire>}"  !!
-      [%~.~ %gossip %gossip ~]  (read:goss:main cage)
+        [%~.~ %gossip %gossip ~]
+      ~&  "%wiki heard a rumor from {<src.bowl>}..."
+      (read:goss:main cage)
     ==
   ::
   ::  A poke to another ship may contain the eyre-id of a form submission in its path.
@@ -713,20 +733,20 @@
   ^-  card
   [%pass [eyre-id -.action ~] %agent [ship %wiki] %poke %wiki-action !>(action)]
 ::
-++  grow :: todo: paths /booklet-0 -> /booklet & /spine-0 -> /spine
+++  grow
   |%
   ++  part
     |=  [book-id=@ta =book tale-path=path =tale]
     ^-  card
     =/  =wire  /wiki/booklet
-    =/  loc=path  (weld /booklet-0/[book-id] tale-path)
+    =/  loc=path  (weld /booklet/[book-id] tale-path)
     =/  =booklet  [(book-to-cover book-id book) tale-path tale]
     [%pass wire %grow loc %wiki-booklet-1 booklet]
   ::
   ++  back
     |=  [id=@ta =book]
     ^-  card
-    [%pass /wiki/spine %grow /spine-0/[id] %wiki-spine-1 (book-to-spine id book)]
+    [%pass /wiki/spine %grow /spine/[id] %wiki-spine-1 (book-to-spine id book)]
   ::
   ++  look
     |=  [book-id=@ta =book]
@@ -751,7 +771,7 @@
     (part id book path tale)
   --
 ::
-++  tomb :: todo: paths /booklet-0 -> /booklet & /spine-0 -> /spine
+++  tomb
   |%
   ++  tomb
     |=  targ=path
@@ -768,16 +788,20 @@
     |=  book-id=@ta
     ^-  (list card)
     =;  paths=(list path)  (zing (turn paths tomb))
+    :-  /spine/[book-id]
     :-  /spine-0/[book-id]
     %+  skim  ~(tap in ~(key by sky.bowl))
     |=  =(pole knot)
     ?+  pole  |
+      [%booklet bid=@ta *]    =(book-id bid.pole)
       [%booklet-0 bid=@ta *]  =(book-id bid.pole)
     ==
   ::
   ++  part
     |=  [book-id=@ta page-path=path]
     ^-  (list card)
+    %+  weld
+      (tomb (weld /booklet/[book-id] page-path))
     (tomb (weld /booklet-0/[book-id] page-path))
   --
 ::
@@ -818,7 +842,6 @@
   ++  read
     |=  =cage
     ^-  (quip card _state)
-    ~&  "%wiki heard a rumor from {<src.bowl>}..."
     ~>  %bout
     ?:  ?=(%gossip-unknown p.cage)  (cope cage)
     ?:  ?=(%wiki-lore p.cage)

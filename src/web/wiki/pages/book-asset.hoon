@@ -18,10 +18,11 @@
   |=  [arg=(list [k=@t v=@t]) msg=(unit [? @t])]
   ^-  reply:rudder
   =,  -.rudyard
-  =/  [site=(pole knot) *]  (sane-url:web url.request.order)
-  ?>  ?=([%wiki %~.~ %p host=@ta book-id=@ta %~.~ %assets filepath=*] site)
-  |^  ?+  filepath.site  [%code 404 'Not found']
-        [%~.style.css ~]  (get-style (slav %p host.site) book-id.site)
+  =/  [site=wiki-path *]  (wiki-url:web url.request.order)
+  =/  loc=(pole knot)  loc.site
+  ?>  ?=([%~.~ %assets filepath=*] loc)
+  |^  ?+  filepath.loc  [%code 404 'Not found']
+        [%~.style.css ~]  (get-style (fall host.site our.bowl) book-id.site)
       ==
   ::
   ++  css-reply
@@ -39,12 +40,6 @@
     %+  bind  (~(get by books) book-id)
     |=  =book
     %-  css-to-mime
-    :: '''
-    :: body {
-    ::   color: blue;
-    ::   background-color: pink;
-    :: }
-    :: '''
     ?-  -.theme.book
       %|  +.theme.book
       %&  (preset-theme +.theme.book)
