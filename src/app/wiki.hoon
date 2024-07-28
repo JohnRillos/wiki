@@ -905,13 +905,12 @@
 ++  log
   |=  [level=?(%d %i %w %e) =tape]
   ^+  same
-  ?:  wordy
-    ?-  level
-      %d  ~&       tape  same
-      %i  ~&  >    tape  same
-      %w  ~&  >>   tape  same
-      %e  ~&  >>>  tape  same
-    ==
-  same
+  ?.  wordy  same
+  ?-  level
+    %d  ~&       tape  same
+    %i  ~&  >    tape  same
+    %w  ~&  >>   tape  same
+    %e  ~&  >>>  tape  same
+  ==
 ::
 --
