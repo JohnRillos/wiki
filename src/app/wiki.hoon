@@ -833,7 +833,7 @@
   ++  rant
     ^-  (list card)
     %-  (log %d "%wiki spreading rumors...")
-    ~>  %bout
+    %-  bout
     %-  (log-if-crash (list card))
     |.
     =;  library
@@ -850,7 +850,7 @@
   ++  read
     |=  =cage
     ^-  (quip card _state)
-    ~>  %bout
+    %-  bout
     ?:  ?=(%gossip-unknown p.cage)  (cope cage)
     ?:  ?=(%wiki-lore p.cage)
       $(cage [%wiki-lore-1 !>((grad-lore:grad-4 !<(lore-0 q.cage)))])
@@ -912,5 +912,10 @@
     %w  ~&  >>   tape  same
     %e  ~&  >>>  tape  same
   ==
+::
+++  bout
+  ^+  same
+  ?.  wordy  same
+  ~>  %bout  same
 ::
 --
