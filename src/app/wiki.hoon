@@ -136,6 +136,7 @@
       %mod-page       (mod-page:main act)
       %del-page       (del-page:main act)
       %imp-file       (imp-file:main act)
+      %set-verb       (set-verb:main act)
     ==
   ::
   ++  handle-relay
@@ -153,7 +154,7 @@
   ++  handle-old-goss
     |=  [%old-goss =cage]
     ^-  (quip card _this)
-    ~&  "Remembering rumor..."
+    %-  (log:main %d "Remembering rumor...")
     =^  cards  state  (read:goss:main cage)
     [cards this]
   ::
@@ -310,7 +311,7 @@
   ?+  path  (on-watch:default path)
     [%http-response *]        [~ this]
     [%~.~ %gossip %source ~]
-      ~&  "{<src.bowl>} wants gossip..."
+      %-  (log:main %d "{<src.bowl>} wants gossip...")
       [rant:goss:main this]
   ==
 ::
@@ -335,7 +336,7 @@
     ^-  (quip card _state)
     ?+  wire  ~|  "Unknown wire {<wire>}"  !!
         [%~.~ %gossip %gossip ~]
-      ~&  "%wiki heard a rumor from {<src.bowl>}..."
+      %-  (log:main %d "%wiki heard a rumor from {<src.bowl>}...")
       (read:goss:main cage)
     ==
   ::
@@ -723,6 +724,13 @@
   ?:  (~(has in new-paths) old-path)  ~
   `(poke-self [%del-page book-id old-path])
 ::
+++  set-verb
+  |=  act=[%set-verb wordy=?]
+  ~&  ?:  wordy.act  '%wiki: more logging enabled'
+      '%wiki: shh! logging reduced...'
+  =.  wordy  wordy.act
+  [~ state]
+::
 ++  poke-self
   |=  =action
   ^-  card
@@ -811,20 +819,20 @@
   ++  tell
     |=  [id=@ta =book]
     ^-  card
-    ~&  '%wiki starting a rumor...'
+    %-  (log %d "%wiki starting a rumor...")
     =/  =lore  [%lurn (malt [[our.bowl id] (book-to-spine id book)]~)]
     [(invent:gossip %wiki-lore-1 !>(lore))]
   ::
   ++  hush
     |=  [id=@ta]
     ^-  card
-    ~&  '%wiki denying a rumor...'
+    %-  (log %d "%wiki denying a rumor...")
     =/  =lore  [%burn our.bowl id now.bowl]
     [(invent:gossip %wiki-lore-1 !>(lore))]
   ::
   ++  rant
     ^-  (list card)
-    ~&  '%wiki spreading rumors...'
+    %-  (log %d "%wiki spreading rumors...")
     ~>  %bout
     %-  (log-if-crash (list card))
     |.
@@ -859,7 +867,7 @@
           %-  (~(uno by shelf) other)
           |=  [k=[@p @ta] v=spine w=spine]
           ?:  (gte stamp.cover.v stamp.cover.w)  v
-          ~&  "... updating index for {<k>}"
+          %-  (log %d "... updating index for {<k>}")
           w
         [~ state]
       ::
@@ -868,7 +876,7 @@
         =/  old=(unit spine)  (~(get by shelf) [host.lore id.lore])
         ?~  old                              state
         ?:  (gth stamp.cover.u.old at.lore)  state
-        ~&  "... un-indexing {<[host.lore id.lore]>}"
+        %-  (log %d "... un-indexing {<[host.lore id.lore]>}")
         =.  shelf  (~(del by shelf) [host.lore id.lore])
         state
     ==
@@ -876,7 +884,7 @@
   ++  cope
     |=  =cage
     ^-  (quip card _state)
-    ~&  "... but didn't understand it (will try again after next update)"
+    %-  (log %w "... but didn't understand it (will try again after next update)")
     =.  early  (snoc early cage)
     [~ state]
   --
@@ -893,5 +901,17 @@
   ^-  simple-payload:http
   =/  html=@t  (error-to-html:web u.error)
   [[400 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
+::
+++  log
+  |=  [level=?(%d %i %w %e) =tape]
+  ^+  same
+  ?:  wordy
+    ?-  level
+      %d  ~&       tape  same
+      %i  ~&  >    tape  same
+      %w  ~&  >>   tape  same
+      %e  ~&  >>>  tape  same
+    ==
+  same
 ::
 --

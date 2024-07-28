@@ -8,8 +8,9 @@
   ++  state
     |=  old=state-3
     ^-  state-4
+    :-  %4
     %=  old
-      -  %4
+      -      |
       shelf  (~(run by shelf.old) grad-spine)
       books  (~(run by books.old) grad-book)
     ==

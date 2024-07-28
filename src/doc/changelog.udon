@@ -8,6 +8,8 @@
 
 Date: TBD
 - hosts can make custom CSS themes
+- reduce amount of logging by default
+  - user can opt into full amount of logging with poke `:wiki &wiki-action [%set-verb &]`
 
 
 ## 1.2

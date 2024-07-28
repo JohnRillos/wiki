@@ -44,6 +44,7 @@
 +$  state-4
   $+  state-4
   $:  %4
+    wordy=_|
     early=(list cage)
     =later
     shelf=shelf-1
@@ -103,6 +104,7 @@
       [%del-page book-id=@ta =path]
       [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
       [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
+      [%set-verb wordy=?]
   ==
 ::
 +$  wiki-path  [[book-id=@ta loc=path] host=(unit @p)]
