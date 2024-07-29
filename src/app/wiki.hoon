@@ -111,7 +111,7 @@
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card _this)
-  ~>  %bout
+  %-  bout
   |^  ?+  mark  (on-poke:default mark vase)
         %wiki-action          (handle-action !<(action vase))
         %wiki-relay           (handle-relay !<(relay vase))

@@ -9,6 +9,7 @@
 Date: TBD
 - hosts can make custom CSS themes
 - reduce amount of logging by default
+  - some logs will always occur, but the noisiest logs are disabled by default
   - user can opt into full amount of logging with poke `:wiki &wiki-action [%set-verb &]`
 
 
