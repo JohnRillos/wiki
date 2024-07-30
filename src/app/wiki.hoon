@@ -98,9 +98,11 @@
     ?.  ?=(%gossip-unknown p.raw)  [| raw]
     =/  k=(cask *)  !<((cask *) q.raw)
     =;  out
-      %+  fall  out
-      ~&  >>>  "failed to parse old rumor w/ known mark {<p.k>}"
-      [| raw]
+      %-  %-  bond
+          |.
+          ~&  >>>  "failed to parse old rumor w/ known mark {<p.k>}"
+          [| raw]
+      out
     %-  mole
     |.
     ?+  p.k         [| raw]
