@@ -2,15 +2,16 @@
 ::
 ::  current state type
 ::
-+$  state-x  state-3
++$  state-x  state-4
 ::
-++  our-era  %3
+++  our-era  %4
 ::
 +$  versioned-state
   $%  state-0
       state-1
       state-2
       state-3
+      state-4
   ==
 ::
 +$  state-0
@@ -40,13 +41,20 @@
     books=(map @ta book-2)
   ==
 ::
-:: todo: track favorite wikis manually, using plain subscription instead of gossip
-::   tbd: mirror full contents or only index
-::   tbd: include in `shelf` or separate
++$  state-4
+  $+  state-4
+  $:  %4
+    wordy=_|
+    early=(list cage)
+    =later
+    shelf=shelf-1
+    books=(map @ta book-3)
+  ==
 ::
 +$  book
   $+  book
-  $:  title=@t
+  $:  theme=(each @tas @t)
+      title=@t
       tales=(map path tale)
       rules=access
       stamp=@da
@@ -91,10 +99,12 @@
       [%mod-book-name id=@ta title=@t]
       [%mod-rule-read id=@ta =rule-read]
       [%mod-rule-edit id=@ta =rule-edit]
+      [%mod-look id=@ta theme=(each @tas @t)]
       [%new-page book-id=@ta =path title=@t content=wain]
       [%del-page book-id=@ta =path]
       [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
       [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
+      [%set-verb wordy=?]
   ==
 ::
 +$  wiki-path  [[book-id=@ta loc=path] host=(unit @p)]
@@ -103,7 +113,9 @@
 ::
 +$  cover
   $+  cover
-  $:  book-id=@ta
+  $:  era=@ud
+      book-id=@ta
+      theme=(unit @tas)
       title=@t
       rules=access
       stamp=@da
@@ -117,7 +129,7 @@
 ::
 +$  booklet  [=cover =path =tale]
 ::
-+$  rudyard  [state-x spine=(unit spine) booklet=(unit booklet)]
++$  rudyard  [state-x spine=(unit spine) booklet=(unit booklet) asset=(unit mime)]
 ::
 ::
 ::
@@ -137,6 +149,19 @@
       done=?
       error=(unit tang)
   ==
+:: ::
+:: +$  flag  [=ship =knot]
+:: ::
+:: +$  foo  (map @ta bar)
+:: ::
+:: +$  bar
+::   $:  =time
+::       cover-wire=wire
+::       wire-2=wire
+::       =flag
+::       =path
+::       cover=(unit cover)
+::   ==
 ::
 ::  facts from newer versions of %wiki, to be consumed on-load
 ::
@@ -170,11 +195,38 @@
 ::
 ::  state-3
 ::
-+$  book-2     book
-+$  lore-0     lore
-+$  shelf-0    shelf
-+$  spine-0    spine
-+$  cover-0    cover
-+$  booklet-0  booklet
++$  book-2
+  $+  book-2
+  $:  title=@t
+      tales=(map path tale)
+      rules=access
+      stamp=@da
+  ==
+::
++$  lore-0
+  $+  lore-0
+  $%  [%lurn shelf=shelf-0]
+      [%burn host=@p id=@ta at=@da]
+  ==
+::
++$  shelf-0    $+(shelf-0 (map [host=@p id=@ta] spine-0))
++$  spine-0    $+(spine-0 [cover=cover-0 toc=(map path ref)])
++$  booklet-0  [cover=cover-0 =path =tale]
++$  cover-0
+  $+  cover-0
+  $:  book-id=@ta
+      title=@t
+      rules=access
+      stamp=@da
+  ==
+::
+::  state-4
+::
++$  book-3     book
++$  lore-1     lore
++$  shelf-1    shelf
++$  spine-1    spine
++$  booklet-1  booklet
++$  cover-1    cover
 ::
 --

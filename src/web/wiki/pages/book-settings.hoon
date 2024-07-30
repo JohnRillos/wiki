@@ -82,6 +82,7 @@
     ;html
       ;+  (doc-head:web bowl "Settings - {(trip title.book)}")
       ;body#with-sidebar(onload on-page-load)
+        ;+  (link-theme:web bowl host.site (book-to-cover book-id.site book))
         ;+  (global-nav:web bowl order [%| book])
         ;main
           ;+  (search-bar:web `book-id.site host.site)
@@ -90,6 +91,10 @@
             ;fieldset
               ;legend: Wiki Name
               ;+  setting-book-name
+            ==
+            ;fieldset
+              ;legend: Appearance
+              ;a/"./settings/theme": Edit Theme
             ==
           ==
           ;div.column-box

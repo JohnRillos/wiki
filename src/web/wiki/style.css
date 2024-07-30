@@ -92,7 +92,7 @@ nav.sidebar {
 
 a#wiki-title {
   margin: auto;
-  color: black;
+  color: inherit;
   font-size: 20pt;
   font-family: serif;
   text-align: center;
@@ -103,8 +103,8 @@ a#wiki-title:hover {
   text-decoration: none;
 }
 
-div#global-menu {
-  background: #e8e8e8;
+#global-menu {
+  background-color: #e8e8e8;
   border-radius: 8px;
   padding: 1em;
   margin-top: 1em;

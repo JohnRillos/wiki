@@ -36,6 +36,7 @@
     ;html
       ;+  (doc-head:web bowl "Page Not Found")
       ;body#with-sidebar
+        ;+  (link-theme:web bowl host.site (book-to-cover book-id.site book))
         ;+  (global-nav:web bowl order [%| book])
         ;main
           ;+  (search-bar:web `book-id.site host.site)

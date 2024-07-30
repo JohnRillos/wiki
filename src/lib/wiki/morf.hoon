@@ -5,7 +5,11 @@
   |=  [id=@ta =book]
   ^-  cover
   =,  book
-  [id title rules stamp]
+  =/  look=(unit @tas)
+    ?:  -.theme
+      `+.theme
+    ~
+  [our-era id look title rules stamp]
 ::
 ++  book-to-spine
   |=  [id=@ta =book]

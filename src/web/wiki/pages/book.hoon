@@ -6,7 +6,7 @@
 ^-  (page:rudder rudyard relay)
 ::
 =<
-::
+:: 
 |_  [=bowl:gall =order:rudder =rudyard]
 ::
 +*  help  ~(. +> [bowl order rudyard])
@@ -52,6 +52,7 @@
     ;html
       ;+  (doc-head:web bowl (trip title.cover))
       ;body#with-sidebar(onload on-page-load)
+        ;+  (link-theme:web bowl host.site cover)
         ;+  (global-nav:web bowl order [%& cover])
         ;main
           ;+  (search-bar:web `book-id.site host.site)
