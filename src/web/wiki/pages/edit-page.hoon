@@ -64,6 +64,7 @@
       ;style: {(trip codemirror-css)}
       ;script: {(trip markdown-js)}
       ;body#with-sidebar
+        ;+  (link-theme:web bowl host.site cover)
         ;+  (global-nav:web bowl order [%& cover])
         ;main
           ;*  ?~  msg  ~
