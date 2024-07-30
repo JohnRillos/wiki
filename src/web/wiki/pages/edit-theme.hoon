@@ -72,25 +72,27 @@
               ~[;/((trip text.u.msg))]
           ;+  (search-bar:web `book-id.site host.site)
           ;h1: Edit Theme
-          :: todo: figure out how to disable code-mirror editor based on radio button
           ;+
           %+  in-form:web  "Are you sure?"
           ;div
             ;div.box-item
               ;+  %+  check-if:web  -.theme
-                  %+  disables-other:web  ~['custom-css']
+                  %+  toggle-codemirror:web  %.n
               ;input#use-default(type "radio", name "is-default", value "true");
               ;label(for "use-default"): Default
             ==
             ;div.box-item
               ;+  %+  check-if:web  ?!(-.theme)
-                  %+  enables-other:web  ~['custom-css']
+                  %+  toggle-codemirror:web  %.y
               ;input#use-custom(type "radio", name "is-default", value "false");
               ;label(for "use-custom"): Custom style
             ==
-            ;h3: Custom CSS
-            ;textarea(id "custom-css", name "custom-css")
-              ; {(trip custom)}
+            ;div#editor-container
+              ;h3: Custom CSS
+              ;textarea(id "custom-css", name "custom-css")
+                ; {(trip custom)}
+              ==
+              ;script: {(trip css-editor-js)}
             ==
             ;br;
             ;br;
@@ -101,7 +103,6 @@
               ; Submit
             ==
           ==
-          ;script: {(trip css-editor-js)}
         ==
       ==
     ==

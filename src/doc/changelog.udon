@@ -6,7 +6,7 @@
 
 ### 1.3.0
 
-Date: TBD
+Date: ~2024.7.29
 - hosts can make custom CSS themes
 - reduce amount of logging by default
   - some logs will always occur, but the noisiest logs are disabled by default

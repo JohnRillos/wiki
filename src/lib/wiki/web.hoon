@@ -251,6 +251,21 @@
   =/  on-input=tape  (zing (join "\0a" scripts))
   manx(a.g [[%oninput on-input] a.g.manx])
 ::
+++  toggle-codemirror
+  |=  [enables=? =manx]
+  ^-  ^manx
+  =/  this-id=tape  (elem-id manx)
+  =/  read-only=tape  ?:(enables "false" "'nocursor'")
+  =/  hidden=tape  ?:(enables "false" "true")
+  =/  on-input=tape
+    """
+    if (document.getElementById('{this-id}').checked) \{
+      editor.setOption('readOnly', {read-only});
+      document.getElementById('editor-container').hidden = {hidden};
+    }
+    """
+  manx(a.g [[%oninput on-input] a.g.manx])
+::
 ++  stub
   ^-  manx
   ;div(style "display: none");
