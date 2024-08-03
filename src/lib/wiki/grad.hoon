@@ -3,6 +3,17 @@
 ::
 +$  card  card:agent:gall
 ::
+++  grad-5
+  |%
+  ++  state
+    |=  old=state-4
+    ^-  state-5
+    %=  old
+      -      %5
+      books  (~(run by books.old) (lead ~))
+    ==
+  --
+::
 ++  grad-4
   |%
   ++  state

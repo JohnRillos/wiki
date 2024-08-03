@@ -329,6 +329,7 @@
   =/  admin=?  (is-admin bowl host access)
   =/  write=?  (may-edit bowl host access)
   ;nav.sidebar
+    ;div#logo-container(hx-get "{wik-dir}/~/x/logo?fresh=true", hx-trigger "load");
     ;a#wiki-title/"{wik-dir}": {(trip book-title)}
     ;div#global-menu
       ;a/"{wik-dir}": Home

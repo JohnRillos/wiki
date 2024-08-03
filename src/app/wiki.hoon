@@ -39,7 +39,7 @@
 |_  =bowl:gall
 +*  this       .
     default  ~(. (default-agent this %|) bowl)
-    serv     ~(. wiki-http [state ~ ~ ~])
+    serv     ~(. wiki-http [state ~ ~ ~ ~])
     main     ~(. +> bowl)
 ::
 ++  on-init
@@ -66,7 +66,8 @@
     =|  cards=(list card)
     |-
     ?-  -.old
-      %4  [cards old]
+      %5  [cards old]
+      %4  $(old (state:grad-5 old))
       %3  $(old (state:grad-4 old))
       %2  $(old (state:grad-3 old))
       %1  $(old (state:grad-2 old))
@@ -132,6 +133,7 @@
       %mod-book-name  (mod-book-name:main act)
       %mod-rule-read  (mod-rule-read:main act)
       %mod-rule-edit  (mod-rule-edit:main act)
+      %mod-logo       (mod-logo:main act)
       %mod-look       (mod-look:main act)
       %del-book       (del-book:main act)
       %new-page       (new-page:main act)
@@ -165,7 +167,7 @@
     ^-  (quip card _this)
     |^  ?:  is-later   handle-later
         ?:  is-remote  handle-http-remote
-        (paddle [bowl order [state ~ ~ ~]])
+        (paddle [bowl order [state ~ ~ ~ ~]])
     ::
     :: if ?after= and pending request in `later`, use `handle-later` to await poke-ack
     :: if ?after= but not pending, process normally (URL is probably being reused)
@@ -196,14 +198,14 @@
     ::
     ++  serve :: todo: consolidate in main core
       %-  (steer:rudder rudyard relay)
-      :^    web:serv                 :: pages
-          http-route:serv            :: route
-        (fours:rudder [state ~ ~ ~]) :: adlib
-      |=  =relay                     :: solve
+      :^    web:serv                   :: pages
+          http-route:serv              :: route
+        (fours:rudder [state ~ ~ ~ ~]) :: adlib
+      |=  =relay                       :: solve
       ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
       =^  cards  this
         (on-poke %wiki-relay !>(relay))
-      ['Successfully processed' cards [state ~ ~ ~]]
+      ['Successfully processed' cards [state ~ ~ ~ ~]]
     ::
     ++  handle-later
       ^-  (quip card _this)
@@ -265,16 +267,12 @@
     ++  get-resource
       |=  [=ship book-id=@ta page-path=path special=path]
       ^-  path
-      ~&  >>  "page-path: {<page-path>}"
-      ~&  >>  "special: {<special>}"
       =/  era=@
         =;  it  (fall it our-era)
         %+  bind  (~(get by shelf) [ship book-id])
         |=(=spine era.cover.spine)
       :: scry path depends on wiki's era
-      |^  ?:  =(era 4)  (era-4 page-path special)
-          ?:  =(era 3)  (era-3 page-path)
-          ~&  "Unknown wiki API {<era>}, defaulting to {<our-era>}"
+      |^  ?:  (lte era 3)  (era-3 page-path)
           (era-4 page-path special)
       ::
       ++  era-4
@@ -282,6 +280,7 @@
         ?^  page-path               /booklet
         ?+  special                 /spine
           [%assets %~.style.css ~]  /style
+          [%x %~.logo ~]            /logo
         ==
       ::
       ++  era-3
@@ -395,15 +394,18 @@
         :-  state
         ?+  p.u.data  ~|("Unknown mark {<p.u.data>}" !!)
         ::
-          %wiki-booklet-0  [~ `(grad-booklet:grad-4 (booklet-0 q.u.data)) ~]
+          %wiki-booklet-0  [~ `(grad-booklet:grad-4 (booklet-0 q.u.data)) ~ ~]
         ::
-          %wiki-spine-0    [`(grad-spine:grad-4 (spine-0 q.u.data)) ~ ~]
+          %wiki-spine-0    [`(grad-spine:grad-4 (spine-0 q.u.data)) ~ ~ ~]
         ::
-          %wiki-booklet-1  [~ `(booklet-1 q.u.data) ~]
+          %wiki-booklet-1  [~ `(booklet-1 q.u.data) ~ ~]
         ::
-          %wiki-spine-1    [`(spine-1 q.u.data) ~ ~]
+          %wiki-spine-1    [`(spine-1 q.u.data) ~ ~ ~]
         ::
-          %mime            [~ ~ `(mime q.u.data)]
+          %wiki-logo-0     [~ ~ ~ `((unit image) q.u.data)]
+        ::
+          %mime            [~ ~ `(mime q.u.data) ~]
+        ::
         ==
       =/  req=(unit inbound-request:eyre)  (eyre-request:serv bowl eyre-id.wire)
       ?~  req  ~|('Remote scry data received but eyre request not found' !!)
@@ -425,14 +427,14 @@
     ::
     ++  serve :: consolidate in main core
       %-  (steer:rudder rudyard relay)
-      :^    web:serv                 :: pages
-          http-route:serv            :: route
-        (fours:rudder [state ~ ~ ~]) :: adlib
-      |=  =relay                     :: solve
+      :^    web:serv                   :: pages
+          http-route:serv              :: route
+        (fours:rudder [state ~ ~ ~ ~]) :: adlib
+      |=  =relay                       :: solve
       ^-  $@(brief:rudder [brief:rudder (list card) rudyard])
       =^  cards  this
         (on-poke %wiki-relay !>(relay))
-      ['Successfully processed' cards [state ~ ~ ~]]
+      ['Successfully processed' cards [state ~ ~ ~ ~]]
     --
   ==
 ::
@@ -453,7 +455,7 @@
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   ?:  &(!public.read.rules public.edit.rules)
     ~|("Cannot enable public edits on private wiki." !!)
-  =/  =book  [[%& %default] title ~ rules now.bowl]
+  =/  =book  [~ [%& %default] title ~ rules now.bowl]
   =.  books  (~(put by books) id book)
   :_  state
   %-  (walt card)
@@ -534,6 +536,17 @@
   :~  [scry.r |.((full:grow id book))]
       [goss.r |.([(tell:goss id book) ~])]
   ==
+::
+++  mod-logo
+  |=  [%mod-logo book-id=@ta logo=(unit image)]
+  ?>  =(src.bowl our.bowl)
+  =/  =book  (~(got by books) book-id)
+  =.  crest.book  logo
+  =.  books  (~(put by books) book-id book)
+  :_  state
+  =/  r  read.rules.book
+  %-  (walt card)
+  [scry.r |.([(logo:grow book-id logo) ~])]~
 ::
 ++  mod-look
   |=  [%mod-look book-id=@ta theme=(each @tas @t)]
@@ -758,6 +771,10 @@
     ^-  card
     [%pass /wiki/spine %grow /spine/[id] %wiki-spine-1 (book-to-spine id book)]
   ::
+  ++  logo
+    |=  [id=@ta data=(unit image)]
+    [%pass /wiki/logo %grow /logo/[id] %wiki-logo-0 data]
+  ::
   ++  look
     |=  [book-id=@ta =book]
     ^-  (list card)
@@ -775,6 +792,7 @@
     |=  [id=@ta =book]
     ^-  (list card)
     :-  (back id book)
+    :-  (logo id crest.book)
     %+  weld  (look id book)
     %+  turn  ~(tap by tales.book)
     |=  [=path =tale]
