@@ -93,6 +93,7 @@ nav.sidebar {
 
 div#logo-container {
   height: 8em;
+  width: fit-content;
   max-width: 100%;
   display: block;
   margin-left: auto;

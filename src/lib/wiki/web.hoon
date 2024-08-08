@@ -521,4 +521,15 @@
   ?+  u.theme.cover  stub
     %default  stub
   ==
+::
+++  sanitize-svg
+  |=  raw=@t
+  ^-  @t
+  =/  munx=(unit manx)  (de-xml:html (sane-newline raw))
+  ?~  munx  ~|('Unable to process SVG' !!)
+  =/  =manx  (need munx)
+  =/  att=(map ?(@tas [@tas @tas]) tape)  (malt a.g.manx)
+  =.  att  (~(gas by att) ~[[%width "inherit"] [%height "inherit"]])
+  =.  a.g.manx  ~(tap by att)
+  (crip (en-xml:html manx))
 --
