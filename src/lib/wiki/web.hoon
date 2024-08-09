@@ -328,8 +328,17 @@
     ==
   =/  admin=?  (is-admin bowl host access)
   =/  write=?  (may-edit bowl host access)
+  =/  check-logo=?
+    ?-  -.data
+      %&  (gte era.p.data 5)
+      %|  &
+    ==
   ;nav.sidebar
-    ;div#logo-container(hx-get "{wik-dir}/~/x/logo?fresh=true", hx-trigger "load");
+    ;+  ?:  check-logo
+          ;div#logo-container(hx-get "{wik-dir}/~/x/logo?fresh=true", hx-trigger "load");
+        ;div#logo-container
+          ;img#logo(src "/wiki/~/assets/logo.svg");
+        ==
     ;a#wiki-title/"{wik-dir}": {(trip book-title)}
     ;div#global-menu
       ;a/"{wik-dir}": Home

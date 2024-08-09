@@ -67,17 +67,20 @@
     |-
     ?-  -.old
       %5  [cards old]
-      %4  $(old (state:grad-5 old))
+      %4  =/  [caz=_cards new=state-5]  (build-5 old)
+          $(old new, cards caz)
       %3  $(old (state:grad-4 old))
       %2  $(old (state:grad-3 old))
       %1  $(old (state:grad-2 old))
       %0  $(old (state:grad-1 old bowl))
     ==
   ::
-  ++  grow-all
-    |=  =state-x
-    ^-  (list card)
-    (zing (turn ~(tap by books.state-x) full:grow:main))
+  ++  build-5
+    |=  old=state-4
+    ^-  (quip card state-5)
+    =/  new=state-5  (state:grad-5 old)
+    :_  new
+    (zing (turn ~(tap by books.new) full:grow:main))
   ::
   ++  retry-early-goss
     ^-  (quip card _state)
