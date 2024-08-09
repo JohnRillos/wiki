@@ -88,6 +88,23 @@ a:hover {
 
 nav.sidebar {
   margin: 1em;
+  max-width: 8em;
+}
+
+div#logo-container {
+  height: 8em;
+  width: fit-content;
+  max-width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#logo {
+  max-height: 100%;
+  max-width: 100%;
+  margin: 0;
+  border-radius: 8px;
 }
 
 a#wiki-title {

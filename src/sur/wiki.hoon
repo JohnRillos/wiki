@@ -2,9 +2,9 @@
 ::
 ::  current state type
 ::
-+$  state-x  state-4
++$  state-x  state-5
 ::
-++  our-era  %4
+++  our-era  %5
 ::
 +$  versioned-state
   $%  state-0
@@ -12,6 +12,7 @@
       state-2
       state-3
       state-4
+      state-5
   ==
 ::
 +$  state-0
@@ -51,9 +52,20 @@
     books=(map @ta book-3)
   ==
 ::
++$  state-5
+  $+  state-5
+  $:  %5
+    wordy=_|
+    early=(list cage)
+    =later
+    shelf=shelf-1
+    books=(map @ta book-4)
+  ==
+::
 +$  book
   $+  book
-  $:  theme=(each @tas @t)
+  $:  crest=(unit image)
+      theme=(each @tas @t)
       title=@t
       tales=(map path tale)
       rules=access
@@ -99,6 +111,7 @@
       [%mod-book-name id=@ta title=@t]
       [%mod-rule-read id=@ta =rule-read]
       [%mod-rule-edit id=@ta =rule-edit]
+      [%mod-logo id=@ta logo=(unit image)]
       [%mod-look id=@ta theme=(each @tas @t)]
       [%new-page book-id=@ta =path title=@t content=wain]
       [%del-page book-id=@ta =path]
@@ -129,7 +142,12 @@
 ::
 +$  booklet  [=cover =path =tale]
 ::
-+$  rudyard  [state-x spine=(unit spine) booklet=(unit booklet) asset=(unit mime)]
++$  rudyard  [state-x spine=(unit spine) booklet=(unit booklet) asset=(unit mime) logo=(unit (unit image))]
+::
++$  image
+  $%  [%url url=@t]
+      [%svg svg=@t]
+  ==
 ::
 ::
 ::
@@ -137,7 +155,6 @@
   $%  [%lurn =shelf]
       [%burn host=@p id=@ta at=@da]
   ==
-::
 ::
 ::  eyre requests awaiting poke-ack before responding
 ::
@@ -149,19 +166,6 @@
       done=?
       error=(unit tang)
   ==
-:: ::
-:: +$  flag  [=ship =knot]
-:: ::
-:: +$  foo  (map @ta bar)
-:: ::
-:: +$  bar
-::   $:  =time
-::       cover-wire=wire
-::       wire-2=wire
-::       =flag
-::       =path
-::       cover=(unit cover)
-::   ==
 ::
 ::  facts from newer versions of %wiki, to be consumed on-load
 ::
@@ -222,11 +226,23 @@
 ::
 ::  state-4
 ::
-+$  book-3     book
++$  book-3
+  $+  book-3
+  $:  theme=(each @tas @t)
+      title=@t
+      tales=(map path tale)
+      rules=access
+      stamp=@da
+  ==
+::
 +$  lore-1     lore
 +$  shelf-1    shelf
 +$  spine-1    spine
 +$  booklet-1  booklet
 +$  cover-1    cover
+::
+::  state-5
+::
++$  book-4  book
 ::
 --

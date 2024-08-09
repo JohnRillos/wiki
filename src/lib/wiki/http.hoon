@@ -32,6 +32,7 @@
         (far [@ta sig %settings %theme ~])  [& %edit-theme]
         [@ta sig %not-found ~]              [r-auth %page-not-found]
         (far [@ta sig %x %front ~])         [r-auth %hx-front]
+        (far [@ta sig %x %logo ~])          [r-auth %hx-logo]
         (far [@ta sig %x %search ~])        [r-auth %hx-search]
       ==
   ::

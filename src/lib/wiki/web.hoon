@@ -328,7 +328,17 @@
     ==
   =/  admin=?  (is-admin bowl host access)
   =/  write=?  (may-edit bowl host access)
+  =/  check-logo=?
+    ?-  -.data
+      %&  (gte era.p.data 5)
+      %|  &
+    ==
   ;nav.sidebar
+    ;+  ?:  check-logo
+          ;div#logo-container(hx-get "{wik-dir}/~/x/logo?fresh=true", hx-trigger "load");
+        ;div#logo-container
+          ;img#logo(src "/wiki/~/assets/logo.svg");
+        ==
     ;a#wiki-title/"{wik-dir}": {(trip book-title)}
     ;div#global-menu
       ;a/"{wik-dir}": Home
@@ -520,4 +530,15 @@
   ?+  u.theme.cover  stub
     %default  stub
   ==
+::
+++  sanitize-svg
+  |=  raw=@t
+  ^-  @t
+  =/  munx=(unit manx)  (de-xml:html (sane-newline raw))
+  ?~  munx  ~|('Unable to process SVG' !!)
+  =/  =manx  (need munx)
+  =/  att=(map ?(@tas [@tas @tas]) tape)  (malt a.g.manx)
+  =.  att  (~(gas by att) ~[[%width "inherit"] [%height "inherit"]])
+  =.  a.g.manx  ~(tap by att)
+  (crip (en-xml:html manx))
 --

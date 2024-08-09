@@ -15,8 +15,12 @@
   ^-  $@(brief:rudder relay)
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
   =/  args=(map @t @t)  (form-data:web order)
+  =/  files=(map @t (list part:multipart))  (multipart-map:web order)
+  =/  action-type=@t
+    %-  (bond |.(body:(head (~(got by files) 'action'))))
+    (~(get by args) 'action')
   =/  =action
-    ?+  (~(got by args) 'action')  !!
+    ?+  action-type  !!
         %mod-book-name
       [%mod-book-name book-id.site (~(got by args) 'book-name')]
     ::
@@ -40,6 +44,20 @@
     ::
         %del-book
       [%del-book book-id.site]
+    ::
+        %mod-logo-url
+      =/  url=@t  (~(got by args) 'logo-url')
+      ?:  =(~ url)  ~|('Image URL is required' !!)
+      [%mod-logo book-id.site `[%url url]]
+    ::
+        %mod-logo-svg
+      =/  file=part:multipart  (head (~(got by files) 'logo-svg'))
+      ?.  =([~ 'image/svg+xml' ~] type.file)  ~|('File must be an SVG image' !!)
+      =/  svg=@t  (sanitize-svg:web body.file)
+      [%mod-logo book-id.site `[%svg svg]]
+    ::
+        %reset-logo
+      [%mod-logo book-id.site ~]
     ==
    [%relay our.bowl id.order action]
 ::
@@ -47,7 +65,8 @@
   |=  [success=? msg=brief:rudder]
   ^-  reply:rudder
   =/  deleted=?
-    &(success =(%del-book (~(got by (form-data:web order)) 'action')))
+    =/  action-type=@t  (fall (~(get by (form-data:web order)) 'action') '')
+    &(success =(%del-book action-type))
   =/  next=@t
     ?.  deleted  url.request.order
     =/  msg=tape  (en-urlt:html "Wiki deleted!")
@@ -92,8 +111,9 @@
               ;legend: Wiki Name
               ;+  setting-book-name
             ==
+            ;+  setting-logo
             ;fieldset
-              ;legend: Appearance
+              ;legend: Theme
               ;a/"./settings/theme": Edit Theme
             ==
           ==
@@ -137,6 +157,60 @@
           =value  "mod-book-name"
           ; Rename
         ==
+      ==
+    ::
+    ++  setting-logo
+      ^-  manx
+      ;fieldset
+        ;legend: Logo
+        ;fieldset
+          ;legend: Image URL
+          ;form(method "post")
+            ;input
+              =type         "url"
+              =name         "logo-url"
+              =value        current-logo-url
+              =placeholder  "https://example.com/logo.png"
+              =required     "true"
+              ;
+            ==
+            ;button
+              =type   "submit"
+              =name   "action"
+              =value  "mod-logo-url"
+              ; Submit URL
+            ==
+          ==
+        ==
+        ;fieldset
+          ;legend: Upload SVG
+          ;form(method "post", enctype "multipart/form-data")
+            ;input(type "file", name "logo-svg", accept ".svg");
+            ;button
+              =type   "submit"
+              =name   "action"
+              =value  "mod-logo-svg"
+              ; Submit File
+            ==
+          ==
+        ==
+        ;p: You may need to hard refresh (ctl-shift-R) to see the logo update.
+        ;form(method "post")
+          ;button.delete
+            =type  "submit"
+            =name  "action"
+            =value  "reset-logo"
+            ; Reset Logo
+          ==
+        ==
+      ==
+    ::
+    ++  current-logo-url
+      ^-  tape
+      ?~  crest.book  ""
+      ?-  -.u.crest.book
+        %url  (trip url.u.crest.book)
+        %svg  ""
       ==
     ::
     ++  setting-rule-read
