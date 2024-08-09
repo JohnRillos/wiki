@@ -249,7 +249,7 @@
       =/  =note-arvo  [%a task]
       =/  req-id=@ta  id.order
       :_  this
-      ~&  "scrying {<ship>} {<loc>}"
+      %-  (log:main %d "scrying {<ship>} {<loc>}")
       =/  =wire  /remote/[req-id]
       [%pass wire %arvo note-arvo]~
     ::
