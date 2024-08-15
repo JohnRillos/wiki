@@ -5,6 +5,7 @@
 ## 1.4
 
 ### 1.4.1
+
 Date: TBD
 - sanitize SVG files to prevent cross-site scripting
 
