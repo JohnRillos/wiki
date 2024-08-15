@@ -533,6 +533,7 @@
 ::
 ++  sanitize-svg
   |=  raw=@t
+  ~+
   ^-  @t
   =/  munx=(unit manx)  (de-xml:html (sane-newline raw))
   ?~  munx  ~|('Unable to process SVG' !!)
@@ -540,5 +541,11 @@
   =/  att=(map ?(@tas [@tas @tas]) tape)  (malt a.g.manx)
   =.  att  (~(gas by att) ~[[%width "inherit"] [%height "inherit"]])
   =.  a.g.manx  ~(tap by att)
-  (crip (en-xml:html manx))
+  =/  tanx=tape  (en-xml:html manx)
+  ?:  (is-evil tanx)  ~|('SVG rejected' !!)
+  (crip tanx)
+::
+++  is-evil
+  |=  text=tape
+  (has:regex "(?i)(script)|(meta)|(on(load)|(error)|(mouseover))" text)
 --

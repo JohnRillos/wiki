@@ -4,6 +4,11 @@
 
 ## 1.4
 
+### 1.4.1
+Date: TBD
+- sanitize SVG files to prevent cross-site scripting
+
+
 ### 1.4.0
 
 Date: ~2024.8.9
