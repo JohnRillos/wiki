@@ -1,8 +1,5 @@
 ::  wiki settings
 ::
-::  to-do:
-::  * option to add logo
-::
 /-  *wiki
 /+  multipart, rudder, web=wiki-web, *wiki
 ::

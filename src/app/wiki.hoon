@@ -3,6 +3,7 @@
 /+  *wiki, *wiki-grad, *wiki-morf, web=wiki-web, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
+/~  webs  *  /web       :: build all web content
 /$  css-to-mime   %css   %mime
 /$  html-to-mime  %html  %mime
 ::

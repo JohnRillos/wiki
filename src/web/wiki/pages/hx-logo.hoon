@@ -23,12 +23,15 @@
     %+  biff  (~(get by books.rudyard) book-id.site)
     |=  =book
     crest.book
+  =;  res=(unit reply:rudder)  (fall res [%code 500 'Error loading logo'])
+  %-  mole
+  |.
   |^
     ?~  logo  [%full (manx-response:gen:server ;img#logo(src "/wiki/~/assets/logo.svg");)]
     ?-  -.u.logo
       %url  [%full (cached-manx-response ;img#logo(src (trip url.u.logo));)]
     ::
-      %svg  [%full (cached-svg-response svg.u.logo)]
+      %svg  [%full (cached-svg-response (sanitize-svg:web svg.u.logo))]
     ==
   ::
   ++  cached-manx-response
