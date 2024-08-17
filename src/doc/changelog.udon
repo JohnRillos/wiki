@@ -6,7 +6,7 @@
 
 ### 1.4.1
 
-Date: TBD
+Date: ~2024.8.17
 - sanitize SVG files to prevent script injection attacks
 - make UI more mobile-friendly when screen is narrow
   - put title on top
