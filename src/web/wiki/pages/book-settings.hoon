@@ -81,6 +81,7 @@
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk
+  =/  =cover  (book-to-cover book-id.site book)
   ::
   |^  [%page render]
   ::
@@ -98,10 +99,10 @@
     ;html
       ;+  (doc-head:web bowl "Settings - {(trip title.book)}")
       ;body#with-sidebar(onload on-page-load)
-        ;+  (link-theme:web bowl host.site (book-to-cover book-id.site book))
+        ;+  (link-theme:web bowl host.site cover)
         ;+  (global-nav:web bowl order [%| book])
         ;main
-          ;+  (search-bar:web `book-id.site host.site)
+          ;+  (topbar:web bowl order cover)
           ;h1: Wiki Settings
           ;div.column-box
             ;fieldset

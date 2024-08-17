@@ -10,6 +10,7 @@
 /*  info-svg         %svg  /web/wiki/icons/info/svg
 /*  load-svg         %svg  /web/wiki/icons/load/svg
 /*  lock-svg         %svg  /web/wiki/icons/lock/svg
+/*  menu-svg         %svg  /web/wiki/icons/menu/svg
 /*  search-svg       %svg  /web/wiki/icons/search/svg
 ::
 |%
@@ -163,6 +164,7 @@
 ::
 ++  base-path
   |=  site=wiki-path
+  ~+
   ^-  tape
   ?~  host.site  (spud /wiki/[book-id.site])
   (spud /wiki/~/p/[(scot %p u.host.site)]/[book-id.site])
@@ -339,32 +341,46 @@
         ;div#logo-container
           ;img#logo(src "/wiki/~/assets/logo.svg");
         ==
-    ;a#wiki-title/"{wik-dir}": {(trip book-title)}
-    ;div#global-menu
-      ;a/"{wik-dir}": Home
-      ;+  ?.  write  stub
-          ;a/"{wik-dir}/~/new": New Page
-      ;*
-      ?:  =(%pawn (clan:title src.bowl))
-        :_  ~ :: todo: fix issue where redirect includes ?after= and it redirects infinitely
-        ;a/"/~/login?eauth&redirect={(trip url.request.order)}": Log in with Urbit
-      ?.  =(src.bowl our.bowl)
-        :~  ;p: User: {<src.bowl>}
-            ;button
-              =type  "button"
-              =onclick  (log-out bowl)
-              ; Log out
-            ==
-        ==
-      :~  ?.  admin  stub
-          ;a/"{wik-dir}/~/settings": Settings
-          ;a/"/wiki": All Wikis
+    ;a.wiki-title/"{wik-dir}": {(trip book-title)}
+    ;+  (nav-submenu bowl order data)
+  ==
+::
+++  nav-submenu
+  |=  [=bowl:gall =order:rudder data=(each cover book)]
+  =/  =wiki-path  wiki-path:(wiki-url url.request.order)
+  =/  wik-dir=tape  (base-path wiki-path)
+  =/  host=(unit @p)  host.wiki-path
+  =/  =access
+    ?-  -.data
+      %&  rules.p.data
+      %|  rules.p.data
+    ==
+  =/  admin=?  (is-admin bowl host access)
+  =/  write=?  (may-edit bowl host access)
+  ;div#global-menu
+    ;a/"{wik-dir}": Home
+    ;+  ?.  write  stub
+        ;a/"{wik-dir}/~/new": New Page
+    ;*
+    ?:  =(%pawn (clan:title src.bowl))
+      :_  ~ :: todo: fix issue where redirect includes ?after= and it redirects infinitely
+      ;a/"/~/login?eauth&redirect={(trip url.request.order)}": Log in with Urbit
+    ?.  =(src.bowl our.bowl)
+      :~  ;p: User: {<src.bowl>}
           ;button
             =type  "button"
             =onclick  (log-out bowl)
             ; Log out
           ==
       ==
+    :~  ?.  admin  stub
+        ;a/"{wik-dir}/~/settings": Settings
+        ;a/"/wiki": All Wikis
+        ;button
+          =type  "button"
+          =onclick  (log-out bowl)
+          ; Log out
+        ==
     ==
   ==
 ::
@@ -395,11 +411,29 @@
   });
   '''
 ::
+++  topbar
+  |=  [=bowl:gall =order:rudder =cover]
+  ^-  manx
+  =/  =wiki-path  wiki-path:(wiki-url url.request.order)
+  =/  wik-dir=tape  (base-path wiki-path)
+  ;div#topbar
+    ;a#top-title.wiki-title/"{wik-dir}": {(trip title.cover)}
+    ;div#topbar-row-2
+      ;button.sidebar-collapse-button(onclick "document.querySelector(\"dialog\").showModal()")
+        ;+  menu:icon
+      ==
+      ;dialog(onmousedown "event.target == this && this.close()")
+        ;+  (nav-submenu bowl order [%& cover])
+      ==
+      ;+  (search-bar `book-id.wiki-path host.wiki-path)
+    ==
+  ==
+::
 ++  search-bar
   |=  [book-id=(unit @ta) host=(unit @p)]
   ^-  manx
   =/  search-url=tape
-    ?~  book-id    !!  :: todo: global search: /wiki/~/search
+    ?~  book-id    !!
     ?~  host       "/wiki/{(trip u.book-id)}/~/x/search"
     "/wiki/~/p/{<u.host>}/{(trip u.book-id)}/~/x/search"
   ;div#search
@@ -432,18 +466,18 @@
   =/  public-read=?  public.read.access
   =/  viz=manx
     ?:  public-read
-      ;div.note
+      ;div.footer-item.note
         ;+  globe:icon
         ;span: This wiki is public
       ==
-    ;div.note
+    ;div.footer-item.note
       ;+  lock:icon
       ;span: This wiki is private
     ==
   ;footer
     ;+  viz
-    ;a/"https://urbit.org": Powered by Urbit
-    ;a/"https://github.com/JohnRillos/wiki": Made with %wiki
+    ;a.footer-item/"https://urbit.org": Powered by Urbit
+    ;a.footer-item/"https://github.com/JohnRillos/wiki": Made with %wiki
   ==
 ::
 ++  icon
@@ -471,6 +505,12 @@
     ^~
     ;div.access-icon(title "private")
       ;+  (need (de-xml:html lock-svg))
+    ==
+  ::
+  ++  menu
+    ^~
+    ;div.menu-icon(title "Menu")
+      ;+  (need (de-xml:html menu-svg))
     ==
   ::
   ++  search

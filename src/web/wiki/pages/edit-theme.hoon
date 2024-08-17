@@ -70,7 +70,7 @@
         ;main
           ;*  ?~  msg  ~
               ~[;/((trip text.u.msg))]
-          ;+  (search-bar:web `book-id.site host.site)
+          ;+  (topbar:web bowl order cover)
           ;h1: Edit Theme
           ;+
           %+  in-form:web  "Are you sure?"

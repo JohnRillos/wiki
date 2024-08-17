@@ -69,7 +69,7 @@
         ;main
           ;*  ?~  msg  ~
               ~[;/((trip text.u.msg))]
-          ;+  (search-bar:web `book-id.site host.site)
+          ;+  (topbar:web bowl order cover)
           ;h1: Edit Page - {(trip title.page)}
           ::
           ;form(method "post")

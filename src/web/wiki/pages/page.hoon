@@ -93,10 +93,9 @@
       ;+  (doc-head:web bowl (trip title.page))
       ;body#with-sidebar.loading(onload on-load)
         ;+  (link-theme:web bowl host cover)
-        :: todo: make some sort of flex container that keeps title + search level, but puts search on top if there isn't room on one line
         ;+  (global-nav:web bowl order [%& cover])
         ;main
-          ;+  (search-bar:web `book-id:help host.site)
+          ;+  (topbar:web bowl order cover)
           ;header
             ;h1#page-title: {(trip title.page)}
             ;nav.page

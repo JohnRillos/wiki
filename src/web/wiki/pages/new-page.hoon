@@ -85,7 +85,7 @@
         ;main
           ;*  ?~  msg  ~
               ~[;/((trip text.u.msg))]
-          ;+  (search-bar:web `book-id.site host.site)
+          ;+  (topbar:web bowl order cover)
           ;+  ?:  is-front
                 ;h1: Edit Front Page
               ;h1: New Page

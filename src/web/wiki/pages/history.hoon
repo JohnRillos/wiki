@@ -45,7 +45,7 @@
         ;+  (link-theme:web bowl host.site cover)
         ;+  (global-nav:web bowl order [%& cover])
         ;main
-          ;+  (search-bar:web `book-id.site host.site)
+          ;+  (topbar:web bowl order cover)
           ;article
             ;header
               ;h1: {(trip title.last)}: Revision History

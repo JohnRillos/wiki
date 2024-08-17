@@ -30,8 +30,8 @@ body#with-sidebar {
 main {
   width: 100%;
   max-width: 50em;
-  margin-left: 2em;
-  margin-right: 2em;
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 #index-container {
@@ -86,6 +86,58 @@ a:hover {
   text-decoration: underline;
 }
 
+#global-menu {
+  background-color: #e8e8e8;
+  border-radius: 8px;
+  padding: 1em;
+  & * {
+    display: block;
+  }
+  & *:not(:last-child) {
+    margin-bottom: 1em;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .sidebar {
+    display: none;
+  }
+
+  #global-menu {
+    background-color: unset;
+  }
+}
+
+#topbar {
+  margin-top: 0.5em;
+  border-bottom: solid 2px;
+  padding-bottom: 0.5em;
+}
+
+#topbar-row-2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+dialog {
+  border: solid 2px;
+  border-radius: 8px;
+  padding: 0;
+  font-size: large;
+  box-shadow: 5px 5px 15px #00000025
+}
+
+@media only screen and (min-width: 601px) {
+  .sidebar-collapse-button {
+    visibility: hidden;
+  }
+
+  a#top-title {
+    display: none;
+  }
+}
+
 nav.sidebar {
   margin: 1em;
   max-width: 8em;
@@ -107,30 +159,18 @@ div#logo-container {
   border-radius: 8px;
 }
 
-a#wiki-title {
+a.wiki-title {
   margin: auto;
   color: inherit;
   font-size: 20pt;
   font-family: serif;
   text-align: center;
   display: block;
+  margin-bottom: 0.5em;
 }
 
-a#wiki-title:hover {
+a.wiki-title:hover {
   text-decoration: none;
-}
-
-#global-menu {
-  background-color: #e8e8e8;
-  border-radius: 8px;
-  padding: 1em;
-  margin-top: 1em;
-  & * {
-    display: block;
-  }
-  & *:not(:last-child) {
-    margin-bottom: 1em;
-  }
 }
 
 .chapter-list-item-label {
@@ -210,8 +250,13 @@ footer {
   flex-direction: row;
   justify-content: space-between;
   font-size: small;
-  & * {
-    display: flex
+  & .footer-item {
+    display: flex;
+    align-items: center;
+    text-align: center;
+  }
+  & .footer-item:not(:last-child) {
+    margin-right: 10px;
   }
 }
 
@@ -224,9 +269,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 div.access-icon {
+  min-width: 1em;
   width: 1em;
   display: inline-block;
   font-size: medium;
+}
+
+div.menu-icon {
+  width: 1.5em;
+  display: inline-block;
 }
 
 div.search-icon {
@@ -333,7 +384,7 @@ div.file-upload {
 
 #search-results-container {
   position: absolute;
-  top: 2rem;
+  top: 2.5rem;
 }
 
 #search-all-results-container {

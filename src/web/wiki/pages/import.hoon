@@ -37,6 +37,7 @@
   ?~  buuk=(~(get by books) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk
+  =/  =cover  (book-to-cover book-id.site book)
   ::
   |^  [%page render]
   ::
@@ -46,10 +47,10 @@
       ;+  (doc-head:web bowl "Import - {(trip title.book)}")
       ;script: {(disable-on-submit:web "upload" `"Uploading...")}
       ;body#with-sidebar(onload (trip helper-js))
-        ;+  (link-theme:web bowl host.site (book-to-cover book-id.site book))
+        ;+  (link-theme:web bowl host.site cover)
         ;+  (global-nav:web bowl order [%| book])
         ;main
-          ;+  (search-bar:web `book-id.site host.site)
+          ;+  (topbar:web bowl order cover)
           ;h1: Import Pages
           ;form#file-form.column-box(method "post", enctype "multipart/form-data")
             ;div.file-upload.box-item
