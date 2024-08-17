@@ -60,10 +60,17 @@
                 ^-  manx
                 =/  hover=tape  "{<~(wyt by tales.book)>} pages"
                 ;li.wiki-list-item
-                  ;a/"/wiki/{(trip id)}"
+                  ;a.local/"/wiki/{(trip id)}"
                     =title  hover
-                    ;+  ?:(public.read.rules.book globe:icon:web lock:icon:web)
-                    ; {(trip title.book)}
+                    ;div.logo-small
+                      =hx-get      "/wiki/{(trip id)}/~/x/logo?fresh=true"
+                      =hx-trigger  "load"
+                      ;img#logo(src "/wiki/~/assets/logo.svg");
+                    ==
+                    ;div
+                      ;+  ?:(public.read.rules.book globe:icon:web lock:icon:web)
+                      ; {(trip title.book)}
+                    ==
                   ==
                 ==
               ==
@@ -99,10 +106,17 @@
               Edited: {(time-ago now.bowl stamp.cover.spine)}
               {<~(wyt by toc.spine)>} pages
               """
+            =/  check-logo=?  (gte era.cover.spine 5)
+            =/  wik-dir=tape  "/wiki/~/p/{<host>}/{(trip id)}"
             ^-  manx
             ;li.wiki-list-item
-              ;a.remote/"/wiki/~/p/{<host>}/{(trip id)}"
+              ;a.remote/"{wik-dir}"
                 =title  hover
+                ;div.logo-small
+                  =hx-get      ?:(check-logo "{wik-dir}/~/x/logo?fresh=true" "")
+                  =hx-trigger  ?:(check-logo "load" "")
+                  ;img#logo(src "/wiki/~/assets/logo.svg");
+                ==
                 ;div.wiki-name: {(trip title.cover.spine)}
                 ;div.wiki-host: {host-text}
               ==

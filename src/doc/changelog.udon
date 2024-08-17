@@ -11,6 +11,7 @@ Date: TBD
 - make UI more mobile-friendly when screen is narrow
   - put title on top
   - sidebar menu is now a modal opened by a hamburger button
+- display logos in wiki index
 
 
 ### 1.4.0

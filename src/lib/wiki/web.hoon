@@ -416,8 +416,16 @@
   ^-  manx
   =/  =wiki-path  wiki-path:(wiki-url url.request.order)
   =/  wik-dir=tape  (base-path wiki-path)
+  =/  check-logo=?  (gte era.cover 5)
   ;div#topbar
-    ;a#top-title.wiki-title/"{wik-dir}": {(trip title.cover)}
+    ;a#top-title.wiki-title/"{wik-dir}"
+      ;div.logo-small
+        =hx-get      ?:(check-logo "{wik-dir}/~/x/logo?fresh=true" "")
+        =hx-trigger  ?:(check-logo "load" "")
+        ;
+      ==
+      ;span: {(trip title.cover)}
+    ==
     ;div#topbar-row-2
       ;button.sidebar-collapse-button(onclick "document.querySelector(\"dialog\").showModal()")
         ;+  menu:icon

@@ -65,10 +65,10 @@ ul.wiki-list {
     & a {
       color: inherit;
       display: flex;
-      padding: 1rem;
+      padding: 0.5rem 1rem;
       align-items: center;
       .access-icon {
-        margin-right: 0.5rem;
+        margin-right: 0.25rem;
       }
     }
     & a:hover {
@@ -152,6 +152,12 @@ div#logo-container {
   margin-right: auto;
 }
 
+div.logo-small {
+  height: 2em;
+  width: fit-content;
+  display: inline-block;
+}
+
 #logo {
   max-height: 100%;
   max-width: 100%;
@@ -171,6 +177,12 @@ a.wiki-title {
 
 a.wiki-title:hover {
   text-decoration: none;
+}
+
+#top-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .chapter-list-item-label {
@@ -290,7 +302,7 @@ div.search-icon {
 }
 
 li.wiki-list-item {
-  & a.remote {
+  & a.remote, a.local {
     flex-direction: column;
     & .wiki-host {
       margin-top: 0.5em;
