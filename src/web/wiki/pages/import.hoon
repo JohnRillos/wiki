@@ -85,7 +85,7 @@
             ==
             ;button#upload.submit.box-item(type "submit"): Upload
           ==
-          ;+  (footer:web [%| book])
+          ;+  (footer:web (fall host.site our.bowl) [%| book])
         ==
       ==
     ==

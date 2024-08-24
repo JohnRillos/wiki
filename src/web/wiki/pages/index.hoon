@@ -58,10 +58,10 @@
                 %+  turn  ~(tap by books)
                 |=  [id=@ta =book]
                 ^-  manx
-                =/  hover=tape  "{<~(wyt by tales.book)>} pages"
+                =/  page-count=@ud  ~(wyt by tales.book)
+                =/  pages-label=tape  ?:(=(1 page-count) "page" "pages")
                 ;li.wiki-list-item
                   ;a.local/"/wiki/{(trip id)}"
-                    =title  hover
                     ;div.logo-small
                       =hx-get      "/wiki/{(trip id)}/~/x/logo?fresh=true"
                       =hx-trigger  "load"
@@ -71,6 +71,7 @@
                       ;+  ?:(public.read.rules.book globe:icon:web lock:icon:web)
                       ; {(trip title.book)}
                     ==
+                    ;div.note: {<page-count>} {pages-label}
                   ==
                 ==
               ==
@@ -104,10 +105,11 @@
               """
               Host: {<host>}
               Edited: {(time-ago now.bowl stamp.cover.spine)}
-              {<~(wyt by toc.spine)>} pages
               """
             =/  check-logo=?  (gte era.cover.spine 5)
             =/  wik-dir=tape  "/wiki/~/p/{<host>}/{(trip id)}"
+            =/  page-count=@ud  ~(wyt by toc.spine)
+            =/  pages-label=tape  ?:(=(1 page-count) "page" "pages")
             ^-  manx
             ;li.wiki-list-item
               ;a.remote/"{wik-dir}"
@@ -119,6 +121,7 @@
                 ==
                 ;div.wiki-name: {(trip title.cover.spine)}
                 ;div.wiki-host: {host-text}
+                ;div.note: {<page-count>} {pages-label}
               ==
             ==
           ==

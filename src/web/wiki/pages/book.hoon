@@ -78,7 +78,7 @@
           ?~  (no-special toc)
             ;p:"This wiki doesn't have any pages yet."
           (render-toc:help toc wik-dir)
-          ;+  (footer:web [%& cover])
+          ;+  (footer:web (fall host.site our.bowl) [%& cover])
         ==
       ==
     ==

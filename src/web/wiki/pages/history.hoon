@@ -67,7 +67,7 @@
                   ==
             ==
           ==
-          ;+  (footer:web [%& cover])
+          ;+  (footer:web (fall host.site our.bowl) [%& cover])
         ==
       ==
     ==

@@ -133,7 +133,7 @@
               ;+  setting-delete-book
             ==
           ==
-          ;+  (footer:web [%| book])
+          ;+  (footer:web (fall host.site our.bowl) [%| book])
         ==
       ==
     ==
