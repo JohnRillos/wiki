@@ -197,7 +197,7 @@ a.wiki-title:hover {
 
 .note {
   opacity: 50%;
-  font-size: .75rem;
+  font-size: small;
 }
 
 .collapsed {
@@ -302,6 +302,9 @@ div.search-icon {
 }
 
 li.wiki-list-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   & a.remote, a.local {
     flex-direction: column;
     & .wiki-host {
