@@ -51,7 +51,7 @@
                 ;button(type "button"): Create Page
               ==
           ==
-          ;+  (footer:web [%| book])
+          ;+  (footer:web (fall host.site our.bowl) [%| book])
         ==
       ==
     ==

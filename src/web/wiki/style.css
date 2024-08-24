@@ -261,14 +261,17 @@ footer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
   font-size: small;
   & .footer-item {
     display: flex;
     align-items: center;
     text-align: center;
-  }
-  & .footer-item:not(:last-child) {
-    margin-right: 10px;
+    margin-bottom: 0.5rem;
+    margin-right: 12px;
   }
 }
 

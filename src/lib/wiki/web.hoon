@@ -464,7 +464,7 @@
   ==
 ::
 ++  footer
-  |=  =(each cover book)
+  |=  [host=@p =(each cover book)]
   ^-  manx
   =/  =access
     ?-  -.each
@@ -483,9 +483,10 @@
       ;span: This wiki is private
     ==
   ;footer
-    ;+  viz
-    ;a.footer-item/"https://urbit.org": Powered by Urbit
-    ;a.footer-item/"https://github.com/JohnRillos/wiki": Made with %wiki
+      ;+  viz
+      ;div.footer-item.note: Hosted by {<host>}
+      ;a.footer-item/"https://urbit.org": Powered by Urbit
+      ;a.footer-item/"https://github.com/JohnRillos/wiki": Made with %wiki
   ==
 ::
 ++  icon
