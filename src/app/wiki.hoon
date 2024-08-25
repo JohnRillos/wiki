@@ -241,7 +241,7 @@
         ==
       =/  special=path  (path-after-sig page-path.site)
       =/  resource=path  (get-resource ship book-id page-path special)
-      =/  ver=@t  (get-case ship book-id page-path query)
+      =/  ver=@t  (crip <now.bowl>)
       =/  base=path  /g/x/[ver]/wiki/$/1
       =/  loc=path  :(weld base resource /[book-id] page-path)
       =/  sec=(unit [idx=@ key=@])  ~
@@ -291,21 +291,6 @@
         ?^  page-path  /booklet-0
         /spine-0
       --
-    ::
-    ++  get-case
-      |=  [=ship book-id=@ta =path query=(map @t @t)]
-      ^-  @t
-      =/  time=(unit @da)
-        ?:  (~(has by query) 'fresh')  ~
-        :: Ideally this would get the last time a page was edited,
-        :: but since the booklet contains data about the book itself,
-        :: that data may have changed.
-        :: Unfortunately this makes page scries load from cache less often
-        :: todo: Maybe split into 2-step scry to get cover @ stamp then page data @edited-at
-        %+  biff  (~(get by shelf) [ship book-id])
-        |=  =spine
-        `stamp.cover.spine
-      (crip <(fall time now.bowl)>)
     --
   --
 ::

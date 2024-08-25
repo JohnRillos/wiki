@@ -337,7 +337,7 @@
     ==
   ;nav.sidebar
     ;+  ?:  check-logo
-          ;div#logo-container(hx-get "{wik-dir}/~/x/logo?fresh=true", hx-trigger "load");
+          ;div#logo-container(hx-get "{wik-dir}/~/x/logo", hx-trigger "load");
         ;div#logo-container
           ;img#logo(src "/wiki/~/assets/logo.svg");
         ==
@@ -420,7 +420,7 @@
   ;div#topbar
     ;a#top-title.wiki-title/"{wik-dir}"
       ;div.logo-small
-        =hx-get      ?:(check-logo "{wik-dir}/~/x/logo?fresh=true" "")
+        =hx-get      ?:(check-logo "{wik-dir}/~/x/logo" "")
         =hx-trigger  ?:(check-logo "load" "")
         ;
       ==

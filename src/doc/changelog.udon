@@ -4,6 +4,17 @@
 
 ## 1.4
 
+### 1.4.3
+
+Date: ~2024.8.24
+- remove scry cache logic, instead always scry latest timestamp
+  - previously, %wiki always tried to scry at the last timestamp a gossiped wiki was updated, to increase cache use
+  - there were issues where it would scry some wikis indefinitely and never receive a response
+    - root cause unclear, possibly due to timestamp mismatches, scry tombstoning weirdness, or breaching
+  - naively scrying at the latest timestamp seems to resolve these issues
+    - uncached response times are actually okay if the other ship is online
+
+
 ### 1.4.2
 
 Date: ~2024.8.24

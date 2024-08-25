@@ -63,7 +63,7 @@
                 ;li.wiki-list-item
                   ;a.local/"/wiki/{(trip id)}"
                     ;div.logo-small
-                      =hx-get      "/wiki/{(trip id)}/~/x/logo?fresh=true"
+                      =hx-get      "/wiki/{(trip id)}/~/x/logo"
                       =hx-trigger  "load"
                       ;img#logo(src "/wiki/~/assets/logo.svg");
                     ==
@@ -115,7 +115,7 @@
               ;a.remote/"{wik-dir}"
                 =title  hover
                 ;div.logo-small
-                  =hx-get      ?:(check-logo "{wik-dir}/~/x/logo?fresh=true" "")
+                  =hx-get      ?:(check-logo "{wik-dir}/~/x/logo" "")
                   =hx-trigger  ?:(check-logo "load" "")
                   ;img#logo(src "/wiki/~/assets/logo.svg");
                 ==
