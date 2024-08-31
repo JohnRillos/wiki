@@ -2,9 +2,9 @@
 ::
 ::  current state type
 ::
-+$  state-x  state-5
++$  state-x  state-6
 ::
-++  our-era  %5
+++  our-era  %6
 ::
 +$  versioned-state
   $%  state-0
@@ -13,6 +13,7 @@
       state-3
       state-4
       state-5
+      state-6
   ==
 ::
 +$  state-0
@@ -55,6 +56,17 @@
 +$  state-5
   $+  state-5
   $:  %5
+    wordy=_|
+    early=(list cage)
+    =later
+    shelf=shelf-1
+    books=(map @ta book-4)
+  ==
+::
++$  state-6
+  $+  state-6
+  $:  %6
+    =ether
     wordy=_|
     early=(list cage)
     =later
@@ -118,9 +130,15 @@
       [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
       [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
       [%set-verb wordy=?]
+      [%eth-auth who=@p secret=@uv address=tape signature=tape]
   ==
 ::
 +$  wiki-path  [[book-id=@ta loc=path] host=(unit @p)]
+::
++$  ether
+  $:  challenges=(set @uv)
+      users=(map comet=@p id=@p)
+  ==
 ::
 +$  title-source  ?(%header %filename %front-matter)
 ::

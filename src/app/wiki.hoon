@@ -1,6 +1,6 @@
 /-  *wiki
 /+  dbug, default-agent, gossip, regex, rudder, server, string, verb
-/+  *wiki, *wiki-grad, *wiki-morf, web=wiki-web, wiki-http
+/+  *wiki, *wiki-grad, *wiki-morf, web=wiki-web, wiki-auth, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
 /$  css-to-mime   %css   %mime
@@ -66,7 +66,8 @@
     =|  cards=(list card)
     |-
     ?-  -.old
-      %5  [cards old]
+      %6  [cards old]
+      %5  $(old (state:grad-6 old))
       %4  =/  [caz=_cards new=state-5]  (build-5 old)
           $(old new, cards caz)
       %3  $(old (state:grad-4 old))
@@ -144,6 +145,7 @@
       %del-page       (del-page:main act)
       %imp-file       (imp-file:main act)
       %set-verb       (set-verb:main act)
+      %eth-auth       (eth-auth:main act)
     ==
   ::
   ++  handle-relay
@@ -168,9 +170,15 @@
   ++  handle-http
     |=  =order:rudder
     ^-  (quip card _this)
-    |^  ?:  is-later   handle-later
-        ?:  is-remote  handle-http-remote
+    |^  ?:  is-get-challenge  handle-get-challenge
+        ?:  is-later          handle-later
+        ?:  is-remote         handle-http-remote
         (paddle [bowl order [state ~ ~ ~ ~]])
+    ::
+    ++  is-get-challenge
+      ?.  =('GET' method.request.order)  |
+      =/  =path  path:(sane-url:web url.request.order)
+      ?=([%wiki %~.~ %auth ~] path)
     ::
     :: if ?after= and pending request in `later`, use `handle-later` to await poke-ack
     :: if ?after= but not pending, process normally (URL is probably being reused)
@@ -209,6 +217,19 @@
       =^  cards  this
         (on-poke %wiki-relay !>(relay))
       ['Successfully processed' cards [state ~ ~ ~ ~]]
+    ::
+    ++  handle-get-challenge
+      ^-  (quip card _this)
+      =^  cards  state
+        =/  challenge=@uv  (sham [now eny]:bowl)
+        =.  challenges.ether  (~(put in challenges.ether) challenge)
+        :_  state
+        :-  (schedule-del-challenge:main challenge)
+        %+  give-simple-payload:app:server  id.order
+        ^-  simple-payload:http
+        =/  =json  (need (de:json:html (crip "\{ \"challenge\": \"{<challenge>}\" }")))
+        (json-response:gen:server json)
+      [cards this]
     ::
     ++  handle-later
       ^-  (quip card _this)
@@ -361,6 +382,22 @@
     ~?  !accepted.sign-arvo
       [dap.bowl 'eyre bind rejected!' binding.sign-arvo]
     [~ this]
+  ::
+      [%behn %wake *]
+    ?+  wire  ~&  >>>  "%behn %wake with unknown wire {<wire>}"  !!
+    ::
+        [%clean %challenge patuv=@ta ~]
+      =/  challenge=@uv  (slav %uv patuv.wire)
+      %-  (log:main %d "%wiki cleaning state: removing auth challenge {<challenge>}...")
+      =.  challenges.ether  (~(del in challenges.ether) challenge)
+      [~ this]
+    ::
+        [%clean %eth %user patp=@ta ~]
+      =/  comet=@p  (slav %p patp.wire)
+      %-  (log:main %d "%wiki cleaning state: removing auth session for {<comet>}...")
+      =.  users.ether  (~(del by users.ether) comet)
+      [~ this]
+    ==
   ::
       [%ames %tune *]
     ?.  ?=([%remote eyre-id=@ta ~] wire)  [~ this]
@@ -733,6 +770,24 @@
       '%wiki: shh! logging reduced...'
   =.  wordy  wordy.act
   [~ state]
+::
+++  eth-auth
+  |=  act=[%eth-auth who=@p secret=@uv address=tape signature=tape]
+  =/  ok=?  (validate:wiki-auth bowl challenges.ether +.act)
+  ?.  ok  ~|  'Failed Metamask authentication'  !!
+  =.  users.ether  (~(put by users.ether) src.bowl who.act)
+  :_  state
+  [(schedule-del-eth-user src.bowl)]~
+::
+++  schedule-del-challenge
+  |=  challenge=@uv
+  =/  at=@da  (add now.bowl ~m10)
+  [%pass /clean/challenge/[(scot %uv challenge)] %arvo %b %wait at]
+::
+++  schedule-del-eth-user
+  |=  comet=@p
+  =/  at=@da  (add now.bowl ~d7)
+  [%pass /clean/eth/user/[(scot %p comet)] %arvo %b %wait at]
 ::
 ++  poke-self
   |=  =action

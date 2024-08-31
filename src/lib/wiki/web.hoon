@@ -5,6 +5,7 @@
 /+  multipart, regex, rudder, server, string, *wiki
 /$  html-to-mime     %html  %mime
 /*  htmx-js          %js   /web/htmx/js
+/*  mask-auth-js     %js   /web/wiki/mask-auth/js
 /*  show-on-load-js  %js   /web/wiki/show-on-load/js
 /*  globe-svg        %svg  /web/wiki/icons/globe/svg
 /*  info-svg         %svg  /web/wiki/icons/info/svg
@@ -363,8 +364,10 @@
         ;a/"{wik-dir}/~/new": New Page
     ;*
     ?:  =(%pawn (clan:title src.bowl))
-      :_  ~ :: todo: fix issue where redirect includes ?after= and it redirects infinitely
-      ;a/"/~/login?eauth&redirect={(trip url.request.order)}": Log in with Urbit
+      :~ :: todo: fix issue where redirect includes ?after= and it redirects infinitely
+        ;a/"/~/login?eauth&redirect={(trip url.request.order)}": Log in with Urbit
+        ;button(onclick (trip mask-auth-js)): Log in with Metamask
+      ==
     ?.  =(src.bowl our.bowl)
       :~  ;p: User: {<src.bowl>}
           ;button
