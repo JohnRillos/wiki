@@ -12,7 +12,9 @@
 /*  load-svg         %svg  /web/wiki/icons/load/svg
 /*  lock-svg         %svg  /web/wiki/icons/lock/svg
 /*  menu-svg         %svg  /web/wiki/icons/menu/svg
+/*  metamask-svg     %svg  /web/wiki/icons/metamask/svg
 /*  search-svg       %svg  /web/wiki/icons/search/svg
+/*  urbit-svg        %svg  /web/wiki/icons/urbit/svg
 ::
 |_  [=bowl:gall =rudyard]
 ::
@@ -361,32 +363,53 @@
   =/  admin=?  (is-admin host access)
   =/  write=?  (may-edit:auth host access)
   ;div#global-menu
-    ;a/"{wik-dir}": Home
+    ;a.menu-item/"{wik-dir}": Home
     ;+  ?.  write  stub
-        ;a/"{wik-dir}/~/new": New Page
+        ;a.menu-item/"{wik-dir}/~/new": New Page
     ;*
-    ?:  =(%pawn (clan:title src.bowl))
-      :~ :: todo: fix issue where redirect includes ?after= and it redirects infinitely
-        ;a/"/~/login?eauth&redirect={(trip url.request.order)}": Log in with Urbit
-        ;button(onclick (trip mask-auth-js)): Log in with Metamask
+    ?:  =(%pawn (clan:title src:auth))
+      :~
+        ;button.menu-item(onclick "document.getElementById(\"login\").showModal()")
+          ; Log in with Urbit
+        ==
       ==
-    ?.  =(src.bowl our.bowl)
-      :~  ;p: User: {<src.bowl>}
-          ;button
+    ?.  =(src:auth our.bowl)
+      :~  ;p.menu-item: User: {<src:auth>}
+          ;button.menu-item
             =type  "button"
             =onclick  (log-out bowl)
             ; Log out
           ==
       ==
     :~  ?.  admin  stub
-        ;a/"{wik-dir}/~/settings": Settings
-        ;a/"/wiki": All Wikis
-        ;button
+        ;a.menu-item/"{wik-dir}/~/settings": Settings
+        ;a.menu-item/"/wiki": All Wikis
+        ;button.menu-item
           =type  "button"
           =onclick  (log-out bowl)
           ; Log out
         ==
     ==
+  ==
+::
+++  login-dialog
+  |=  =order:rudder
+  ^-  manx
+  ;dialog#login(onmousedown "event.target == this && this.close()")
+    :: todo: fix issue where redirect includes ?after= and it redirects infinitely
+    ;button.login-button(onclick "window.location.href='/~/login?eauth&redirect={(trip url.request.order)}'")
+      ;+  urbit:icon
+      ; Login with Urbit OS
+    ==
+    ;div.note: Your Urbit must be online.
+    ;br;
+    ;button.login-button(onclick (trip mask-auth-js))
+      ;+  metamask:icon
+      ; Login with MetaMask
+    ==
+    ;div.note: You must have an Urbit ID in your MetaMask wallet.
+    ;label(for "urbit-id"): Urbit ID
+    ;input#mask-auth-urbit-id(type "text", name "urbit-id", placeholder "~sampel-palnet");
   ==
 ::
 ++  doc-head
@@ -432,14 +455,15 @@
       ;span: {(trip title.cover)}
     ==
     ;div#topbar-row-2
-      ;button.sidebar-collapse-button(onclick "document.querySelector(\"dialog\").showModal()")
+      ;button.sidebar-collapse-button(onclick "document.getElementById(\"navbar\").showModal()")
         ;+  menu:icon
       ==
-      ;dialog(onmousedown "event.target == this && this.close()")
+      ;dialog#navbar(onmousedown "event.target == this && this.close()")
         ;+  (nav-submenu bowl order [%& cover])
       ==
       ;+  (search-bar `book-id.wiki-path host.wiki-path)
     ==
+    ;+  (login-dialog order)
   ==
 ::
 ++  search-bar
@@ -527,10 +551,22 @@
       ;+  (need (de-xml:html menu-svg))
     ==
   ::
+  ++  metamask
+    ^~
+    ;div.metamask-icon(title "MetaMask")
+      ;+  (need (de-xml:html metamask-svg))
+    ==
+  ::
   ++  search
     ^~
     ;div.search-icon(title "search")
       ;+  (need (de-xml:html search-svg))
+    ==
+  ::
+  ++  urbit
+    ^~
+    ;div.urbit-icon(title "Urbit")
+      ;+  (need (de-xml:html urbit-svg))
     ==
   --
 ::
@@ -555,9 +591,9 @@
 ++  unauthorized :: todo: maybe redirect to login/eauth screen
   |=  =bowl:gall
   ^-  reply:rudder
-  ?:  =(%pawn (clan:title src.bowl))
+  ?:  =(%pawn (clan:title src:auth))
     [%code 401 'Unauthorized: user must be logged in']
-  [%code 403 (crip "Forbidden: user does not have permission: {<src.bowl>}")]
+  [%code 403 (crip "Forbidden: user does not have permission: {<src:auth>}")]
 ::
 ++  toggle-expand
   |=  id=tape

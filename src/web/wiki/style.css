@@ -90,12 +90,14 @@ a:hover {
   background-color: #e8e8e8;
   border-radius: 8px;
   padding: 1em;
-  & * {
-    display: block;
-  }
-  & *:not(:last-child) {
-    margin-bottom: 1em;
-  }
+}
+
+.menu-item {
+  display: block;
+}
+
+.menu-item:not(:last-child) {
+  margin-bottom: 1em;
 }
 
 @media only screen and (max-width: 600px) {
@@ -126,6 +128,14 @@ dialog {
   padding: 0;
   font-size: large;
   box-shadow: 5px 5px 15px #00000025
+}
+
+dialog#login {
+  padding: 1rem;
+}
+
+#mask-auth-urbit-id {
+  margin-left: 0.5rem;
 }
 
 @media only screen and (min-width: 601px) {
@@ -298,6 +308,25 @@ div.menu-icon {
 div.search-icon {
   width: 1em;
   display: inline-block;
+}
+
+div.urbit-icon {
+  width: 1.5em;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+div.metamask-icon {
+  width: 1.5em;
+  display: inline-block;
+  margin-left: 2px;
+  margin-right: 6px;
+}
+
+button.login-button {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
 }
 
 .index-header {

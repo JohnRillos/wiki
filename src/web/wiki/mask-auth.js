@@ -1,4 +1,10 @@
 async function authWithEthereumWallet() {
+  const who = document.getElementById('mask-auth-urbit-id').value;
+  if (!who) {
+    alert('You must enter an Urbit ID to use MetaMask login.');
+    return;
+  }
+
   const challengeResponse = await fetch('/wiki/~/auth', {
     method: 'GET',
     headers: {
@@ -21,9 +27,7 @@ async function authWithEthereumWallet() {
   });
 
   const body = {
-    // todo: get desired @p from input field
-    // who: document.getElementById('mask-auth-urbit-id').value,
-    who: '~tamlyt-moldex',
+    who: document.getElementById('mask-auth-urbit-id').value,
     address: account,
     signature: signature,
     secret: challenge,
