@@ -14,7 +14,9 @@
 /*  menu-svg         %svg  /web/wiki/icons/menu/svg
 /*  search-svg       %svg  /web/wiki/icons/search/svg
 ::
-|%
+|_  [=bowl:gall =rudyard]
+::
++*  auth  ~(. wiki-auth [bowl ether.rudyard])
 ::
 ++  form-data
   |=  =order:rudder
@@ -329,8 +331,8 @@
       %&  rules.p.data
       %|  rules.p.data
     ==
-  =/  admin=?  (is-admin bowl host access)
-  =/  write=?  (may-edit bowl host access)
+  =/  admin=?  (is-admin host access)
+  =/  write=?  (may-edit:auth host access)
   =/  check-logo=?
     ?-  -.data
       %&  (gte era.p.data 5)
@@ -356,8 +358,8 @@
       %&  rules.p.data
       %|  rules.p.data
     ==
-  =/  admin=?  (is-admin bowl host access)
-  =/  write=?  (may-edit bowl host access)
+  =/  admin=?  (is-admin host access)
+  =/  write=?  (may-edit:auth host access)
   ;div#global-menu
     ;a/"{wik-dir}": Home
     ;+  ?.  write  stub
@@ -600,4 +602,9 @@
 ++  is-evil
   |=  text=tape
   (has:regex "(?i)(script)|(meta)|(on(load)|(error)|(mouseover))" text)
+::
+++  is-admin
+  |=  [host=(unit @p) =access] :: access isn't used... yet
+  =(src:auth (fall host our.bowl))
+::
 --

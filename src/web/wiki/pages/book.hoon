@@ -1,15 +1,16 @@
 ::  wiki overview
 ::
 /-  *wiki
-/+  multipart, rudder, web=wiki-web, *wiki
+/+  multipart, rudder, wiki-web, *wiki
 ::
 ^-  (page:rudder rudyard relay)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder =rudyard]
+|_  [=bowl:gall =order:rudder =^rudyard]
 ::
 +*  help  ~(. +> [bowl order rudyard])
+    web  ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -59,7 +60,7 @@
           ;h1#page-title: Main Page
           ;nav#wiki-controls
             ;*
-            ?.  (is-admin bowl host.site rules.cover)  ~
+            ?.  (is-admin:web host.site rules.cover)  ~
             ;=  ;+  (edit-front-link wik-dir toc)
                 ;a/"{wik-dir}/~/import"
                   ;button(type "button"): Import
@@ -87,16 +88,18 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web  ~(. wiki-web [bowl rudyard])
 ::
 ++  get-spine
-  ^-  (unit ^spine)
-  ?^  spine  spine
+  ^-  (unit spine)
+  ?^  spine.rudyard  spine.rudyard
   =/  =wiki-path  wiki-path:(wiki-url:web url.request.order)
   =/  book-id=@t  book-id.wiki-path
   =/  host=@p  (fall host.wiki-path our.bowl)
-  ?.  =(our.bowl host)  (~(get by shelf) [host book-id.wiki-path])
-  =/  buuk  (~(get by books) book-id)
+  ?.  =(our.bowl host)  (~(get by shelf.rudyard) [host book-id.wiki-path])
+  =/  buuk  (~(get by books.rudyard) book-id)
   %+  bind  buuk
   |=(=book (book-to-spine book-id book))
 ::

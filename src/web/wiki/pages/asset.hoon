@@ -1,7 +1,7 @@
 ::  load public asset file
 ::
 /-  *wiki
-/+  rudder, server, string, web=wiki-web, *wiki
+/+  rudder, server, string, wiki-web, *wiki
 /*  favicon-16  %mime  /web/wiki/assets/favicon-16/png
 /*  favicon-32  %mime  /web/wiki/assets/favicon-32/png
 /*  favicon-48  %mime  /web/wiki/assets/favicon-48/png
@@ -10,7 +10,9 @@
 ::
 ^-  (page:rudder rudyard relay)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web  ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [header-list:http (unit octs)]

@@ -1,12 +1,14 @@
 ::  htmx partial: logo element
 ::
 /-  *wiki
-/+  multipart, regex, rudder, server, string, web=wiki-web, *wiki
+/+  multipart, regex, rudder, server, string, wiki-web, *wiki
 /$  svg-to-mime  %svg  %mime
 ::
 ^-  (page:rudder rudyard relay)
 ::
 |_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web   ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]

@@ -1,17 +1,19 @@
 ::  Modified from ~rabsef-bicrym's %mask
 ::
+/-  *wiki
 /+  ethereum, naive
-|%
+::
+|_  [=bowl:gall =ether]
 ::
 ++  validate
-  |=  [=bowl:gall challenges=(set @uv) who=@p challenge=@uv address=tape hancock=tape]
+  |=  [who=@p challenge=@uv address=tape hancock=tape]
   ^-  ?
   =/  addy  (from-tape address)
   =/  cock  (from-tape hancock)
-  =/  owner  (get-owner bowl who)
+  =/  owner  (get-owner who)
   ?~  owner  %.n
   ?.  =(addy u.owner)  %.n
-  ?.  (~(has in challenges) challenge)  %.n
+  ?.  (~(has in challenges.ether) challenge)  %.n
   =/  note=@uvI
     =+  octs=(as-octs:mimes:html (scot %uv challenge))
     %-  keccak-256:keccak:crypto
@@ -43,7 +45,7 @@
   |=(h=tape ^-(@ux (scan h ;~(pfix (jest '0x') hex))))
 ::
 ++  get-owner
-  |=  [=bowl:gall who=@p]
+  |=  [who=@p]
   ^-  (unit @ux)
   =-  ?~  pin=`(unit point:naive)`-
         ~
@@ -54,4 +56,18 @@
     %gx
     /(scot %p our.bowl)/azimuth/(scot %da now.bowl)/point/(scot %p who)/noun
   ==
+::
+++  src
+  ~+
+  ^-  @p
+  (fall (~(get by users.ether) src.bowl) src.bowl)
+::
+++  may-edit
+  |=  [host=(unit @p) =access]
+  ^-  ?
+  ?:  =(src (fall host our.bowl))  &
+  ?:  =(%pawn (clan:title src))
+    comet.edit.access
+  public.edit.access
+::
 --

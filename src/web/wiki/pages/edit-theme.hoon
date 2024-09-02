@@ -1,7 +1,7 @@
 ::  Theme editing page
 ::
 /-  *wiki
-/+  rudder, web=wiki-web, *wiki
+/+  rudder, wiki-web, *wiki
 /*  codemirror-js   %js   /web/codemirror/lib/codemirror/js
 /*  codemirror-css  %css  /web/codemirror/lib/codemirror/css
 /*  css-mode-js     %js   /web/codemirror/mode/css/css/js
@@ -11,9 +11,10 @@
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder =rudyard]
+|_  [=bowl:gall =order:rudder =^rudyard]
 ::
 +*  help  ~(. +> [bowl order rudyard])
+    web   ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -111,7 +112,9 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web  ~(. wiki-web [bowl rudyard])
 ::
 ++  book-id  ~+
   ^-  @ta
@@ -124,11 +127,11 @@
 ::
 ++  get-cover :: todo: update when remote admins are a thing
   ^-  (unit cover)
-  %+  bind  (~(get by books) book-id)
+  %+  bind  (~(get by books.rudyard) book-id)
   |=(=book (book-to-cover book-id book))
 ::
 ++  get-theme :: todo: update when remote admins are a thing
   ^-  (each @tas @t)
-  theme:(~(got by books) book-id)
+  theme:(~(got by books.rudyard) book-id)
 ::
 --

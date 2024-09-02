@@ -1,7 +1,7 @@
 ::  Article creation page
 ::
 /-  *wiki
-/+  rudder, web=wiki-web, *wiki
+/+  rudder, wiki-auth, wiki-web, *wiki
 /*  codemirror-js   %js   /web/codemirror/lib/codemirror/js
 /*  codemirror-css  %css  /web/codemirror/lib/codemirror/css
 /*  markdown-js     %js   /web/codemirror/mode/markdown/markdown/js
@@ -11,9 +11,11 @@
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder =rudyard]
+|_  [=bowl:gall =order:rudder =^rudyard]
 ::
 +*  help  ~(. +> [bowl order rudyard])
+    auth  ~(. wiki-auth [bowl ether.rudyard])
+    web   ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -60,7 +62,7 @@
   =/  cuver  get-cover:help
   ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =cover  u.cuver
-  ?.  (may-edit bowl host.site rules.cover)  (unauthorized:web bowl)
+  ?.  (may-edit:auth host.site rules.cover)  (unauthorized:web bowl)
   ::
   |^  [%page render]
   ::
@@ -140,7 +142,9 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web  ~(. wiki-web [bowl rudyard])
 ::
 ++  args  ~+
   ^-  (map @t @t)
@@ -157,10 +161,10 @@
 ::
 ++  get-cover
   ^-  (unit cover)
-  ?^  spine  `cover.u.spine
+  ?^  spine.rudyard  `cover.u.spine.rudyard
   =/  =wiki-path  wiki-path:(wiki-url:web url.request.order)
   =/  book-id=@t  book-id.wiki-path
-  %+  bind  (~(get by books) book-id)
+  %+  bind  (~(get by books.rudyard) book-id)
   |=(=book (book-to-cover book-id book))
 ::
 --

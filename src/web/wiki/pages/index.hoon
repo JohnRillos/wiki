@@ -1,11 +1,13 @@
 ::  app index
 ::
 /-  *wiki
-/+  rudder, web=wiki-web, *wiki
+/+  rudder, wiki-web, *wiki
 ::
 ^-  (page:rudder rudyard relay)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web  ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -36,6 +38,7 @@
   ::
   ++  render
     ^-  manx
+    =,  rudyard
     ;html
       ;+  (doc-head:web bowl "%wiki")
       ;body(onload on-page-load)

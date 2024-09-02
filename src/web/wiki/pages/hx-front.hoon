@@ -1,16 +1,17 @@
 ::  htmx partial: front page content
 ::
 /-  *wiki
-/+  rudder, web=wiki-web, *wiki
+/+  rudder, wiki-web, *wiki
 /*  mermaid-zero-js  %js  /web/wiki/mermaid-zero/js
 ::
 ^-  (page:rudder rudyard relay)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder =rudyard]
+|_  [=bowl:gall =order:rudder =^rudyard]
 ::
 +*  help  ~(. +> [bowl order rudyard])
+    web   ~(. wiki-web [bowl rudyard])
 ::
 ++  argue  |=(* !!)
 ::
@@ -71,7 +72,9 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web   ~(. wiki-web [bowl rudyard])
 ::
 ++  book-id  ~+
   ^-  @ta
@@ -79,14 +82,14 @@
 ::
 ++  get-cover
   ^-  (unit cover)
-  ?^  booklet  `cover.u.booklet
-  %+  bind  (~(get by books) book-id)
+  ?^  booklet.rudyard  `cover.u.booklet.rudyard
+  %+  bind  (~(get by books.rudyard) book-id)
   |=(=book (book-to-cover book-id book))
 ::
 ++  get-tale
   ^-  (unit tale)
-  ?^  booklet  `tale.u.booklet
-  %+  biff  (~(get by books) book-id)
+  ?^  booklet.rudyard  `tale.u.booklet.rudyard
+  %+  biff  (~(get by books.rudyard) book-id)
   |=  =book
   (~(get by tales.book) /['-']/front)
 ::

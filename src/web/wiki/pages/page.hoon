@@ -1,17 +1,19 @@
 ::  article
 ::
 /-  *wiki
-/+  rudder, web=wiki-web, *wiki
+/+  rudder, wiki-auth, wiki-web, *wiki
 /*  format-time-js  %js  /web/wiki/format-time/js
 /*  mermaid-zero-js  %js  /web/wiki/mermaid-zero/js
 ::
 ^-  (page:rudder rudyard relay)
-:: 
+::
 =<
 ::
-|_  [=bowl:gall =order:rudder =rudyard]
+|_  [=bowl:gall =order:rudder =^rudyard]
 ::
 +*  help  ~(. +> [bowl order rudyard])
+    auth  ~(. wiki-auth [bowl ether.rudyard])
+    web   ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -99,7 +101,7 @@
           ;header
             ;h1#page-title: {(trip title.page)}
             ;nav.page
-              ;+  ?.  (may-edit bowl host rules.cover)  stub:web
+              ;+  ?.  (may-edit:auth host rules.cover)  stub:web
                   ;a/"{wik-dir}{pag-dir}/~/edit": Edit
               ;a/"{wik-dir}{pag-dir}/~/history": History
               ;a/"{wik-dir}{pag-dir}/~/download?t={<as-of>}"
@@ -107,7 +109,7 @@
                 ; Download
               ==
               ;+
-              ?.  =(src.bowl (fall host our.bowl))  stub:web
+              ?.  =(src:auth (fall host our.bowl))  stub:web
               %+  in-form:web  "Are you sure you want to delete this page?"
               ;button.delete
                 =type   "submit"
@@ -144,7 +146,9 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web   ~(. wiki-web [bowl rudyard])
 ::
 ++  book-id  ~+
   ^-  @ta
@@ -162,14 +166,14 @@
 ::
 ++  get-cover
   ^-  (unit cover)
-  ?^  booklet  `cover.u.booklet
-  %+  bind  (~(get by books) book-id)
+  ?^  booklet.rudyard  `cover.u.booklet.rudyard
+  %+  bind  (~(get by books.rudyard) book-id)
   |=(=book (book-to-cover book-id book))
 ::
 ++  get-tale
   ^-  (unit tale)
-  ?^  booklet  `tale.u.booklet
-  %+  biff  (~(get by books) book-id)
+  ?^  booklet.rudyard  `tale.u.booklet.rudyard
+  %+  biff  (~(get by books.rudyard) book-id)
   |=  =book
   (~(get by tales.book) where:space-time)
 ::

@@ -1,11 +1,13 @@
 ::  wiki settings
 ::
 /-  *wiki
-/+  multipart, rudder, web=wiki-web, *wiki
+/+  multipart, rudder, wiki-web, *wiki
 ::
 ^-  (page:rudder rudyard relay)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web  ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -73,6 +75,7 @@
 ++  build
   |=  [arg=(list [k=@t v=@t]) msg=(unit [success=? text=@t])]
   ^-  reply:rudder
+  =,  rudyard
   ::
   =/  [site=wiki-path query=(map @t @t)]  (wiki-url:web url.request.order)
   ?.  ?~  host.site  &

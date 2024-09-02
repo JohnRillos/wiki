@@ -17,7 +17,6 @@
   ?~  jon                     'Error: unable to parse auth request'
   =/  =action  (dj-mask-auth:wiki-dejs u.jon)
   ?.  ?=(%eth-auth -.action)  'Error: incorrect action'
-  ~&  >>>  action
   [%relay our.bowl id.order action]
 ::
 ++  final

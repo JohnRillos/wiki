@@ -1,11 +1,13 @@
 ::  Wiki creation page
 ::
 /-  *wiki
-/+  rudder, web=wiki-web
+/+  rudder, wiki-web
 ::
 ^-  (page:rudder rudyard relay)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web  ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]

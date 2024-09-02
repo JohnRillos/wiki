@@ -1,15 +1,16 @@
 ::  article
 ::
 /-  *wiki
-/+  rudder, web=wiki-web, *wiki
+/+  rudder, wiki-auth, wiki-web, *wiki
 ::
 ^-  (page:rudder rudyard relay)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
 ::
-+*  help  ~(. +> [bowl order books])
++*  help  ~(. +> [bowl order rudyard])
+    web   ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -20,6 +21,8 @@
 ++  build
   |=  [arg=(list [k=@t v=@t]) msg=(unit [? @t])]
   ^-  reply:rudder
+  ::
+  =,  rudyard
   ::
   =/  [site=wiki-path query=(map @t @t)]  (wiki-url:web url.request.order)
   ?~  buuk=(~(get by books) book-id.site)
@@ -60,7 +63,9 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder books=(map @ta book)]
+|_  [=bowl:gall =order:rudder rudyard]
+::
++*  auth  ~(. wiki-auth [bowl ether])
 ::
 ++  book-id  ~+
   ^-  @ta
@@ -74,7 +79,7 @@
   =/  target=(unit @t)  (~(get by query) 'target')
   (bind target stab)
 ::
-++  can-create
-  =(src.bowl our.bowl)
+++  can-create  :: todo: allow editors to create
+  =(src:auth our.bowl)
 ::
 --
