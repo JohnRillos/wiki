@@ -1,11 +1,14 @@
 ::  htmx partial: global search results
 ::
 /-  *wiki
-/+  multipart, regex, rudder, string, web=wiki-web, *wiki
+/+  multipart, regex, rudder, string, wiki-auth, wiki-web, *wiki
 ::
 ^-  (page:rudder rudyard relay)
 ::
 |_  [=bowl:gall =order:rudder =rudyard]
+::
++*  auth  ~(. wiki-auth [bowl ether.rudyard])
+    web   ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -46,7 +49,7 @@
           ;+  ?:  here  stub:web
               ;div.search-result-book-title
                 ;span: {(trip title.cover.spine)}
-                ;span: {?:(=(src.bowl host) "" (cite:title host))}
+                ;span: {?:(=(src:auth host) "" (cite:title host))}
               ==
           ;span: {(trip title.ref)}
         ==
@@ -101,8 +104,8 @@
     |=  [a=[=ship id=@ta] b=[=ship id=@ta]]
     ?:  &((is-here ship.a id.a) !(is-here ship.b id.b))  &
     ?:  &(!(is-here ship.a id.a) (is-here ship.b id.b))  |
-    ?:  &(=(src.bowl ship.a) ?!(=(src.bowl ship.b)))  &
-    ?:  &(?!(=(src.bowl ship.a)) =(src.bowl ship.b))  |
+    ?:  &(=(src:auth ship.a) ?!(=(src:auth ship.b)))  &
+    ?:  &(?!(=(src:auth ship.a)) =(src:auth ship.b))  |
     (alpha-less (trip id.a) (trip id.b))
   ::
   ++  sort-results
@@ -124,7 +127,7 @@
   ::
   ++  super-shelf  ~+
     ^-  shelf
-    ?.  =(src.bowl our.bowl)
+    ?.  =(src:auth our.bowl)
       =/  id=@ta  (need this-book)
       =/  =book  (~(got by books.rudyard) id)
       (malt [[our.bowl id] (book-to-spine id book)]~)

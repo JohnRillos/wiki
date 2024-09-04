@@ -1,6 +1,6 @@
 /-  *wiki
 /+  dbug, default-agent, gossip, regex, rudder, server, string, verb
-/+  *wiki, *wiki-grad, *wiki-morf, web=wiki-web, wiki-http
+/+  *wiki, *wiki-grad, *wiki-morf, wiki-web, wiki-auth, wiki-http
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
 /$  css-to-mime   %css   %mime
@@ -40,6 +40,7 @@
 +*  this       .
     default  ~(. (default-agent this %|) bowl)
     serv     ~(. wiki-http [state ~ ~ ~ ~])
+    web      ~(. wiki-web [bowl [state ~ ~ ~ ~]])
     main     ~(. +> bowl)
 ::
 ++  on-init
@@ -66,7 +67,8 @@
     =|  cards=(list card)
     |-
     ?-  -.old
-      %5  [cards old]
+      %6  [cards old]
+      %5  $(old (state:grad-6 old))
       %4  =/  [caz=_cards new=state-5]  (build-5 old)
           $(old new, cards caz)
       %3  $(old (state:grad-4 old))
@@ -144,6 +146,7 @@
       %del-page       (del-page:main act)
       %imp-file       (imp-file:main act)
       %set-verb       (set-verb:main act)
+      %eth-auth       (eth-auth:main act)
     ==
   ::
   ++  handle-relay
@@ -168,9 +171,15 @@
   ++  handle-http
     |=  =order:rudder
     ^-  (quip card _this)
-    |^  ?:  is-later   handle-later
-        ?:  is-remote  handle-http-remote
+    |^  ?:  is-get-challenge  handle-get-challenge
+        ?:  is-later          handle-later
+        ?:  is-remote         handle-http-remote
         (paddle [bowl order [state ~ ~ ~ ~]])
+    ::
+    ++  is-get-challenge
+      ?.  =('GET' method.request.order)  |
+      =/  =path  path:(sane-url:web url.request.order)
+      ?=([%wiki %~.~ %auth ~] path)
     ::
     :: if ?after= and pending request in `later`, use `handle-later` to await poke-ack
     :: if ?after= but not pending, process normally (URL is probably being reused)
@@ -209,6 +218,19 @@
       =^  cards  this
         (on-poke %wiki-relay !>(relay))
       ['Successfully processed' cards [state ~ ~ ~ ~]]
+    ::
+    ++  handle-get-challenge
+      ^-  (quip card _this)
+      =^  cards  state
+        =/  challenge=@uv  (sham [now eny]:bowl)
+        =.  challenges.ether  (~(put in challenges.ether) challenge)
+        :_  state
+        :-  (schedule-del-challenge:main challenge)
+        %+  give-simple-payload:app:server  id.order
+        ^-  simple-payload:http
+        =/  =json  (need (de:json:html (crip "\{ \"challenge\": \"{<challenge>}\" }")))
+        (json-response:gen:server json)
+      [cards this]
     ::
     ++  handle-later
       ^-  (quip card _this)
@@ -362,6 +384,22 @@
       [dap.bowl 'eyre bind rejected!' binding.sign-arvo]
     [~ this]
   ::
+      [%behn %wake *]
+    ?+  wire  ~&  >>>  "%behn %wake with unknown wire {<wire>}"  !!
+    ::
+        [%clean %challenge patuv=@ta ~]
+      =/  challenge=@uv  (slav %uv patuv.wire)
+      %-  (log:main %d "%wiki cleaning state: removing auth challenge {<challenge>}...")
+      =.  challenges.ether  (~(del in challenges.ether) challenge)
+      [~ this]
+    ::
+        [%clean %eth %user patp=@ta ~]
+      =/  comet=@p  (slav %p patp.wire)
+      %-  (log:main %d "%wiki cleaning state: removing auth session for {<comet>}...")
+      =.  users.ether  (~(del by users.ether) comet)
+      [~ this]
+    ==
+  ::
       [%ames %tune *]
     ?.  ?=([%remote eyre-id=@ta ~] wire)  [~ this]
     |^  (handle-errors |.(on-remote-scry-response))
@@ -433,10 +471,13 @@
 ::
 |_  =bowl:gall
 ::
++*  auth  ~(. wiki-auth [bowl ether])
+    web   ~(. wiki-web [bowl [state ~ ~ ~ ~]])
+::
 ++  new-book
   |=  [%new-book id=@ta title=@t rules=access]
-  ?.  =(src.bowl our.bowl)
-    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %new-book"  !!
+  ?.  =(src:auth our.bowl)
+    ~&  >>>  "Unauthorized poke from {<src:auth>}: %new-book"  !!
   ?:  |(=(~.~ id) !((sane %ta) id))
     ~|("Invalid wiki ID" !!)
   ?:  (~(has by books) id)  ~|("Wiki '{(trip id)}' already exists!" !!)
@@ -453,8 +494,8 @@
 ::
 ++  del-book
   |=  [%del-book id=@ta]
-  ?.  =(src.bowl our.bowl)
-    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %del-book"  !!
+  ?.  =(src:auth our.bowl)
+    ~&  >>>  "Unauthorized poke from {<src:auth>}: %del-book"  !!
   =/  =book  (~(got by books) id)
   =.  books  (~(del by books) id)
   :_  state
@@ -466,8 +507,8 @@
 ::
 ++  mod-book-name
   |=  [%mod-book-name id=@ta title=@t]
-  ?.  =(src.bowl our.bowl)
-    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-book-name"  !!
+  ?.  =(src:auth our.bowl)
+    ~&  >>>  "Unauthorized poke from {<src:auth>}: %mod-book-name"  !!
   =/  =book  (~(got by books) id)
   ?:  (is-space:string (trip title))  ~|("Wiki title must not be blank" !!)
   =.  title.book  title
@@ -482,8 +523,8 @@
 ::
 ++  mod-rule-read
   |=  [%mod-rule-read id=@ta read=rule-read]
-  ?.  =(src.bowl our.bowl)
-    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-rule-read"  !!
+  ?.  =(src:auth our.bowl)
+    ~&  >>>  "Unauthorized poke from {<src:auth>}: %mod-rule-read"  !!
   ?:  &(!public.read urth.read)  ~|('Private wikis do not support eauth (clearweb)' !!)
   ?:  &(!public.read scry.read)  ~|('Private wikis do not support remote scry' !!)
   ?:  &(!public.read goss.read)  ~|('Private wikis do not support gossip (global index)' !!)
@@ -509,8 +550,8 @@
 ::
 ++  mod-rule-edit
   |=  [%mod-rule-edit id=@ta =rule-edit]
-  ?.  =(src.bowl our.bowl)
-    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-rule-edit"  !!
+  ?.  =(src:auth our.bowl)
+    ~&  >>>  "Unauthorized poke from {<src:auth>}: %mod-rule-edit"  !!
   =/  =book  (~(got by books) id)
   ?:  &(!public.read.rules.book public.rule-edit)
     ~|  "Cannot enable public edits on private wiki. Enable public-read first"
@@ -527,7 +568,7 @@
 ::
 ++  mod-logo
   |=  [%mod-logo book-id=@ta logo=(unit image)]
-  ?>  =(src.bowl our.bowl)
+  ?>  =(src:auth our.bowl)
   =/  =book  (~(got by books) book-id)
   =.  crest.book  logo
   =.  books  (~(put by books) book-id book)
@@ -538,7 +579,7 @@
 ::
 ++  mod-look
   |=  [%mod-look book-id=@ta theme=(each @tas @t)]
-  ?>  =(src.bowl our.bowl)
+  ?>  =(src:auth our.bowl)
   =/  =book  (~(got by books) book-id)
   ?:  ?+  theme        &
         [%| @t]        |
@@ -564,12 +605,12 @@
   ?.  (levy path (sane %ta))  ~|('Invalid path!' !!)
   ?>  (check-reserved-path path)
   =/  =book  (~(got by books) book-id)
-  ?.  (may-edit bowl ~ rules.book)
-    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %new-page"
+  ?.  (may-edit:auth ~ rules.book)
+    ~&  >>>  "Unauthorized poke from {<src:auth>}: %new-page"
     ~|("Unauthorized" !!)
   ?:  (~(has by tales.book) path)  ~|("Page {<path>} already exists!" !!)
   ?:  =('' title)  ~|("Title cannot be blank!" !!)
-  =/  =page  [title content src.bowl]
+  =/  =page  [title content src:auth]
   =/  =tale  (gas:ton *tale [now.bowl page]~)
   =.  tales.book  (~(put by tales.book) path tale)
   =.  stamp.book  now.bowl
@@ -587,14 +628,14 @@
   |=  =path
   ^-  ?
   ?+  path  &
-    [%~.- %front ~]  ~|('Only the host can set up the front page' ?>(=(src.bowl our.bowl) &))
+    [%~.- %front ~]  ~|('Only the host can set up the front page' ?>(=(src:auth our.bowl) &))
     [%~.- *]         ~|('Paths beginning with "/-/" are reserved' !!)
   ==
 ::
 ++  del-page
   |=  [%del-page book-id=@ta =path]
   =/  =book       (~(got by books) book-id)
-  ?.  (is-admin bowl ~ rules.book)
+  ?.  (is-admin:web ~ rules.book)
     ~|("You must be an admin to delete this page" !!)
   =.  tales.book  (~(del by tales.book) path)
   =.  stamp.book  now.bowl
@@ -611,9 +652,9 @@
 ++  mod-page
   |=  [%mod-page book-id=@ta =path title=(unit @t) content=(unit wain)]
   =/  =book  (~(got by books) book-id)
-  ?.  (may-edit bowl ~ rules.book)
-    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %mod-page"  !!
-  ?:  &(=(/[~.-]/front path) ?!((is-admin bowl ~ rules.book)))
+  ?.  (may-edit:auth ~ rules.book)
+    ~&  >>>  "Unauthorized poke from {<src:auth>}: %mod-page"  !!
+  ?:  &(=(/[~.-]/front path) ?!((is-admin:web ~ rules.book)))
     ~|("You must be an admin to edit this page" !!)
   =/  =tale  (~(got by tales.book) path)
   =/  =page  page:(latest tale)
@@ -624,7 +665,7 @@
     [~ state]
   =.  title.page    (fall title title.page)
   =.  content.page  (fall content content.page)
-  =.  edit-by.page  src.bowl
+  =.  edit-by.page  src:auth
   =.  tale          (put:ton tale now.bowl page)
   =.  tales.book  (~(put by tales.book) path tale)
   =.  stamp.book  now.bowl
@@ -641,8 +682,8 @@
 ++  imp-file
   |=  [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
   =/  =book  (~(got by books) book-id)
-  ?.  (may-edit bowl ~ rules.book)
-    ~&  >>>  "Unauthorized poke from {<src.bowl>}: %imp-file"  !!
+  ?.  (may-edit:auth ~ rules.book)
+    ~&  >>>  "Unauthorized poke from {<src:auth>}: %imp-file"  !!
   ~&  "importing {<~(wyt by files)>} files..."
   :_  state
   =/  parsed=(list [data=wain =path filename=tape])
@@ -718,8 +759,8 @@
 ++  delete-missing
   |=  [book-id=@ta imported=(list [* path *])]
   ^-  (list card)
-  ?.  =(our.bowl src.bowl)
-    ~&  >>>  "Unauthorized delete request from {<src.bowl>}"  !!
+  ?.  =(our.bowl src:auth)
+    ~&  >>>  "Unauthorized delete request from {<src:auth>}"  !!
   =/  =book  (~(got by books) book-id)
   =/  new-paths=(set path)  (silt (turn imported |=([* =path *] path)))
   %+  murn  ~(tap in ~(key by tales.book))
@@ -733,6 +774,24 @@
       '%wiki: shh! logging reduced...'
   =.  wordy  wordy.act
   [~ state]
+::
+++  eth-auth
+  |=  act=[%eth-auth who=@p secret=@uv address=tape signature=tape]
+  =/  ok=?  (validate:auth +.act)
+  ?.  ok  ~|  'Failed Metamask authentication'  !!
+  =.  users.ether  (~(put by users.ether) src.bowl who.act)
+  :_  state
+  [(schedule-del-eth-user src.bowl)]~
+::
+++  schedule-del-challenge
+  |=  challenge=@uv
+  =/  at=@da  (add now.bowl ~m10)
+  [%pass /clean/challenge/[(scot %uv challenge)] %arvo %b %wait at]
+::
+++  schedule-del-eth-user
+  |=  comet=@p
+  =/  at=@da  (add now.bowl ~d7)
+  [%pass /clean/eth/user/[(scot %p comet)] %arvo %b %wait at]
 ::
 ++  poke-self
   |=  =action

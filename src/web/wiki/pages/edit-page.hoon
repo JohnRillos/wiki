@@ -1,7 +1,7 @@
 ::  Article editing page
 ::
 /-  *wiki
-/+  rudder, web=wiki-web, *wiki
+/+  rudder, wiki-auth, wiki-web, *wiki
 /*  codemirror-js   %js   /web/codemirror/lib/codemirror/js
 /*  codemirror-css  %css  /web/codemirror/lib/codemirror/css
 /*  markdown-js     %js   /web/codemirror/mode/markdown/markdown/js
@@ -11,9 +11,11 @@
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder =rudyard]
+|_  [=bowl:gall =order:rudder =^rudyard]
 ::
 +*  help  ~(. +> [bowl order rudyard])
+    auth  ~(. wiki-auth [bowl ether.rudyard])
+    web   ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -46,7 +48,7 @@
   =/  cuver  get-cover:help
   ?~  cuver  [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =cover  u.cuver
-  ?.  (may-edit bowl host.site rules.cover)  (unauthorized:web bowl)
+  ?.  (may-edit:auth host.site rules.cover)  (unauthorized:web bowl)
   =/  tale=(unit tale)  get-tale:help
   ?~  tale
     [%code 404 (crip "Article {<page-path:help>} not found in {<title.cover>}")]
@@ -76,7 +78,7 @@
             ;table
               ;tr
                 ;td
-                  ;button.submit
+                  ;button.submit.gap-r
                     =type   "submit"
                     =name   "action"
                     =value  "mod-page"
@@ -126,7 +128,9 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web   ~(. wiki-web [bowl rudyard])
 ::
 ++  book-id  ~+
   ^-  @ta
@@ -139,15 +143,15 @@
 ::
 ++  get-cover
   ^-  (unit cover)
-  ?^  booklet  `cover.u.booklet
-  %+  bind  (~(get by books) book-id)
+  ?^  booklet.rudyard  `cover.u.booklet.rudyard
+  %+  bind  (~(get by books.rudyard) book-id)
   |=(=book (book-to-cover book-id book))
 ::
 ++  get-tale
   ^-  (unit tale)
-  ?^  booklet  `tale.u.booklet
+  ?^  booklet.rudyard  `tale.u.booklet.rudyard
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
-  %+  biff  (~(get by books) book-id)
+  %+  biff  (~(get by books.rudyard) book-id)
   |=  =book
   (~(get by tales.book) page-path)
 ::

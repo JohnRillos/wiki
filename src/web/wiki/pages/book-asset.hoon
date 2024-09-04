@@ -1,12 +1,14 @@
 ::  load public per-book asset
 ::
 /-  *wiki
-/+  rudder, server, string, web=wiki-web, *wiki
+/+  rudder, server, string, wiki-web, *wiki
 /$  css-to-mime  %css  %mime
 ::
 ^-  (page:rudder rudyard relay)
 ::
 |_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web  ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [header-list:http (unit octs)]

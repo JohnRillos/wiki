@@ -4,6 +4,11 @@
 
 ## 1.4
 
+### 1.4.4
+Date: TBD
+- refactors some internal logic needed for future Metamask login feature (not yet enabled)
+
+
 ### 1.4.3
 
 Date: ~2024.8.24

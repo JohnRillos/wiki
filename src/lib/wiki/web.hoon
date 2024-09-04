@@ -13,7 +13,9 @@
 /*  menu-svg         %svg  /web/wiki/icons/menu/svg
 /*  search-svg       %svg  /web/wiki/icons/search/svg
 ::
-|%
+|_  [=bowl:gall =rudyard]
+::
++*  auth  ~(. wiki-auth [bowl ether.rudyard])
 ::
 ++  form-data
   |=  =order:rudder
@@ -328,8 +330,8 @@
       %&  rules.p.data
       %|  rules.p.data
     ==
-  =/  admin=?  (is-admin bowl host access)
-  =/  write=?  (may-edit bowl host access)
+  =/  admin=?  (is-admin host access)
+  =/  write=?  (may-edit:auth host access)
   =/  check-logo=?
     ?-  -.data
       %&  (gte era.p.data 5)
@@ -355,28 +357,31 @@
       %&  rules.p.data
       %|  rules.p.data
     ==
-  =/  admin=?  (is-admin bowl host access)
-  =/  write=?  (may-edit bowl host access)
+  =/  admin=?  (is-admin host access)
+  =/  write=?  (may-edit:auth host access)
   ;div#global-menu
-    ;a/"{wik-dir}": Home
+    ;a.menu-item/"{wik-dir}": Home
     ;+  ?.  write  stub
-        ;a/"{wik-dir}/~/new": New Page
+        ;a.menu-item/"{wik-dir}/~/new": New Page
     ;*
-    ?:  =(%pawn (clan:title src.bowl))
-      :_  ~ :: todo: fix issue where redirect includes ?after= and it redirects infinitely
-      ;a/"/~/login?eauth&redirect={(trip url.request.order)}": Log in with Urbit
-    ?.  =(src.bowl our.bowl)
-      :~  ;p: User: {<src.bowl>}
-          ;button
+    ?:  =(%pawn (clan:title src:auth))
+      :~
+        ;button.menu-item(onclick "window.location.href='/~/login?eauth&redirect={(trip url.request.order)}'")
+          ; Log in with Urbit
+        ==
+      ==
+    ?.  =(src:auth our.bowl)
+      :~  ;p.menu-item: User: {<src:auth>}
+          ;button.menu-item
             =type  "button"
             =onclick  (log-out bowl)
             ; Log out
           ==
       ==
     :~  ?.  admin  stub
-        ;a/"{wik-dir}/~/settings": Settings
-        ;a/"/wiki": All Wikis
-        ;button
+        ;a.menu-item/"{wik-dir}/~/settings": Settings
+        ;a.menu-item/"/wiki": All Wikis
+        ;button.menu-item
           =type  "button"
           =onclick  (log-out bowl)
           ; Log out
@@ -427,10 +432,10 @@
       ;span: {(trip title.cover)}
     ==
     ;div#topbar-row-2
-      ;button.sidebar-collapse-button(onclick "document.querySelector(\"dialog\").showModal()")
+      ;button.sidebar-collapse-button(onclick "document.getElementById(\"navbar\").showModal()")
         ;+  menu:icon
       ==
-      ;dialog(onmousedown "event.target == this && this.close()")
+      ;dialog#navbar(onmousedown "event.target == this && this.close()")
         ;+  (nav-submenu bowl order [%& cover])
       ==
       ;+  (search-bar `book-id.wiki-path host.wiki-path)
@@ -550,9 +555,9 @@
 ++  unauthorized :: todo: maybe redirect to login/eauth screen
   |=  =bowl:gall
   ^-  reply:rudder
-  ?:  =(%pawn (clan:title src.bowl))
+  ?:  =(%pawn (clan:title src:auth))
     [%code 401 'Unauthorized: user must be logged in']
-  [%code 403 (crip "Forbidden: user does not have permission: {<src.bowl>}")]
+  [%code 403 (crip "Forbidden: user does not have permission: {<src:auth>}")]
 ::
 ++  toggle-expand
   |=  id=tape
@@ -597,4 +602,9 @@
 ++  is-evil
   |=  text=tape
   (has:regex "(?i)(script)|(meta)|(on(load)|(error)|(mouseover))" text)
+::
+++  is-admin
+  |=  [host=(unit @p) =access] :: access isn't used... yet
+  =(src:auth (fall host our.bowl))
+::
 --

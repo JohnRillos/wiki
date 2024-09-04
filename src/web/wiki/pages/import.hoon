@@ -1,12 +1,15 @@
 ::  file upload
 ::
 /-  *wiki
-/+  multipart, rudder, web=wiki-web, *wiki
+/+  multipart, rudder, wiki-auth, wiki-web, *wiki
 /*  helper-js  %js  /web/wiki/file-import-helper/js
 ::
 ^-  (page:rudder rudyard relay)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  auth  ~(. wiki-auth [bowl ether.rudyard])
+    web   ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -34,7 +37,7 @@
   ^-  reply:rudder
   ::
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
-  ?~  buuk=(~(get by books) book-id.site)
+  ?~  buuk=(~(get by books.rudyard) book-id.site)
     [%code 404 (crip "Wiki {<book-id.site>} not found")]
   =/  =book  u.buuk
   =/  =cover  (book-to-cover book-id.site book)
@@ -73,7 +76,7 @@
                 ;option(value "header"): first header
                 ;option(value "front-matter"): front matter
               ==
-              ;+  ?.  =(src.bowl our.bowl)  stub:web
+              ;+  ?.  =(src:auth our.bowl)  stub:web
               ;div
                 ;br;
                 ;label

@@ -1,16 +1,17 @@
 ::  article revision history
 ::
 /-  *wiki
-/+  rudder, web=wiki-web, *wiki
+/+  rudder, wiki-web, *wiki
 /*  format-time-js  %js  /web/wiki/format-time/js
 ::
 ^-  (page:rudder rudyard relay)
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder =rudyard]
+|_  [=bowl:gall =order:rudder =^rudyard]
 ::
 +*  help  ~(. +> [bowl order rudyard])
+    web   ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -76,7 +77,9 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web   ~(. wiki-web [bowl rudyard])
 ::
 ++  book-id  ~+
   ^-  @ta
@@ -89,15 +92,15 @@
 ::
 ++  get-cover
   ^-  (unit cover)
-  ?^  booklet  `cover.u.booklet
-  %+  bind  (~(get by books) book-id)
+  ?^  booklet.rudyard  `cover.u.booklet.rudyard
+  %+  bind  (~(get by books.rudyard) book-id)
   |=(=book (book-to-cover book-id book))
 ::
 ++  get-tale
   ^-  (unit tale)
-  ?^  booklet  `tale.u.booklet
+  ?^  booklet.rudyard  `tale.u.booklet.rudyard
   =/  [site=wiki-path *]  (wiki-url:web url.request.order)
-  %+  biff  (~(get by books) book-id)
+  %+  biff  (~(get by books.rudyard) book-id)
   |=  =book
   (~(get by tales.book) page-path)
 ::

@@ -21,6 +21,7 @@
       ?+  pat                               page-resource
         ~                                   [& %index]
         [sig %assets *]                     [| %asset]
+        [sig %auth ~]                       [| %mask-auth]
         [sig %new ~]                        [& %new-book]
         [sig %search ~]                     [& %search-all]
         [sig %x %search ~]                  [& %hx-search]

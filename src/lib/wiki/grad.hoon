@@ -3,6 +3,14 @@
 ::
 +$  card  card:agent:gall
 ::
+++  grad-6
+  |%
+  ++  state
+    |=  old=state-5
+    ^-  state-6
+    [%6 *ether +.old]
+  --
+::
 ++  grad-5
   |%
   ++  state

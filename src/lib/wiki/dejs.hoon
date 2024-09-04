@@ -15,6 +15,13 @@
       ['delMissing' bo]
   ==
 ::
+++  dj-mask-auth
+  |=  =json
+  %.  json
+  %-  of
+  :~  [%eth-auth (ot ~[who+(se %p) secret+(se %uv) address+sa signature+sa])]
+  ==
+::
 ++  dj-title-source
     |=  =json
     =/  =cord  (so json)

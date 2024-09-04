@@ -1,7 +1,7 @@
 ::  download page as .md
 ::
 /-  *wiki
-/+  rudder, string, web=wiki-web, *wiki
+/+  rudder, string, wiki-web, *wiki
 /$  page-to-md  %wiki-page-1  %md
 /$  md-to-mime  %md  %mime
 ::
@@ -9,9 +9,10 @@
 ::
 =<
 ::
-|_  [=bowl:gall =order:rudder =rudyard]
+|_  [=bowl:gall =order:rudder =^rudyard]
 ::
 +*  help  ~(. +> [bowl order rudyard])
+    web   ~(. wiki-web [bowl rudyard])
 ::
 ++  argue
   |=  [headers=header-list:http body=(unit octs)]
@@ -46,7 +47,9 @@
 ::
 ::  helper core (help)
 ::
-|_  [=bowl:gall =order:rudder rudyard]
+|_  [=bowl:gall =order:rudder =rudyard]
+::
++*  web  ~(. wiki-web [bowl rudyard])
 ::
 ++  book-id  ~+
   ^-  @ta
@@ -64,14 +67,14 @@
 ::
 ++  get-cover
   ^-  (unit cover)
-  ?^  booklet  `cover.u.booklet
-  %+  bind  (~(get by books) book-id)
+  ?^  booklet.rudyard  `cover.u.booklet.rudyard
+  %+  bind  (~(get by books.rudyard) book-id)
   |=(=book (book-to-cover book-id book))
 ::
 ++  get-tale
   ^-  (unit tale)
-  ?^  booklet  `tale.u.booklet
-  %+  biff  (~(get by books) book-id)
+  ?^  booklet.rudyard  `tale.u.booklet.rudyard
+  %+  biff  (~(get by books.rudyard) book-id)
   |=  =book
   (~(get by tales.book) where:space-time)
 ::
