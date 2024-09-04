@@ -78,7 +78,7 @@
             ;table
               ;tr
                 ;td
-                  ;button.submit
+                  ;button.submit.gap-r
                     =type   "submit"
                     =name   "action"
                     =value  "mod-page"

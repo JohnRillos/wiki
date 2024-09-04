@@ -355,7 +355,6 @@ button {
   cursor: pointer;
   font-size: unset;
   padding: 4px 6px;
-  margin-right: 0.5em;
 }
 
 select {
@@ -370,8 +369,8 @@ button:hover {
   background-color: lightgray;
 }
 
-button:last-child {
-  margin-right: 0;
+.gap-r {
+  margin-right: 0.5rem;
 }
 
 button.submit {

@@ -113,7 +113,7 @@
               ;+  setting-rule-edit
             ==
           ==
-          ;button.submit
+          ;button.submit.gap-r
             =type   "submit"
             =name   "action"
             =value  "new-book"
