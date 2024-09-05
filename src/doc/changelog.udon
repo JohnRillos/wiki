@@ -5,8 +5,10 @@
 ## 1.4
 
 ### 1.4.4
-Date: TBD
+Date: ~2024.9.4
 - refactors some internal logic needed for future Metamask login feature (not yet enabled)
+- attempt to fix file import for some users
+  - handle `.md` files uploaded as `application/octet-stream` MIME type
 
 
 ### 1.4.3

@@ -125,11 +125,21 @@
       ~&  "file ignored, empty filename - type: {<type.part>}"  ~
     ?~  type.part
       ~&  "file ignored, no MIME type: {<u.file.part>}"  ~
-    ?.  =(~['text/markdown'] u.type.part)
-      ~&  "file ignored, not markdown: {<u.type.part>} {<u.file.part>}"  ~
+    =/  ext=(unit tape)  (get-extension (trip u.file.part))
+    ?~  ext  ~&  "file ignored, no file extension"  ~
+    ?.  =("md" (cass u.ext))
+      ~&  "file ignored, not .md: {<u.type.part>} {<u.file.part>}"  ~
+    ?.  ?|(=(~['text/markdown'] u.type.part) =(~['application/octet-stream'] u.type.part))
+      ~&  "file ignored, invalid MIME type: {<u.type.part>} {<u.file.part>}"  ~
     =/  data=wain  (to-wain:format (sane-newline body.part))
     ~&  "parsed: {(trip u.file.part)}"
     `[u.file.part data]
+  ::
+  ++  get-extension
+    |=  =tape
+    ^-  (unit ^tape)
+    ?~  found=(fand "." tape)  ~
+    `(slag +((rear found)) tape)
   --
 ::
 ++  parse-filepath
