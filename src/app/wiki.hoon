@@ -23,7 +23,8 @@
 ::
 %+  verb  |
 ::
-%-  %+  agent:gossip  [3 %anybody %anybody &]
+=*  gossip-config  [3 %anybody %anybody |]
+%-  %+  agent:gossip  gossip-config
     %-  ~(gas by *(map mark $-(* vase)))
     :~  [%wiki-lore |=(=noun !>((lore-0 noun)))]
         [%wiki-lore-1 |=(=noun !>((lore-1 noun)))]
@@ -59,7 +60,8 @@
   |^  =+  !<(old=versioned-state old-vase)
       =^  cards-1  state  (build-state old)
       =^  cards-2  state  retry-early-goss
-      [(weld cards-1 cards-2) this]
+      =^  cards-3  state  config-gossip
+      [:(weld cards-1 cards-2 cards-3) this]
   ::
   ++  build-state
     |=  old=versioned-state
@@ -114,6 +116,10 @@
     ?+  p.k         [| raw]
       %wiki-lore-1  [& [p.k !>((lore-1 q.k))]]
     ==
+  ::
+  ++  config-gossip
+    ^-  (quip card _state)
+    [[(configure:gossip gossip-config)]~ state]
   --
 ::
 ++  on-poke

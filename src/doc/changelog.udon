@@ -4,7 +4,17 @@
 
 ## 1.4
 
+### 1.4.5
+
+Date: ~2024.9.5
+- prevent %gossip from spamming ships that aren't running %wiki
+  - update /lib/gossip.hoon with bug fix
+  - disable relay in gossip config
+  - should prevent additional dead ames-flows, but doesn't clean up existing ones
+
+
 ### 1.4.4
+
 Date: ~2024.9.4
 - refactors some internal logic needed for future Metamask login feature (not yet enabled)
 - attempt to fix file import for some users
