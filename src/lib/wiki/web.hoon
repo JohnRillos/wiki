@@ -12,6 +12,7 @@
 /*  lock-svg         %svg  /web/wiki/icons/lock/svg
 /*  menu-svg         %svg  /web/wiki/icons/menu/svg
 /*  search-svg       %svg  /web/wiki/icons/search/svg
+/*  urbit-svg        %svg  /web/wiki/icons/urbit/svg
 ::
 |_  [=bowl:gall =rudyard]
 ::
@@ -494,9 +495,9 @@
         ;+  globe:icon
         ;span: This wiki is public
       ==
-    ?:  mars-read  :: todo: use urbit icon
+    ?:  mars-read 
       ;div.footer-item.note
-        ;+  globe:icon
+        ;+  urbit-small:icon
         ;span: This wiki is public on Urbit
       ==
     ;div.footer-item.note
@@ -547,6 +548,12 @@
     ^~
     ;div.search-icon(title "search")
       ;+  (need (de-xml:html search-svg))
+    ==
+  ::
+  ++  urbit-small
+    ^~
+    ;div.access-icon(title "Urbit")
+      ;+  (need (de-xml:html urbit-svg))
     ==
   --
 ::
