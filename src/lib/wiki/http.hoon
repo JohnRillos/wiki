@@ -45,7 +45,7 @@
     ^-  ?
     =/  book-id=@ta  -.pat
     ?~  book=(~(get by books) book-id)  &
-    !urth.read.rules.u.book
+    !public.read.rules.u.book
   ::
   ++  w-auth
     ^-  ?

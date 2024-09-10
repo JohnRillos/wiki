@@ -370,7 +370,7 @@
   =/  admin=?  (is-admin host access)
   =/  write=?  (may-edit:auth host access)
   ;div#global-menu
-    ;a.menu-item/"{wik-dir}": Home
+    ;a.menu-item/"{wik-dir}": Main Page
     ;+  ?.  write  stub
         ;a.menu-item/"{wik-dir}/~/new": New Page
     ;*
@@ -385,7 +385,7 @@
           ;button.menu-item
             =type  "button"
             =onclick  (log-out bowl)
-            ; Log out
+            ; Log Out
           ==
       ==
     :~  ?.  admin  stub
@@ -394,7 +394,7 @@
         ;button.menu-item
           =type  "button"
           =onclick  (log-out bowl)
-          ; Log out
+          ; Log Out
         ==
     ==
   ==
@@ -486,12 +486,18 @@
       %&  rules.p.each
       %|  rules.p.each
     ==
-  =/  public-read=?  public.read.access
+  =/  public-read=?  &(public.read.access urth.read.access)
+  =/  mars-read=?  &(public.read.access !urth.read.access)
   =/  viz=manx
     ?:  public-read
       ;div.footer-item.note
         ;+  globe:icon
         ;span: This wiki is public
+      ==
+    ?:  mars-read  :: todo: use urbit icon
+      ;div.footer-item.note
+        ;+  globe:icon
+        ;span: This wiki is public on Urbit
       ==
     ;div.footer-item.note
       ;+  lock:icon

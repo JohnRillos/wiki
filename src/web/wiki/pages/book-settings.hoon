@@ -25,10 +25,10 @@
     ::
         %mod-rule-read
       =/  =rule-read
-        =/  public=?  =('true' (~(got by args) 'read-public'))
-        =/    urth=?  &(public (~(has by args) 'read-urth'))
-        =/    scry=?  &(public (~(has by args) 'read-scry'))
-        =/    goss=?    &(scry (~(has by args) 'read-goss'))
+        =/  public=?   =('true' (~(got by args) 'read-public'))
+        =/    urth=?  &(public !(~(has by args) 'read-mars'))
+        =/    scry=?   &(public (~(has by args) 'read-scry'))
+        =/    goss=?     &(scry (~(has by args) 'read-goss'))
         [public urth scry goss]
       [%mod-rule-read book-id.site rule-read]
     ::
@@ -220,39 +220,46 @@
       %+  in-form:web  confirm
       ;div
         ;div.box-item
-          ;+  %+  check-if:web  !public.read.rules.book
-              %+  disables-other:web  ~['read-urth' 'read-scry' 'read-goss']
+          ;+
+          %+  check-if:web  !public.read.rules.book
+          %+  disables-other:web  ~['read-mars' 'read-scry' 'read-goss']
           ;input#read-pub-n(type "radio", name "read-public", value "false");
           ;label(for "read-pub-n"): Private: Only you can view this wiki.
         ==
         ;div.box-item
-          ;+  %+  check-if:web  public.read.rules.book
-              %+  enables-other:web  ~['read-urth' 'read-scry' 'read-goss']
+          ;+
+          %+  check-if:web  public.read.rules.book
+          %+  enables-other:web  ~['read-mars' 'read-scry' 'read-goss']
           ;input#read-pub-y(type "radio", name "read-public", value "true");
           ;label(for "read-pub-y"): Public: Anyone can view this wiki.
+          ;+
+          =/  headers=(map @t @t)  (my `(list (pair @t @t))`header-list.request.order)
+          =/  web-host=(unit @t)  (~(get by headers) 'host')
+          ?~  web-host  stub:web
+          ;div.note: This wiki will be visible at {(trip u.web-host)}{(base-path:web site)}
         ==
         ;fieldset
           ;div.box-item
-            ;+  %+    check-if:web     urth.read.rules.book
-                %+  disable-if:web  !public.read.rules.book
-            ;input#read-urth(type "checkbox", name "read-urth");
-            ;label(for "read-urth"): This wiki can be viewed as a website on the clearweb.
             ;+
-            =/  headers=(map @t @t)  (my `(list (pair @t @t))`header-list.request.order)
-            =/  web-host=(unit @t)  (~(get by headers) 'host')
-            ?~  web-host  stub:web
+            %+    check-if:web    !urth.read.rules.book
+            %+  disable-if:web  !public.read.rules.book
+            ;input#read-mars(type "checkbox", name "read-mars");
+            ;label(for "read-mars"): Users must log in with Urbit ID to read pages.
+            ;+
             %-  info:icon:web
             """
-            Wiki will be visible at {(trip u.web-host)}{(base-path:web site)}.
-            Visitors can view the site without logging in or using Urbit, but can also log in with their Urbit ID's using EAuth.
+            If enabled, users must log in with Urbit ID to view pages on the site.
+            Unauthenticated users will only be able to view the main page.
+            If disabled, anybody can read this wiki without logging in.
             """
           ==
           ;div.box-item
-            ;+  %+    check-if:web        scry.read.rules.book
-                %+  disable-if:web     !public.read.rules.book
-                %+  enables-other:web  ~['read-goss']
+            ;+
+            %+    check-if:web        scry.read.rules.book
+            %+  disable-if:web     !public.read.rules.book
+            %+  enables-other:web  ~['read-goss']
             ;input#read-scry(type "checkbox", name "read-scry");
-            ;label(for "read-scry"): This wiki can be viewed on Urbit.
+            ;label(for "read-scry"): This wiki can be viewed in Urbit OS.
             ;+
             %-  info:icon:web
             """
@@ -261,11 +268,12 @@
             """
           ==
           ;div.box-item
-            ;+  %+    check-if:web     goss.read.rules.book
-                %+  disable-if:web    !scry.read.rules.book
-                %+  disable-if:web  !public.read.rules.book
+            ;+
+            %+    check-if:web     goss.read.rules.book
+            %+  disable-if:web    !scry.read.rules.book
+            %+  disable-if:web  !public.read.rules.book
             ;input#read-goss(type "checkbox", name "read-goss");
-            ;label(for "read-goss"): Share this wiki on the global index so people can discover it.
+            ;label(for "read-goss"): List this wiki on the global index so people can discover it.
             ;+
             %-  info:icon:web
             """

@@ -98,6 +98,8 @@
         ;+  (global-nav:web bowl order [%& cover])
         ;main
           ;+  (topbar:web bowl order cover)
+          ;+
+          ?.  (may-read:auth rules.cover)  stub:web
           ;header
             ;h1#page-title: {(trip title.page)}
             ;nav.page
@@ -118,6 +120,18 @@
               ==
             ==
           ==
+          ;+
+          ?.  (may-read:auth rules.cover)
+            ;div.login-gate
+              ;p
+                ;a/"/~/login?eauth&redirect={wik-dir}{pag-dir}": Log in
+                ; 
+                ; with 
+                ;a/"https://urbit.org": Urbit
+                ; 
+                ; to view content on this wiki.
+              ==
+            ==
           ;article
             ;+  (fall version-notice stub:web)
             ;script(defer "", src mermaid-src);
