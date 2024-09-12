@@ -1,5 +1,5 @@
 ::  article
-:: 
+::
 /-  *wiki
 /+  rudder, wiki-auth, wiki-web, *wiki
 /*  format-time-js  %js  /web/wiki/format-time/js

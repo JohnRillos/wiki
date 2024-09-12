@@ -495,7 +495,7 @@
         ;+  globe:icon
         ;span: This wiki is public
       ==
-    ?:  mars-read 
+    ?:  mars-read
       ;div.footer-item.note
         ;+  urbit-small:icon
         ;span: This wiki is public on Urbit
