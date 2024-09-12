@@ -531,11 +531,10 @@
   |=  [%mod-rule-read id=@ta read=rule-read]
   ?.  =(src:auth our.bowl)
     ~&  >>>  "Unauthorized poke from {<src:auth>}: %mod-rule-read"  !!
-  ?:  &(!public.read urth.read)  ~|('Private wikis do not support eauth (clearweb)' !!)
+  ?:  &(!public.read urth.read)  ~|('Private wikis do not support clearweb' !!)
   ?:  &(!public.read scry.read)  ~|('Private wikis do not support remote scry' !!)
   ?:  &(!public.read goss.read)  ~|('Private wikis do not support gossip (global index)' !!)
   ?:  &(!scry.read goss.read)    ~|('Cannot gossip index if wiki not accessible via remote scry' !!)
-  ?:  &(public.read ?!(|(urth.read scry.read)))  ~|('Public wikis must be visible via web and/or Urbit' !!)
   =/  =book  (~(got by books) id)
   =/  en-scry=?  &(!scry.read.rules.book scry.read)
   =/  un-scry=?  &(scry.read.rules.book !scry.read)

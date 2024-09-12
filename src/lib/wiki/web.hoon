@@ -12,6 +12,7 @@
 /*  lock-svg         %svg  /web/wiki/icons/lock/svg
 /*  menu-svg         %svg  /web/wiki/icons/menu/svg
 /*  search-svg       %svg  /web/wiki/icons/search/svg
+/*  urbit-svg        %svg  /web/wiki/icons/urbit/svg
 ::
 |_  [=bowl:gall =rudyard]
 ::
@@ -370,7 +371,7 @@
   =/  admin=?  (is-admin host access)
   =/  write=?  (may-edit:auth host access)
   ;div#global-menu
-    ;a.menu-item/"{wik-dir}": Home
+    ;a.menu-item/"{wik-dir}": Main Page
     ;+  ?.  write  stub
         ;a.menu-item/"{wik-dir}/~/new": New Page
     ;*
@@ -385,7 +386,7 @@
           ;button.menu-item
             =type  "button"
             =onclick  (log-out bowl)
-            ; Log out
+            ; Log Out
           ==
       ==
     :~  ?.  admin  stub
@@ -394,7 +395,7 @@
         ;button.menu-item
           =type  "button"
           =onclick  (log-out bowl)
-          ; Log out
+          ; Log Out
         ==
     ==
   ==
@@ -486,12 +487,18 @@
       %&  rules.p.each
       %|  rules.p.each
     ==
-  =/  public-read=?  public.read.access
+  =/  public-read=?  &(public.read.access urth.read.access)
+  =/  mars-read=?  &(public.read.access !urth.read.access)
   =/  viz=manx
     ?:  public-read
       ;div.footer-item.note
         ;+  globe:icon
         ;span: This wiki is public
+      ==
+    ?:  mars-read
+      ;div.footer-item.note
+        ;+  urbit-small:icon
+        ;span: This wiki is public on Urbit
       ==
     ;div.footer-item.note
       ;+  lock:icon
@@ -541,6 +548,12 @@
     ^~
     ;div.search-icon(title "search")
       ;+  (need (de-xml:html search-svg))
+    ==
+  ::
+  ++  urbit-small
+    ^~
+    ;div.access-icon(title "Urbit")
+      ;+  (need (de-xml:html urbit-svg))
     ==
   --
 ::
