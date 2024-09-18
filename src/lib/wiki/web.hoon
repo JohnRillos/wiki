@@ -12,6 +12,7 @@
 /*  lock-svg         %svg  /web/wiki/icons/lock/svg
 /*  menu-svg         %svg  /web/wiki/icons/menu/svg
 /*  search-svg       %svg  /web/wiki/icons/search/svg
+/*  star-svg         %svg  /web/wiki/icons/star/svg
 /*  urbit-svg        %svg  /web/wiki/icons/urbit/svg
 ::
 |_  [=bowl:gall =rudyard]
@@ -370,6 +371,7 @@
     ==
   =/  admin=?  (is-admin host access)
   =/  write=?  (may-edit:auth host access)
+  =/  =flag  [(fall host our.bowl) book-id.wiki-path]
   ;div#global-menu
     ;a.menu-item/"{wik-dir}": Main Page
     ;+  ?.  write  stub
@@ -392,12 +394,29 @@
     :~  ?.  admin  stub
         ;a.menu-item/"{wik-dir}/~/settings": Settings
         ;a.menu-item/"/wiki": All Wikis
+        (fave-button flag)
         ;button.menu-item
           =type  "button"
           =onclick  (log-out bowl)
           ; Log Out
         ==
     ==
+  ==
+::
+++  fave-button
+  |=  =flag
+  ?.  (~(has by shelf.rudyard) flag)  stub
+  =/  fave-path=tape  "/wiki/~/x/faves/{<host.flag>}/{(trip id.flag)}"
+  ?:  (~(has in faves.rudyard) flag)
+    ;button.menu-item(title "Remove Favorite", hx-post "{fave-path}?set=false", hx-swap "outerHTML")
+      ; Remove
+      ;+  (fave:icon &)
+      ;
+    ==
+  ;button.menu-item(title "Add Favorite", hx-post "{fave-path}?set=true", hx-swap "outerHTML")
+    ; Add
+    ;+  (fave:icon |)
+    ;
   ==
 ::
 ++  doc-head
@@ -513,6 +532,12 @@
 ::
 ++  icon
   |%
+  ::
+  ++  fave
+    |=  [active=?]
+    ;div(class ?:(active "fave-icon on" "fave-icon off"))
+      ;+  (need (de-xml:html star-svg))
+    ==
   ::
   ++  globe
     ^~

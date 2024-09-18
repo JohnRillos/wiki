@@ -2,6 +2,19 @@
 
 # Version 1
 
+##  1.6
+
+### 1.6.0
+
+Date: ~2024.9.17
+- you can now add wikis to your favorites
+  - favorite wikis will appear in a section above "More Wikis on Urbit" on the index page
+  - only an option when browsing %wiki through Arvo on your own ship
+  - only public listed wikis can be added to favorites
+  - currently this feature is only for basic organization, but in the future, favorite wikis may 
+    have other uses
+
+
 ## 1.5
 
 ### 1.5.0

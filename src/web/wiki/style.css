@@ -300,6 +300,34 @@ div.access-icon {
   font-size: medium;
 }
 
+.fave-icon {
+  width: 1.5em;
+  display: inline-block;
+  margin-left: 4px;
+  margin-right: -2px;
+}
+
+.fave-icon.on {
+  color: #f8bb22;
+  transition: color 0.5s;
+}
+
+.fave-icon.off {
+  color: gray;
+  transition: color 0.5s;
+}
+
+button:hover {
+  & .fave-icon.off {
+    color: #f8bb22;
+    transition: color 0.5s;
+  }
+  & .fave-icon.on {
+    color: gray;
+    transition: color 0.5s;
+  }
+}
+
 div.menu-icon {
   width: 1.5em;
   display: inline-block;
@@ -327,6 +355,11 @@ button.login-button {
   display: flex;
   align-items: center;
   margin-bottom: 4px;
+}
+
+button.menu-item {
+  display: flex;
+  align-items: center;
 }
 
 .index-header {

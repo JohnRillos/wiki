@@ -69,7 +69,8 @@
     =|  cards=(list card)
     |-
     ?-  -.old
-      %6  [cards old]
+      %7  [cards old]
+      %6  $(old (state:grad-7 old))
       %5  $(old (state:grad-6 old))
       %4  =/  [caz=_cards new=state-5]  (build-5 old)
           $(old new, cards caz)
@@ -153,6 +154,8 @@
       %imp-file       (imp-file:main act)
       %set-verb       (set-verb:main act)
       %eth-auth       (eth-auth:main act)
+      %add-fave       (add-fave:main act)
+      %del-fave       (del-fave:main act)
     ==
   ::
   ++  handle-relay
@@ -775,6 +778,7 @@
 ::
 ++  set-verb
   |=  act=[%set-verb wordy=?]
+  ?>  =(src.bowl our.bowl)
   ~&  ?:  wordy.act  '%wiki: more logging enabled'
       '%wiki: shh! logging reduced...'
   =.  wordy  wordy.act
@@ -787,6 +791,20 @@
   =.  users.ether  (~(put by users.ether) src.bowl who.act)
   :_  state
   [(schedule-del-eth-user src.bowl)]~
+::
+++  add-fave
+  |=  [%add-fave =flag]
+  ?>  =(our.bowl src:auth)
+  ?:  =(our.bowl host.flag)
+    ~|  'You cannot favorite your own wiki'  !!
+  ?.  (~(has by shelf) flag)
+    ~|  'Cannot favorite unlisted wiki'  !!
+  [~ state(faves (~(put in faves) flag))]
+::
+++  del-fave
+  |=  [%del-fave =flag]
+  ?>  =(our.bowl src:auth)
+  [~ state(faves (~(del in faves) flag))]
 ::
 ++  schedule-del-challenge
   |=  challenge=@uv

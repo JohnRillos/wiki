@@ -4,7 +4,7 @@
     base+'wiki'
     image+'/wiki/~/assets/tile.svg'
     site+/wiki
-    version+[1 5 0]
+    version+[1 6 0]
     website+'https://github.com/JohnRillos/wiki'
     license+'MIT'
 ==

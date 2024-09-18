@@ -24,6 +24,7 @@
         [sig %auth ~]                       [| %mask-auth]
         [sig %new ~]                        [& %new-book]
         [sig %search ~]                     [& %search-all]
+        [sig %x %faves *]                   [| %hx-fave]
         [sig %x %search ~]                  [& %hx-search]
         (far [@ta ~])                       [r-auth %book]
         (far [@ta sig %assets *])           [| %book-asset]
