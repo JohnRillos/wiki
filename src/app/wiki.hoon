@@ -336,7 +336,13 @@
   ==
 ::
 ++  on-leave  on-leave:default
-++  on-peek   on-peek:default
+::
+++  on-peek
+  |=  path=(pole knot)
+  ^-  (unit (unit cage))
+  ?+  +.path  (on-peek:default path)
+    [%list %mine ~]  ``wiki-list-0+!>(list-mine:main)
+  ==
 ::
 ++  on-agent
   |=  [=wire =sign:agent:gall]
@@ -1008,4 +1014,17 @@
   ?.  wordy  same
   ~>  %bout  same
 ::
+++  list-mine
+  ^-  (list blurb)
+  %+  turn  ~(tap by books)
+  |=  [id=@ta =book]
+  ^-  blurb
+  :*  our.bowl
+      id
+      title.book
+      public.read.rules.book
+      !urth.read.rules.book
+      ~(wyt by tales.book)
+      stamp.book
+  ==
 --

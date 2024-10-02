@@ -184,6 +184,16 @@
       [%svg svg=@t]
   ==
 ::
++$  blurb
+  $:  host=@p
+      id=@ta
+      title=@t
+      public=?
+      must-login=?
+      page-count=@ud
+      edited=@da
+  ==
+::
 ::
 ::
 +$  lore
@@ -279,5 +289,9 @@
 ::  state-5
 ::
 +$  book-4  book
+::
+::  state-7
+::
++$  blurb-0  blurb
 ::
 --
