@@ -4,6 +4,13 @@
 
 ##  1.7
 
+### 1.7.1
+
+Date: ~2024.10.3
+- json conversion for `%wiki-list-0` mark
+  - you can get a list of your wikis in json at `GET /~/scry/wiki/list/mine.json`
+
+
 ### 1.7.0
 
 Date: ~2024.10.2
