@@ -2,9 +2,9 @@
 ::
 ::  current state type
 ::
-+$  state-x  state-6
++$  state-x  state-7
 ::
-++  our-era  %6
+++  our-era  %7
 ::
 +$  versioned-state
   $%  state-0
@@ -14,6 +14,7 @@
       state-4
       state-5
       state-6
+      state-7
   ==
 ::
 +$  state-0
@@ -74,6 +75,18 @@
     books=(map @ta book-4)
   ==
 ::
++$  state-7
+  $+  state-7
+  $:  %7
+    faves=(set flag)
+    =ether
+    wordy=_|
+    early=(list cage)
+    =later
+    shelf=shelf-1
+    books=(map @ta book-4)
+  ==
+::
 +$  book
   $+  book
   $:  crest=(unit image)
@@ -112,6 +125,8 @@
 ::
 +$  rule-edit  ?([public=%.n comet=%.n] [public=%.y comet=?])
 ::
++$  flag  [host=@p id=@ta]
+::
 +$  relay  [%relay to=@p eyre-id=@ta =action]
 ::
 +$  old-goss  [%old-goss =cage]
@@ -131,6 +146,8 @@
       [%imp-file book-id=@ta files=(map @t wain) =title-source del-missing=?]
       [%set-verb wordy=?]
       [%eth-auth who=@p secret=@uv address=tape signature=tape]
+      [%add-fave =flag]
+      [%del-fave =flag]
   ==
 ::
 +$  wiki-path  [[book-id=@ta loc=path] host=(unit @p)]
@@ -165,6 +182,16 @@
 +$  image
   $%  [%url url=@t]
       [%svg svg=@t]
+  ==
+::
++$  blurb
+  $:  host=@p
+      id=@ta
+      title=@t
+      public=?
+      must-login=?
+      page-count=@ud
+      edited=@da
   ==
 ::
 ::
@@ -262,5 +289,9 @@
 ::  state-5
 ::
 +$  book-4  book
+::
+::  state-7
+::
++$  blurb-0  blurb
 ::
 --

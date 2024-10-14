@@ -65,9 +65,17 @@
 ++  may-edit
   |=  [host=(unit @p) =access]
   ^-  ?
+  ?.  (may-read access)  |
   ?:  =(src (fall host our.bowl))  &
   ?:  =(%pawn (clan:title src))
     comet.edit.access
   public.edit.access
+::
+++  may-read
+  |=  =access
+  ^-  ?
+  ?.  public.read.access  =(src our.bowl)
+  ?:  urth.read.access  &
+  ?!(=(%pawn (clan:title src)))
 ::
 --

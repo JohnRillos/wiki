@@ -3,6 +3,14 @@
 ::
 +$  card  card:agent:gall
 ::
+++  grad-7
+  |%
+  ++  state
+    |=  old=state-6
+    ^-  state-7
+    [%7 ~ +.old]
+  --
+::
 ++  grad-6
   |%
   ++  state

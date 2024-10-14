@@ -39,97 +39,109 @@
   ++  render
     ^-  manx
     =,  rudyard
-    ;html
-      ;+  (doc-head:web bowl "%wiki")
-      ;body(onload on-page-load)
-        ;div#index-container
-          ;h1: %wiki
-          ;nav#main-controls
-            ;a/"/wiki/~/new"
-              ;button.submit(type "button"): New Wiki
+    |^
+      =/  shorted-shelf=(list [=flag =^spine])  (sort ~(tap by shelf) sort-shelf)
+      ;html
+        ;+  (doc-head:web bowl "%wiki")
+        ;body(onload on-page-load)
+          ;div#index-container
+            ;h1: %wiki
+            ;nav#main-controls
+              ;a/"/wiki/~/new"
+                ;button.submit(type "button"): New Wiki
+              ==
+              ;a/"/wiki/~/search"
+                ;button(type "button"): Search
+              ==
             ==
-            ;a/"/wiki/~/search"
-              ;button(type "button"): Search
-            ==
-          ==
-          ;*
-          ?:  =(~ books)  [stub:web]~
-            ;=
-              ;h2.index-header: Your Wikis
-              ;ul.wiki-list
-                ;*
-                %+  turn  ~(tap by books)
-                |=  [id=@ta =book]
-                ^-  manx
-                =/  page-count=@ud  ~(wyt by tales.book)
-                =/  pages-label=tape  ?:(=(1 page-count) "page" "pages")
-                ;li.wiki-list-item
-                  ;a.local/"/wiki/{(trip id)}"
-                    ;div.logo-small
-                      =hx-get      "/wiki/{(trip id)}/~/x/logo"
-                      =hx-trigger  "load"
-                      ;img#logo(src "/wiki/~/assets/logo.svg");
+            ;*
+            ?:  =(~ books)  [stub:web]~
+              ;=
+                ;h2.index-header: Your Wikis
+                ;ul.wiki-list
+                  ;*
+                  %+  turn  ~(tap by books)
+                  |=  [id=@ta =book]
+                  ^-  manx
+                  =/  page-count=@ud  ~(wyt by tales.book)
+                  =/  pages-label=tape  ?:(=(1 page-count) "page" "pages")
+                  ;li.wiki-list-item
+                    ;a.local/"/wiki/{(trip id)}"
+                      ;div.logo-small
+                        =hx-get      "/wiki/{(trip id)}/~/x/logo"
+                        =hx-trigger  "load"
+                        ;img#logo(src "/wiki/~/assets/logo.svg");
+                      ==
+                      ;div
+                        ;+  ?:(public.read.rules.book globe:icon:web lock:icon:web)
+                        ; {(trip title.book)}
+                      ==
+                      ;div.note: {<page-count>} {pages-label}
                     ==
-                    ;div
-                      ;+  ?:(public.read.rules.book globe:icon:web lock:icon:web)
-                      ; {(trip title.book)}
-                    ==
-                    ;div.note: {<page-count>} {pages-label}
                   ==
                 ==
               ==
-            ==
-          ;br;
-          ;h2.index-header
-            ; More Wikis on Urbit
-            ;+  (info:icon:web "Your %pals have been gossiping about these wikis")
-          ==
-          ;div
-            ;*
-            =/  pals-installed=?  .^(? %gu /(scot %p our.bowl)/pals/(scot %da now.bowl)/$)
-            %-  (wilt manx)
-            :~  [!pals-installed ;p:"You don't have ~paldev/pals installed." ~]
-                [&(!pals-installed ?!(=(~ shelf))) ;p:"This list might be out of date." ~]
-                :-  =(~ shelf)
-                :~  ;p:"You haven't heard about any wikis on the network yet."
-                    ;p:"%wiki uses %pals to find out about other wikis on Urbit."
-                    ;p:"If you know someone who uses %wiki, add them as a pal!"
+            ;+  ?~  faves  stub:web
+                ;h2.index-header: Favorite Wikis
+                ;ul.wiki-list
+                  ;*
+                  %+  turn  (skim shorted-shelf |=([=flag *] (~(has in faves) flag)))
+                  render-foreign-book
                 ==
+            ;h2.index-header
+              ; More Wikis on Urbit
+              ;+  (info:icon:web "Your %pals have been gossiping about these wikis")
             ==
-          ==
-          ;ul.wiki-list
-            ;*
-            %+  turn  (sort ~(tap by shelf) sort-shelf)
-            |=  [[host=@p id=@ta] =^spine]
-            =/  host-text=tape
-              ?:  =(%pawn (clan:title host))  "comet"
-              (cite:title host)
-            =/  hover=tape
-              """
-              Host: {<host>}
-              Edited: {(time-ago now.bowl stamp.cover.spine)}
-              """
-            =/  check-logo=?  (gte era.cover.spine 5)
-            =/  wik-dir=tape  "/wiki/~/p/{<host>}/{(trip id)}"
-            =/  page-count=@ud  ~(wyt by toc.spine)
-            =/  pages-label=tape  ?:(=(1 page-count) "page" "pages")
-            ^-  manx
-            ;li.wiki-list-item
-              ;a.remote/"{wik-dir}"
-                =title  hover
-                ;div.logo-small
-                  =hx-get      ?:(check-logo "{wik-dir}/~/x/logo" "")
-                  =hx-trigger  ?:(check-logo "load" "")
-                  ;img#logo(src "/wiki/~/assets/logo.svg");
-                ==
-                ;div.wiki-name: {(trip title.cover.spine)}
-                ;div.wiki-host: {host-text}
-                ;div.note: {<page-count>} {pages-label}
+            ;div
+              ;*
+              =/  pals-installed=?  .^(? %gu /(scot %p our.bowl)/pals/(scot %da now.bowl)/$)
+              %-  (wilt manx)
+              :~  [!pals-installed ;p:"You don't have ~paldev/pals installed." ~]
+                  [&(!pals-installed ?!(=(~ shelf))) ;p:"This list might be out of date." ~]
+                  :-  =(~ shelf)
+                  :~  ;p:"You haven't heard about any wikis on the network yet."
+                      ;p:"%wiki uses %pals to find out about other wikis on Urbit."
+                      ;p:"If you know someone who uses %wiki, add them as a pal!"
+                  ==
               ==
+            ==
+            ;ul.wiki-list
+              ;*
+              %+  turn  (skip shorted-shelf |=([=flag *] (~(has in faves) flag)))
+              render-foreign-book
             ==
           ==
         ==
       ==
-    ==
+    ::
+    ++  render-foreign-book
+      |=  [[host=@p id=@ta] =^spine]
+      =/  host-text=tape
+        ?:  =(%pawn (clan:title host))  "comet"
+        (cite:title host)
+      =/  hover=tape
+        """
+        Host: {<host>}
+        Edited: {(time-ago now.bowl stamp.cover.spine)}
+        """
+      =/  check-logo=?  (gte era.cover.spine 5)
+      =/  wik-dir=tape  "/wiki/~/p/{<host>}/{(trip id)}"
+      =/  page-count=@ud  ~(wyt by toc.spine)
+      =/  pages-label=tape  ?:(=(1 page-count) "page" "pages")
+      ^-  manx
+      ;li.wiki-list-item
+        ;a.remote/"{wik-dir}"
+          =title  hover
+          ;div.logo-small
+            =hx-get      ?:(check-logo "{wik-dir}/~/x/logo" "")
+            =hx-trigger  ?:(check-logo "load" "")
+            ;img#logo(src "/wiki/~/assets/logo.svg");
+          ==
+          ;div.wiki-name: {(trip title.cover.spine)}
+          ;div.wiki-host: {host-text}
+          ;div.note: {<page-count>} {pages-label}
+        ==
+      ==
+    --
   --
 --

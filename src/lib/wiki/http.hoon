@@ -24,6 +24,7 @@
         [sig %auth ~]                       [| %mask-auth]
         [sig %new ~]                        [& %new-book]
         [sig %search ~]                     [& %search-all]
+        [sig %x %faves *]                   [| %hx-fave]
         [sig %x %search ~]                  [& %hx-search]
         (far [@ta ~])                       [r-auth %book]
         (far [@ta sig %assets *])           [| %book-asset]
@@ -45,7 +46,7 @@
     ^-  ?
     =/  book-id=@ta  -.pat
     ?~  book=(~(get by books) book-id)  &
-    !urth.read.rules.u.book
+    !public.read.rules.u.book
   ::
   ++  w-auth
     ^-  ?

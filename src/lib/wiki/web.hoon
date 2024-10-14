@@ -14,6 +14,7 @@
 /*  menu-svg         %svg  /web/wiki/icons/menu/svg
 /*  metamask-svg     %svg  /web/wiki/icons/metamask/svg
 /*  search-svg       %svg  /web/wiki/icons/search/svg
+/*  star-svg         %svg  /web/wiki/icons/star/svg
 /*  urbit-svg        %svg  /web/wiki/icons/urbit/svg
 ::
 |_  [=bowl:gall =rudyard]
@@ -128,11 +129,21 @@
       ~&  "file ignored, empty filename - type: {<type.part>}"  ~
     ?~  type.part
       ~&  "file ignored, no MIME type: {<u.file.part>}"  ~
-    ?.  =(~['text/markdown'] u.type.part)
-      ~&  "file ignored, not markdown: {<u.type.part>} {<u.file.part>}"  ~
+    =/  ext=(unit tape)  (get-extension (trip u.file.part))
+    ?~  ext  ~&  "file ignored, no file extension"  ~
+    ?.  =("md" (cass u.ext))
+      ~&  "file ignored, not .md: {<u.type.part>} {<u.file.part>}"  ~
+    ?.  ?|(=(~['text/markdown'] u.type.part) =(~['application/octet-stream'] u.type.part))
+      ~&  "file ignored, invalid MIME type: {<u.type.part>} {<u.file.part>}"  ~
     =/  data=wain  (to-wain:format (sane-newline body.part))
     ~&  "parsed: {(trip u.file.part)}"
     `[u.file.part data]
+  ::
+  ++  get-extension
+    |=  =tape
+    ^-  (unit ^tape)
+    ?~  found=(fand "." tape)  ~
+    `(slag +((rear found)) tape)
   --
 ::
 ++  parse-filepath
@@ -362,8 +373,9 @@
     ==
   =/  admin=?  (is-admin host access)
   =/  write=?  (may-edit:auth host access)
+  =/  =flag  [(fall host our.bowl) book-id.wiki-path]
   ;div#global-menu
-    ;a.menu-item/"{wik-dir}": Home
+    ;a.menu-item/"{wik-dir}": Main Page
     ;+  ?.  write  stub
         ;a.menu-item/"{wik-dir}/~/new": New Page
     ;*
@@ -378,16 +390,17 @@
           ;button.menu-item
             =type  "button"
             =onclick  (log-out bowl)
-            ; Log out
+            ; Log Out
           ==
       ==
     :~  ?.  admin  stub
         ;a.menu-item/"{wik-dir}/~/settings": Settings
         ;a.menu-item/"/wiki": All Wikis
+        (fave-button flag)
         ;button.menu-item
           =type  "button"
           =onclick  (log-out bowl)
-          ; Log out
+          ; Log Out
         ==
     ==
   ==
@@ -410,6 +423,22 @@
     ;div.note: You must have an Urbit ID in your MetaMask wallet.
     ;label(for "urbit-id"): Urbit ID
     ;input#mask-auth-urbit-id(type "text", name "urbit-id", placeholder "~sampel-palnet");
+==
+::
+++  fave-button
+  |=  =flag
+  ?.  (~(has by shelf.rudyard) flag)  stub
+  =/  fave-path=tape  "/wiki/~/x/faves/{<host.flag>}/{(trip id.flag)}"
+  ?:  (~(has in faves.rudyard) flag)
+    ;button.menu-item(title "Remove Favorite", hx-post "{fave-path}?set=false", hx-swap "outerHTML")
+      ; Remove
+      ;+  (fave:icon &)
+      ;
+    ==
+  ;button.menu-item(title "Add Favorite", hx-post "{fave-path}?set=true", hx-swap "outerHTML")
+    ; Add
+    ;+  (fave:icon |)
+    ;
   ==
 ::
 ++  doc-head
@@ -500,12 +529,18 @@
       %&  rules.p.each
       %|  rules.p.each
     ==
-  =/  public-read=?  public.read.access
+  =/  public-read=?  &(public.read.access urth.read.access)
+  =/  mars-read=?  &(public.read.access !urth.read.access)
   =/  viz=manx
     ?:  public-read
       ;div.footer-item.note
         ;+  globe:icon
         ;span: This wiki is public
+      ==
+    ?:  mars-read
+      ;div.footer-item.note
+        ;+  urbit-small:icon
+        ;span: This wiki is public on Urbit
       ==
     ;div.footer-item.note
       ;+  lock:icon
@@ -520,6 +555,12 @@
 ::
 ++  icon
   |%
+  ::
+  ++  fave
+    |=  [active=?]
+    ;div(class ?:(active "fave-icon on" "fave-icon off"))
+      ;+  (need (de-xml:html star-svg))
+    ==
   ::
   ++  globe
     ^~
@@ -566,6 +607,12 @@
   ++  urbit
     ^~
     ;div.urbit-icon(title "Urbit")
+      ;+  (need (de-xml:html urbit-svg))
+    ==
+  ::
+  ++  urbit-small
+    ^~
+    ;div.access-icon(title "Urbit")
       ;+  (need (de-xml:html urbit-svg))
     ==
   --

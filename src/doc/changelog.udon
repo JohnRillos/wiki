@@ -2,7 +2,81 @@
 
 # Version 1
 
+##  1.7
+
+### 1.7.1
+
+Date: ~2024.10.3
+- json conversion for `%wiki-list-0` mark
+  - you can get a list of your wikis in json at `GET /~/scry/wiki/list/mine.json`
+
+
+### 1.7.0
+
+Date: ~2024.10.2
+- new scry endpoint: `.^((list blurb) %gx /=wiki=/list/mine/wiki-list-0)`
+  - returns a list of data ("blurbs") about your own wikis
+  - this data is intended to be enough to create a listing with links to your wikis from another app
+  - the `blurb` type (defined in `/sur/wiki.hoon`):
+    ```
+    +$  blurb
+      $:  host=@p
+          id=@ta
+          title=@t
+          public=?
+          must-login=?
+          page-count=@ud
+          edited=@da
+      ==
+    ```
+
+
+##  1.6
+
+### 1.6.0
+
+Date: ~2024.9.17
+- you can now add wikis to your favorites
+  - favorite wikis will appear in a section above "More Wikis on Urbit" on the index page
+  - only an option when browsing %wiki through Arvo on your own ship
+  - only public listed wikis can be added to favorites
+  - currently this feature is only for basic organization, but in the future, favorite wikis may 
+    have other uses
+
+
+## 1.5
+
+### 1.5.0
+
+Date: ~2024.9.11
+- public wikis can now require Urbit login to read articles, making them "public on Urbit"
+  - the main page of the wiki will be visible to unauthenticated users, but any article will display 
+    as a screen telling them to log in
+  - this replaces the public-but-not-clearweb option, which was originally intended to 
+    make some content exclusive to Urbit, but had the downside of making those wiki inaccessible for 
+    Urbit users through clearweb links
+  - this new behavior will encourage users to get on Urbit, as they can see that there is content, 
+    but need to get on Urbit to access it
+
+
 ## 1.4
+
+### 1.4.5
+
+Date: ~2024.9.5
+- prevent %gossip from spamming ships that aren't running %wiki
+  - update /lib/gossip.hoon with bug fix
+  - disable relay in gossip config
+  - should prevent additional dead ames-flows, but doesn't clean up existing ones
+
+
+### 1.4.4
+
+Date: ~2024.9.4
+- refactors some internal logic needed for future Metamask login feature (not yet enabled)
+- attempt to fix file import for some users
+  - handle `.md` files uploaded as `application/octet-stream` MIME type
+
 
 ### 1.4.3
 

@@ -23,7 +23,8 @@
 ::
 %+  verb  |
 ::
-%-  %+  agent:gossip  [3 %anybody %anybody &]
+=*  gossip-config  [3 %anybody %anybody |]
+%-  %+  agent:gossip  gossip-config
     %-  ~(gas by *(map mark $-(* vase)))
     :~  [%wiki-lore |=(=noun !>((lore-0 noun)))]
         [%wiki-lore-1 |=(=noun !>((lore-1 noun)))]
@@ -59,7 +60,8 @@
   |^  =+  !<(old=versioned-state old-vase)
       =^  cards-1  state  (build-state old)
       =^  cards-2  state  retry-early-goss
-      [(weld cards-1 cards-2) this]
+      =^  cards-3  state  config-gossip
+      [:(weld cards-1 cards-2 cards-3) this]
   ::
   ++  build-state
     |=  old=versioned-state
@@ -67,7 +69,8 @@
     =|  cards=(list card)
     |-
     ?-  -.old
-      %6  [cards old]
+      %7  [cards old]
+      %6  $(old (state:grad-7 old))
       %5  $(old (state:grad-6 old))
       %4  =/  [caz=_cards new=state-5]  (build-5 old)
           $(old new, cards caz)
@@ -114,6 +117,10 @@
     ?+  p.k         [| raw]
       %wiki-lore-1  [& [p.k !>((lore-1 q.k))]]
     ==
+  ::
+  ++  config-gossip
+    ^-  (quip card _state)
+    [[(configure:gossip gossip-config)]~ state]
   --
 ::
 ++  on-poke
@@ -147,6 +154,8 @@
       %imp-file       (imp-file:main act)
       %set-verb       (set-verb:main act)
       %eth-auth       (eth-auth:main act)
+      %add-fave       (add-fave:main act)
+      %del-fave       (del-fave:main act)
     ==
   ::
   ++  handle-relay
@@ -327,7 +336,13 @@
   ==
 ::
 ++  on-leave  on-leave:default
-++  on-peek   on-peek:default
+::
+++  on-peek
+  |=  path=(pole knot)
+  ^-  (unit (unit cage))
+  ?+  +.path  (on-peek:default path)
+    [%list %mine ~]  ``wiki-list-0+!>(list-mine:main)
+  ==
 ::
 ++  on-agent
   |=  [=wire =sign:agent:gall]
@@ -525,11 +540,10 @@
   |=  [%mod-rule-read id=@ta read=rule-read]
   ?.  =(src:auth our.bowl)
     ~&  >>>  "Unauthorized poke from {<src:auth>}: %mod-rule-read"  !!
-  ?:  &(!public.read urth.read)  ~|('Private wikis do not support eauth (clearweb)' !!)
+  ?:  &(!public.read urth.read)  ~|('Private wikis do not support clearweb' !!)
   ?:  &(!public.read scry.read)  ~|('Private wikis do not support remote scry' !!)
   ?:  &(!public.read goss.read)  ~|('Private wikis do not support gossip (global index)' !!)
   ?:  &(!scry.read goss.read)    ~|('Cannot gossip index if wiki not accessible via remote scry' !!)
-  ?:  &(public.read ?!(|(urth.read scry.read)))  ~|('Public wikis must be visible via web and/or Urbit' !!)
   =/  =book  (~(got by books) id)
   =/  en-scry=?  &(!scry.read.rules.book scry.read)
   =/  un-scry=?  &(scry.read.rules.book !scry.read)
@@ -770,6 +784,7 @@
 ::
 ++  set-verb
   |=  act=[%set-verb wordy=?]
+  ?>  =(src.bowl our.bowl)
   ~&  ?:  wordy.act  '%wiki: more logging enabled'
       '%wiki: shh! logging reduced...'
   =.  wordy  wordy.act
@@ -782,6 +797,20 @@
   =.  users.ether  (~(put by users.ether) src.bowl who.act)
   :_  state
   [(schedule-del-eth-user src.bowl)]~
+::
+++  add-fave
+  |=  [%add-fave =flag]
+  ?>  =(our.bowl src:auth)
+  ?:  =(our.bowl host.flag)
+    ~|  'You cannot favorite your own wiki'  !!
+  ?.  (~(has by shelf) flag)
+    ~|  'Cannot favorite unlisted wiki'  !!
+  [~ state(faves (~(put in faves) flag))]
+::
+++  del-fave
+  |=  [%del-fave =flag]
+  ?>  =(our.bowl src:auth)
+  [~ state(faves (~(del in faves) flag))]
 ::
 ++  schedule-del-challenge
   |=  challenge=@uv
@@ -985,4 +1014,17 @@
   ?.  wordy  same
   ~>  %bout  same
 ::
+++  list-mine
+  ^-  (list blurb)
+  %+  turn  ~(tap by books)
+  |=  [id=@ta =book]
+  ^-  blurb
+  :*  our.bowl
+      id
+      title.book
+      public.read.rules.book
+      !urth.read.rules.book
+      ~(wyt by tales.book)
+      stamp.book
+  ==
 --
