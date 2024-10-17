@@ -313,8 +313,7 @@
   """
   function delete_cookie(name, path, domain) \{
     if (has_cookie(name)) \{
-      document.cookie = encodeURIComponent(name) + '=; max-age=-1' +
-        ((path) ? '; path=' + encodeURIComponent(path) : '');
+      document.cookie = name + '=; max-age=-1; path=' + path;
     }
   }
   function has_cookie(name) \{
