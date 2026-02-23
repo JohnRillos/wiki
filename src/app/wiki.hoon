@@ -415,7 +415,7 @@
       [~ this]
     ==
   ::
-      [%ames %tune *]
+      [%ames %sage *]
     ?.  ?=([%remote eyre-id=@ta ~] wire)  [~ this]
     |^  (handle-errors |.(on-remote-scry-response))
     ::
@@ -428,24 +428,23 @@
       ==
     ::
     ++  on-remote-scry-response
-      ?~  roar.sign-arvo  [error-404 this]
-      =/  [=path data=(unit (cask))]  dat.u.roar.sign-arvo
-      ?~  data            [error-404 this]
+      =/  [=spar:ames data=gage:mess:ames]  sage.sign-arvo
+      ?~  data             [error-404 this]
       =/  rud=rudyard
         :-  state
-        ?+  p.u.data  ~|("Unknown mark {<p.u.data>}" !!)
+        ?+  p.data  ~|("Unknown mark {<p.data>}" !!)
         ::
-          %wiki-booklet-0  [~ `(grad-booklet:grad-4 (booklet-0 q.u.data)) ~ ~]
+          %wiki-booklet-0  [~ `(grad-booklet:grad-4 (booklet-0 q.data)) ~ ~]
         ::
-          %wiki-spine-0    [`(grad-spine:grad-4 (spine-0 q.u.data)) ~ ~ ~]
+          %wiki-spine-0    [`(grad-spine:grad-4 (spine-0 q.data)) ~ ~ ~]
         ::
-          %wiki-booklet-1  [~ `(booklet-1 q.u.data) ~ ~]
+          %wiki-booklet-1  [~ `(booklet-1 q.data) ~ ~]
         ::
-          %wiki-spine-1    [`(spine-1 q.u.data) ~ ~ ~]
+          %wiki-spine-1    [`(spine-1 q.data) ~ ~ ~]
         ::
-          %wiki-logo-0     [~ ~ ~ `((unit image) q.u.data)]
+          %wiki-logo-0     [~ ~ ~ `((unit image) q.data)]
         ::
-          %mime            [~ ~ `(mime q.u.data) ~]
+          %mime            [~ ~ `(mime q.data) ~]
         ::
         ==
       =/  req=(unit inbound-request:eyre)  (eyre-request:serv bowl eyre-id.wire)
