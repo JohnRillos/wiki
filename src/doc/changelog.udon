@@ -4,6 +4,12 @@
 
 ##  1.12
 
+### 1.12.2
+
+Date: ~2026.9.18
+- fix loading wiki state saved before `%zuse` 408
+
+
 ### 1.12.1
 
 Date: ~2026.9.18

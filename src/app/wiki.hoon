@@ -61,12 +61,43 @@
 ++  on-load
   |=  old-vase=vase
   ^-  (quip card _this)
-  |^  =+  !<(old=versioned-state old-vase)
+  |^  =/  old=versioned-state
+        =/  new=(unit versioned-state)  (mole |.(!<(versioned-state old-vase)))
+        ?^  new  u.new
+        (upgrade-vases old-vase)
       =^  cards-1  state  (build-state old)
       =^  cards-2  state  retry-early-goss
       =^  cards-3  state  config-gossip
       =/  cards-4  cancel-stale-scries:main
       [:(weld cards-1 cards-2 cards-3 cards-4) this]
+  ::
+  ::  +upgrade-vases: migrate vases in .early to the h135 type-of-type
+  ::
+  ::    State saved before %zuse 408 holds h136 vases in .early, which
+  ::    gall does not migrate for us.
+  ::
+  ++  upgrade-vases
+    |=  ole=vase
+    ^-  versioned-state
+    ?+  -.q.ole  !<(versioned-state ole)
+      %3  =/  o  !<(state-3-h136 ole)  o(early (upgrade-early early.o))
+      %4  =/  o  !<(state-4-h136 ole)  o(early (upgrade-early early.o))
+      %5  =/  o  !<(state-5-h136 ole)  o(early (upgrade-early early.o))
+      %6  =/  o  !<(state-6-h136 ole)  o(early (upgrade-early early.o))
+      %7  =/  o  !<(state-7-h136 ole)  o(early (upgrade-early early.o))
+    ==
+  ::
+  +$  cage-h136     (pair mark vase:h136)
+  +$  state-3-h136  _%*(. *state-3 early *(list cage-h136))
+  +$  state-4-h136  _%*(. *state-4 early *(list cage-h136))
+  +$  state-5-h136  _%*(. *state-5 early *(list cage-h136))
+  +$  state-6-h136  _%*(. *state-6 early *(list cage-h136))
+  +$  state-7-h136  _%*(. *state-7 early *(list cage-h136))
+  ::
+  ++  upgrade-early
+    |=  early=(list cage-h136)
+    ^-  (list cage)
+    (turn early |=([=mark =vase:h136] [mark (next-vase:h136 vase)]))
   ::
   ++  build-state
     |=  old=versioned-state
