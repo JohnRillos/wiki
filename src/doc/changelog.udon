@@ -4,6 +4,12 @@
 
 ##  1.12
 
+### 1.12.1
+
+Date: ~2026.9.18
+- fix loading state saved before `%zuse` 408 (update `/lib/gossip` to v1.1.1)
+
+
 ### 1.12.0
 
 Date: ~2026.9.18
