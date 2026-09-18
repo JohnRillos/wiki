@@ -12,6 +12,10 @@
 ::
 +$  card  card:agent:gall
 ::
+::  how long to wait for a remote scry before cancelling it
+::
+++  remote-timeout  ~m2
+::
 --
 ::
 ::  state
@@ -61,7 +65,8 @@
       =^  cards-1  state  (build-state old)
       =^  cards-2  state  retry-early-goss
       =^  cards-3  state  config-gossip
-      [:(weld cards-1 cards-2 cards-3) this]
+      =/  cards-4  cancel-stale-scries:main
+      [:(weld cards-1 cards-2 cards-3 cards-4) this]
   ::
   ++  build-state
     |=  old=versioned-state
@@ -281,8 +286,12 @@
       =/  req-id=@ta  id.order
       :_  this
       %-  (log:main %d "scrying {<ship>} {<loc>}")
-      =/  =wire  /remote/[req-id]
-      [%pass wire %arvo note-arvo]~
+      ::  unanswered scries are retried forever, so cancel after a timeout
+      ::
+      =/  at=@da  (add now.bowl remote-timeout)
+      :~  [%pass (remote-wire:main req-id at) %arvo note-arvo]
+          [%pass (timeout-wire:main req-id at ship loc) %arvo %b %wait at]
+      ==
     ::
     ++  path-before-sig
       |=  full=path
@@ -413,11 +422,43 @@
       %-  (log:main %d "%wiki cleaning state: removing auth session for {<comet>}...")
       =.  users.ether  (~(del by users.ether) comet)
       [~ this]
+    ::
+        [%remote-timeout eyre-id=@ta at=@ta who=@ta loc=*]
+      =/  =spar:ames  [(slav %p who.wire) loc.wire]
+      =/  keen-wire=^wire  (remote-wire:main eyre-id.wire (slav %da at.wire))
+      %-  (log:main %w "remote scry timed out: {<spar>}")
+      ::  re-send the %keen first: scries sent before %ames knew the peer's
+      ::  keys are missing from its .tip index, which %yawn needs
+      ::
+      =/  cancel=(list card)
+        :~  [%pass keen-wire %arvo %a %keen ~ spar]
+            [%pass keen-wire %arvo %a %yawn spar]
+        ==
+      ?~  (eyre-request:serv bowl eyre-id.wire)  [cancel this]
+      :_  this
+      %+  weld  cancel
+      %+  give-simple-payload:app:server  eyre-id.wire
+      ^-  simple-payload:http
+      =/  html=@t  '<html><body>Remote ship did not respond!</body></html>'
+      [[504 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
     ==
   ::
       [%ames %sage *]
-    ?.  ?=([%remote eyre-id=@ta ~] wire)  [~ this]
-    |^  (handle-errors |.(on-remote-scry-response))
+    ?.  ?=([%remote @ *] wire)  [~ this]
+    =/  eyre-id=@ta  &2.wire
+    ::  answered, so cancel the timeout
+    ::
+    =/  stop=(list card)
+      ?.  ?=([@ ~] +>.wire)  ~
+      =/  at=@da  (slav %da -.+>.wire)
+      =/  [who=ship loc=path]  p.sage.sign-arvo
+      [%pass (timeout-wire:main eyre-id at who loc) %arvo %b %rest at]~
+    ::  late response, or a stale scry cancelled with %wham
+    ::
+    ?~  (eyre-request:serv bowl eyre-id)  [stop this]
+    |^  =/  [caz=(list card) new=_this]
+          (handle-errors |.(on-remote-scry-response))
+        [(weld stop caz) new]
     ::
     ++  handle-errors
       |*  =(trap (quip card _this))
@@ -447,20 +488,20 @@
           %mime            [~ ~ `(mime q.data) ~]
         ::
         ==
-      =/  req=(unit inbound-request:eyre)  (eyre-request:serv bowl eyre-id.wire)
+      =/  req=(unit inbound-request:eyre)  (eyre-request:serv bowl eyre-id)
       ?~  req  ~|('Remote scry data received but eyre request not found' !!)
-      =/  =order:rudder  [eyre-id.wire u.req]
+      =/  =order:rudder  [eyre-id u.req]
       =/  out=(quip card rudyard)  (serve [bowl order rud])
       [-.out this(state -.+.out)]
     ::
     ++  error-404
-      %+  give-simple-payload:app:server  eyre-id.wire
+      %+  give-simple-payload:app:server  eyre-id
       ^-  simple-payload:http
       =/  html=@t  '<html><body>Remote page not found!</body></html>'
       [[404 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
     ::
     ++  error-unknown
-      %+  give-simple-payload:app:server  eyre-id.wire
+      %+  give-simple-payload:app:server  eyre-id
       ^-  simple-payload:http
       =/  html=@t  '<html><body>Error handling remote data!</body></html>'
       [[500 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
@@ -1006,6 +1047,92 @@
     %i  ~&  >    tape  same
     %w  ~&  >>   tape  same
     %e  ~&  >>>  tape  same
+  ==
+::
+::  +remote-wire: wire for a remote scry serving an eyre request
+::
+++  remote-wire
+  |=  [eyre-id=@ta at=@da]
+  ^-  wire
+  /remote/[eyre-id]/(scot %da at)
+::
+::  +timeout-wire: wire for the timer that cancels a remote scry
+::
+++  timeout-wire
+  |=  [eyre-id=@ta at=@da =spar:ames]
+  ^-  wire
+  (weld /remote-timeout/[eyre-id]/(scot %da at)/(scot %p ship.spar) path.spar)
+::
+::  +cancel-stale-scries: cancel remote scries left over from earlier versions
+::
+::    Versions before 1.12.0 never cancelled remote scries, so ones that were
+::    never answered are still being retried by %ames. Find the ones sent
+::    from our /remote wires and cancel them.
+::
+::    Scries sent before %ames knew the peer's keys can be missing from its
+::    .tip index, which %wham needs, so first re-send the %keen to add it.
+::
+++  cancel-stale-scries
+  ^-  (list card)
+  %-  fall  :_  ~
+  %-  mole  |.
+  =/  ax=path  /(scot %p our.bowl)//(scot %da now.bowl)
+  =/  known
+    |=  kind=path
+    ^-  (list ship)
+    %+  murn  ~(tap by .^((map ship ?(%alien %known)) %ax (weld ax kind)))
+    |=([her=ship k=?(%alien %known)] ?:(?=(%known k) `her ~))
+  ::  the full %ames types are too big to typecheck here, so only name
+  ::  what we need: .keens of $peer-state and .pit of $fren-state, with
+  ::  their listeners
+  ::
+  =/  keens  $:(%known * * * * * * * * * keens=(map path [* * * * * * (jug duct *) *]) *)
+  =/  pit    $:(%known * * * * * * pit=(map path [(jug duct *) *]) *)
+  =/  from-peers=(list [ship path (set duct)])
+    %-  zing
+    %+  turn  (known /peers)
+    |=  her=ship
+    ^-  (list [ship path (set duct)])
+    =/  sat  ;;(keens .^(* %ax (weld ax /peers/(scot %p her))))
+    %+  turn  ~(tap by keens.sat)
+    |=([=path * * * * * * lis=(jug duct *) *] [her path ~(key by lis)])
+  =/  from-chums=(list [ship path (set duct)])
+    %-  zing
+    %+  turn  (known /chums)
+    |=  her=ship
+    ^-  (list [ship path (set duct)])
+    =/  sat  ;;(pit .^(* %ax (weld ax /chums/(scot %p her))))
+    %+  murn  ~(tap by pit.sat)
+    |=  [=path for=(jug duct *) *]
+    ^-  (unit [ship ^path (set duct)])
+    ::  public scries are kept under /publ/[life]
+    ::
+    ?~  path  ~
+    ?.  =(%publ i.path)  ~
+    `[her (slag 1 t.path) ~(key by for)]
+  =/  pending  (weld from-peers from-chums)
+  =/  stale=(list spar:ames)
+    %+  murn  pending
+    |=  [her=ship =path ducts=(set duct)]
+    ^-  (unit spar:ames)
+    =/  ours=?
+      %+  lien  ~(tap in ducts)
+      |=  =duct
+      %+  lien  duct
+      |=  =wire
+      ::  requests still in flight will be cancelled by their own timer
+      ::
+      ?.  ?=([%gall %use @ @ @ %remote @ *] wire)  |
+      ?&  =(dap.bowl &3.wire)
+          ?=(~ (eyre-request:wiki-http bowl &7.wire))
+      ==
+    ?.(ours ~ `[her path])
+  ~?  ?=(^ stale)  [dap.bowl %cancelling-stale-remote-scries (lent stale)]
+  %-  zing
+  %+  turn  stale
+  |=  =spar:ames
+  :~  [%pass /remote-cleanup %arvo %a %keen ~ spar]
+      [%pass /remote-cleanup %arvo %a %wham spar]
   ==
 ::
 ++  bout

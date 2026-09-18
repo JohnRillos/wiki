@@ -2,6 +2,15 @@
 
 # Version 1
 
+##  1.12
+
+### 1.12.0
+
+Date: ~2026.9.18
+- remote wiki requests time out after 2 minutes instead of retrying forever
+- cancel remote requests left over from earlier versions
+
+
 ##  1.11
 
 ### 1.11.0
