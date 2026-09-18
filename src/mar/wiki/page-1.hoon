@@ -1,14 +1,14 @@
 /-  *wiki
 ::
-|_  =page-1
+|_  pag=page-1
 ++  grad  %noun
 ++  grow
   |%
-  ++  noun  page-1
+  ++  noun  pag
   ++  md
-    :-  (crip "# {(trip title.page-1)}")
+    :-  (crip "# {(trip title.pag)}")
     :-  ''
-    content.page-1
+    content.pag
   --
 ::
 ++  grab

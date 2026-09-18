@@ -2,6 +2,15 @@
 
 # Version 1
 
+##  1.11
+
+### 1.11.0
+
+Date: ~2026.9.18
+- `%zuse` 408
+- fix `%wiki-page-1` and `%wiki-mask-auth` marks
+
+
 ##  1.10
 
 ### 1.10.0

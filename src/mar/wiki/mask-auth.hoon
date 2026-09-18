@@ -1,16 +1,16 @@
 /-  *wiki
 /+  wiki-dejs
 ::
-|_  auth=mask-auth
+|_  act=action
 ++  grad  %noun
 ++  grow
   |%
-  ++  noun  auth
+  ++  noun  act
   --
 ::
 ++  grab
   |%
-  ++  noun  mask-auth
+  ++  noun  action
   ++  json  dj-mask-auth:wiki-dejs
   --
 --
