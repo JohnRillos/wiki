@@ -2,6 +2,16 @@
 
 # Version 1
 
+##  1.13
+
+### 1.13.0
+
+Date: ~2026.9.19
+- the wiki index checks each remote wiki and shows whether its host is online, whether %wiki is running there, and whether the wiki is available
+- fix remote wikis not loading from hosts using directed messaging
+- publish `/ping` so other ships can check that %wiki is running
+
+
 ##  1.12
 
 ### 1.12.2

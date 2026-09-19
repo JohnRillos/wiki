@@ -1,6 +1,6 @@
 /-  *wiki
 /+  dbug, default-agent, gossip, regex, rudder, server, string, verb
-/+  *wiki, *wiki-grad, *wiki-morf, wiki-web, wiki-auth, wiki-http
+/+  *wiki, *wiki-grad, *wiki-morf, wiki-web, wiki-auth, wiki-http, wiki-probe
 /~  libs  *  /lib/wiki  :: build all wiki libs
 /~  mars  *  /mar       :: build all marks
 /$  css-to-mime   %css   %mime
@@ -15,6 +15,15 @@
 ::  how long to wait for a remote scry before cancelling it
 ::
 ++  remote-timeout  ~m2
+::
+::  how long to wait for a remote wiki to answer a status check
+::
+++  probe-timeout  ~s30
+::
+::  how far back to date remote scries: the host doesn't answer a date
+::  later than its own clock, which can lag behind ours
+::
+++  remote-lag  ~m1
 ::
 --
 ::
@@ -53,7 +62,9 @@
   =^  cards  state
     =|  state=state-x
     :_  state
-    [%pass /eyre/connect %arvo %e %connect [~ /[dap.bowl]] dap.bowl]~
+    :~  [%pass /eyre/connect %arvo %e %connect [~ /[dap.bowl]] dap.bowl]
+        ping:grow:main
+    ==
   [cards this]
 ::
 ++  on-save  !>(state)
@@ -69,7 +80,8 @@
       =^  cards-2  state  retry-early-goss
       =^  cards-3  state  config-gossip
       =/  cards-4  cancel-stale-scries:main
-      [:(weld cards-1 cards-2 cards-3 cards-4) this]
+      =/  cards-5  ?:((~(has by sky.bowl) /ping) ~ [ping:grow:main]~)
+      [:(weld cards-1 cards-2 cards-3 cards-4 cards-5) this]
   ::
   ::  +upgrade-vases: migrate vases in .early to the h135 type-of-type
   ::
@@ -218,6 +230,7 @@
     ^-  (quip card _this)
     |^  ?:  is-get-challenge  handle-get-challenge
         ?:  is-later          handle-later
+        ?:  is-status         handle-status
         ?:  is-remote         handle-http-remote
         (paddle [bowl order [state ~ ~ ~ ~]])
     ::
@@ -233,6 +246,13 @@
       =/  query=(map @t @t)  query:(sane-url:web url.request.order)
       ?~  after-eyre-id=(~(get by query) 'after')  |
       (~(has by later) u.after-eyre-id)
+    ::
+    ::  status check for a remote wiki on the index
+    ::
+    ++  is-status
+      ?.  =('GET' method.request.order)  |
+      =/  site=(pole knot)  path:(sane-url:web url.request.order)
+      ?=([%wiki %~.~ %p @ta @ta %~.~ %x %status ~] site)
     ::
     ++  is-remote
       =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
@@ -294,6 +314,26 @@
       =.  later  (~(del by later) last-eyre-id)
       [(relay-response:main order error.u.await this) this]
     ::
+    ::  +handle-status: check if a remote wiki can be reached
+    ::
+    ::    only for the logged-in user, as it sends requests to the host
+    ::
+    ++  handle-status
+      ^-  (quip card _this)
+      ?.  authenticated.order
+        :_  this
+        (give-simple-payload:app:server id.order [[403 ~] ~])
+      =/  site=(pole knot)  path:(sane-url:web url.request.order)
+      ?>  ?=([%wiki %~.~ %p who=@ta book-id=@ta %~.~ %x %status ~] site)
+      =/  =ship  (slav %p who.site)
+      ::  logo is the smallest thing every wiki publishes
+      ::
+      =/  book=path
+        (weld (get-resource ship book-id.site ~ /x/logo) /[book-id.site])
+      =/  =wire  /status/[id.order]/[who.site]/[book-id.site]
+      =/  =shed:khan  (probe:wiki-probe ship book probe-timeout)
+      [[%pass wire %arvo %k %lard q.byk.bowl shed]~ this]
+    ::
     ++  handle-http-remote
       ^-  (quip card _this)
       =/  [site=(pole knot) query=(map @t @t)]  (sane-url:web url.request.order)
@@ -308,7 +348,7 @@
         ==
       =/  special=path  (path-after-sig page-path.site)
       =/  resource=path  (get-resource ship book-id page-path special)
-      =/  ver=@t  (crip <now.bowl>)
+      =/  ver=@t  (scot %da (sub now.bowl remote-lag))
       =/  base=path  /g/x/[ver]/wiki/$/1
       =/  loc=path  :(weld base resource /[book-id] page-path)
       =/  sec=(unit [idx=@ key=@])  ~
@@ -473,6 +513,31 @@
       =/  html=@t  '<html><body>Remote ship did not respond!</body></html>'
       [[504 ['content-type' 'text/html']~] `(tail (html-to-mime html))]
     ==
+  ::
+      [%khan %arow *]
+    ?.  ?=([%status eyre-id=@ta who=@ta book-id=@ta ~] wire)  [~ this]
+    ?~  (eyre-request:serv bowl eyre-id.wire)  [~ this]
+    =/  =flag  [(slav %p who.wire) book-id.wire]
+    ?~  spine=(~(get by shelf) flag)
+      :_  this
+      (give-simple-payload:app:server eyre-id.wire [[404 ~] ~])
+    =/  res=(unit echo:wiki-probe)
+      ?:  ?=(%| -.p.sign-arvo)
+        ((slog leaf+"%wiki: status check failed for {<flag>}" tang.p.p.sign-arvo) ~)
+      `!<(echo:wiki-probe q.p.p.sign-arvo)
+    =/  =reach
+      ?~  res                 %unknown
+      ?^  book.u.res          %online
+      ?:  app.u.res           %missing
+      ?:  host.u.res          %app-down
+      %host-down
+    :_  this
+    %+  give-simple-payload:app:server  eyre-id.wire
+    ^-  simple-payload:http
+    :_  `(as-octt:mimes:html (en-xml:html (foreign-book:web flag u.spine reach)))
+    ::  so reloading the index doesn't check every wiki again right away
+    ::
+    [200 ~[['content-type' 'text/html'] ['cache-control' 'max-age=300']]]
   ::
       [%ames %sage *]
     ?.  ?=([%remote @ *] wire)  [~ this]
@@ -921,6 +986,12 @@
   ++  logo
     |=  [id=@ta data=(unit image)]
     [%pass /wiki/logo %grow /logo/[id] %wiki-logo-0 data]
+  ::
+  ::  lets other ships check that %wiki is running here
+  ::
+  ++  ping
+    ^-  card
+    [%pass /wiki/ping %grow /ping %noun our-era]
   ::
   ++  look
     |=  [book-id=@ta =book]

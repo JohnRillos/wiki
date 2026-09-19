@@ -288,6 +288,86 @@
   ^-  manx
   ;div(style "display: none");
 ::
+::  +foreign-book: list item for a remote wiki on the index
+::
+::    while %checking, it replaces itself with the result of the check
+::
+++  foreign-book
+  |=  [[host=@p id=@ta] =spine =reach]
+  ^-  manx
+  =/  host-text=tape
+    ?:  =(%pawn (clan:title host))  "comet"
+    (cite:title host)
+  =/  hover=tape
+    """
+    Host: {<host>}
+    Edited: {(time-ago now.bowl stamp.cover.spine)}
+    """
+  =/  wik-dir=tape  "/wiki/~/p/{<host>}/{(trip id)}"
+  =/  page-count=@ud  ~(wyt by toc.spine)
+  =/  pages-label=tape  ?:(=(1 page-count) "page" "pages")
+  =/  down=?  ?=(?(%missing %app-down %host-down) reach)
+  =/  item-class=tape  ?:(down "wiki-list-item down" "wiki-list-item")
+  =/  check=mart
+    ?.  ?=(%checking reach)  ~
+    :~  [%hx-get "{wik-dir}/~/x/status"]
+        [%hx-trigger "load"]
+        [%hx-swap "outerHTML"]
+    ==
+  ::  wikis older than era 5 have no logo
+  ::
+  =/  get-logo=mart
+    ?.  &(?=(%online reach) (gte era.cover.spine 5))  ~
+    :~  [%hx-get "{wik-dir}/~/x/logo"]
+        [%hx-trigger "load"]
+    ==
+  =/  item=manx
+    ;li(class item-class)
+      ;a.remote/"{wik-dir}"
+        =title  hover
+        ;+  =/  logo=manx
+              ;div.logo-small
+                ;img#logo(src "/wiki/~/assets/logo.svg");
+              ==
+            logo(a.g (weld a.g.logo get-logo))
+        ;div.wiki-name: {(trip title.cover.spine)}
+        ;div.wiki-host: {host-text}
+        ;div.note: {<page-count>} {pages-label}
+        ;+  (reach-badge reach)
+      ==
+    ==
+  item(a.g (weld a.g.item check))
+::
+++  reach-badge
+  |=  =reach
+  ^-  manx
+  ?-  reach
+      %checking
+    ;div.wiki-reach.checking(title "Checking whether this wiki can be reached")
+      ;+  load:icon
+      ; checking
+    ==
+  ::
+      %online
+    ;div.wiki-reach.online(title "This wiki is available"): online
+  ::
+      %missing
+    ;div.wiki-reach.down(title "The host is running %wiki, but this wiki isn't available")
+      ; wiki not found
+    ==
+  ::
+      %app-down
+    ;div.wiki-reach.down(title "The host is online, but its %wiki app isn't responding")
+      ; %wiki not running
+    ==
+  ::
+      %host-down
+    ;div.wiki-reach.down(title "The host isn't responding"): host offline
+  ::
+      %unknown
+    ;div.wiki-reach(title "Couldn't check this wiki"): status unknown
+  ==
+::
 ++  disable-on-submit
   |=  [id=tape loading-text=(unit tape)]
   ^-  tape

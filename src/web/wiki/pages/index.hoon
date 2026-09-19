@@ -115,33 +115,9 @@
       ==
     ::
     ++  render-foreign-book
-      |=  [[host=@p id=@ta] =^spine]
-      =/  host-text=tape
-        ?:  =(%pawn (clan:title host))  "comet"
-        (cite:title host)
-      =/  hover=tape
-        """
-        Host: {<host>}
-        Edited: {(time-ago now.bowl stamp.cover.spine)}
-        """
-      =/  check-logo=?  (gte era.cover.spine 5)
-      =/  wik-dir=tape  "/wiki/~/p/{<host>}/{(trip id)}"
-      =/  page-count=@ud  ~(wyt by toc.spine)
-      =/  pages-label=tape  ?:(=(1 page-count) "page" "pages")
+      |=  [=flag =^spine]
       ^-  manx
-      ;li.wiki-list-item
-        ;a.remote/"{wik-dir}"
-          =title  hover
-          ;div.logo-small
-            =hx-get      ?:(check-logo "{wik-dir}/~/x/logo" "")
-            =hx-trigger  ?:(check-logo "load" "")
-            ;img#logo(src "/wiki/~/assets/logo.svg");
-          ==
-          ;div.wiki-name: {(trip title.cover.spine)}
-          ;div.wiki-host: {host-text}
-          ;div.note: {<page-count>} {pages-label}
-        ==
-      ==
+      (foreign-book:web flag spine %checking)
     --
   --
 --

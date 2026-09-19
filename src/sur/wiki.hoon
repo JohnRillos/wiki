@@ -184,6 +184,17 @@
       [%svg svg=@t]
   ==
 ::
+::  $reach: whether a remote wiki can be reached
+::
+::    %checking:   not known yet
+::    %online:     the wiki responded
+::    %missing:    %wiki is running on the host, but not this wiki
+::    %app-down:   the host is online, but %wiki is not responding
+::    %host-down:  the host is not responding
+::    %unknown:    the check itself failed
+::
++$  reach  ?(%checking %online %missing %app-down %host-down %unknown)
+::
 +$  blurb
   $:  host=@p
       id=@ta

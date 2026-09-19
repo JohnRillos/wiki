@@ -382,6 +382,38 @@ li.wiki-list-item {
   }
 }
 
+li.wiki-list-item.down {
+  border-style: dashed;
+  opacity: 70%;
+  & #logo {
+    filter: grayscale(1);
+  }
+}
+
+.wiki-reach {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  margin-top: 0.25em;
+  font-size: small;
+  & .loading-icon svg {
+    width: auto;
+    height: 1.25em;
+  }
+}
+
+.wiki-reach.checking {
+  opacity: 50%;
+}
+
+.wiki-reach.online {
+  color: green;
+}
+
+.wiki-reach.down {
+  color: darkred;
+}
+
 button {
   border: solid 1px;
   border-radius: 8px;
